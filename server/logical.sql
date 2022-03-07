@@ -1,11 +1,10 @@
--- IF EXISTS(SELECT * FROM   dbo.users) DROP TABLE dbo.users;
--- IF EXISTS(SELECT * FROM   dbo.cohort) DROP TABLE dbo.cohort;
--- IF EXISTS(SELECT * FROM   dbo.events) DROP TABLE dbo.events;
--- IF EXISTS(SELECT * FROM   dbo.recipes) DROP TABLE dbo.recipes;
--- IF EXISTS(SELECT * FROM   dbo.dietary_restrictions) DROP TABLE dbo.dietary_restrictions;
--- IF EXISTS(SELECT * FROM   dbo.allergies) DROP TABLE dbo.allergies;
--- IF EXISTS(SELECT * FROM   dbo.recipe_allergies) DROP TABLE dbo.recipe_allergies;
-
+DROP TABLE IF EXISTS users CASCADE; 
+DROP TABLE IF EXISTS cohort CASCADE; 
+DROP TABLE IF EXISTS events CASCADE; 
+DROP TABLE IF EXISTS recipes CASCADE; 
+DROP TABLE IF EXISTS dietary_restrictions CASCADE; 
+DROP TABLE IF EXISTS allergies CASCADE; 
+DROP TABLE IF EXISTS recipe_allergies CASCADE; 
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
