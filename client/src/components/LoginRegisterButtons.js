@@ -1,13 +1,14 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-const LoginRegisterButtons = () => {
+const LoginRegisterButtons = (props) => {
 
     const buttonClicked = (action) => {
+        //action === "register" || "login"
         if(action === "register"){
-            alert("register");
+            props.displayForms("register");
         } else{
-            alert("login");
+            props.displayForms("login");
         }
     };
 
