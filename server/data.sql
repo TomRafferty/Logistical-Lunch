@@ -1,0 +1,2 @@
+INSERT INTO cohort (class_number,region) VALUES (3, 'West Midlands');
+INSERT INTO users (user_name,user_email,is_admin,is_lunch_maker,is_lunch_shopper,user_location,cohort_id,user_password) VALUES ('john doe', 'johndoe@mail.com', false, false, false, 'birmingham',1,'password');
