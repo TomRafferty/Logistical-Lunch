@@ -6,6 +6,12 @@ DROP TABLE IF EXISTS dietary_restrictions CASCADE;
 DROP TABLE IF EXISTS allergies CASCADE; 
 DROP TABLE IF EXISTS recipe_allergies CASCADE; 
 
+CREATE TABLE cohort(
+    id SERIAL PRIMARY KEY,
+    class_number INT NOT NULL,
+    region VARCHAR(30) NOT NULL
+);
+
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     user_name VARCHAR(60) NOT NULL,
@@ -18,10 +24,16 @@ CREATE TABLE users(
     user_password VARCHAR(10240) NOT NULL
 );
 
-CREATE TABLE cohort(
+CREATE TABLE recipes(
     id SERIAL PRIMARY KEY,
-    class_number INT NOT NULL,
-    region VARCHAR(30) NOT NULL
+    recipe_name VARCHAR(90) NOT NULL,
+    cooking_instructions VARCHAR(600) NOT NULL,
+    ingredients VARCHAR(360) NOT NULL,
+    servings INT NOT NULL,
+    ratings INT NOT NULL,
+    difficulty VARCHAR(20) NOT NULL,
+    preparation_time INT NOT NULL,
+    total_time INT NOT NULL
 );
 
 CREATE TABLE events(
@@ -40,26 +52,14 @@ CREATE TABLE events(
     recipe_id INT REFERENCES recipes(id) 
 );
 
-CREATE TABLE recipes(
+CREATE TABLE allergies(
     id SERIAL PRIMARY KEY,
-    recipe_name VARCHAR(90) NOT NULL,
-    cooking_instructions VARCHAR(600) NOT NULL,
-    ingredients VARCHAR(360) NOT NULL,
-    servings INT NOT NULL,
-    ratings INT NOT NULL,
-    difficulty VARCHAR(20) NOT NULL,
-    preparation_time INT NOT NULL,
-    total_time INT NOT NULL
+    allergy_name VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE dietary_restrictions(
     user_id INT REFERENCES users(id) NOT NULL,
     allergen_id INT REFERENCES allergies(id) NOT NULL
-);
-
-CREATE TABLE allergies(
-    id SERIAL PRIMARY KEY,
-    allergy_name VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE recipe_allergies(
