@@ -28,11 +28,11 @@ const LoginForm = () => {
 			</Typography>
 			<FormControl margin="dense">
 				{/* field for email */}
-				<TextField id="email" label="Email" type="email" margin="dense" />
+				<TextField id="login-email" label="Email" type="email" margin="dense" />
 
 				{/* Field for password */}
 				<TextField
-					id="password"
+					id="login-password"
 					label="Password"
 					type="password"
 					margin="dense"

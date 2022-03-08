@@ -46,14 +46,19 @@ const RegisterForm = () => {
 				</Typography>
 				<FormControl margin="dense">
 					{/* field for name */}
-					<TextField id="name" label="Name" margin="dense" />
+					<TextField id="register-name" label="Name" margin="dense" />
 
 					{/* field for email */}
-					<TextField id="email" label="Email" type="email" margin="dense" />
+					<TextField
+						id="register-email"
+						label="Email"
+						type="email"
+						margin="dense"
+					/>
 
 					{/* dropdown to select the role */}
 					<TextField
-						id="role"
+						id="register-role"
 						select
 						label="Role"
 						margin="dense"
@@ -70,7 +75,7 @@ const RegisterForm = () => {
 
 					{/* dropdown to select the region */}
 					<TextField
-						id="region"
+						id="register-region"
 						select
 						label="Region"
 						margin="dense"
@@ -87,7 +92,7 @@ const RegisterForm = () => {
 
 					{/* dropdown to select the class */}
 					<TextField
-						id="class"
+						id="register-class"
 						select
 						label="Class"
 						margin="dense"
@@ -104,7 +109,7 @@ const RegisterForm = () => {
 
 					{/* Field for password */}
 					<TextField
-						id="password"
+						id="register-password"
 						label="Password"
 						type="password"
 						margin="dense"
@@ -112,7 +117,7 @@ const RegisterForm = () => {
 
 					{/* Field for retyping password */}
 					<TextField
-						id="retype-password"
+						id="register-retype-password"
 						label="Retype Password"
 						type="password"
 						margin="dense"
