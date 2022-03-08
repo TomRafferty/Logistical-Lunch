@@ -9,13 +9,13 @@ DROP TABLE IF EXISTS recipe_allergies CASCADE;
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     user_name VARCHAR(60) NOT NULL,
-    user_email VARCHAR(90) NOT NULL,
+    user_email VARCHAR(256) NOT NULL,
     is_admin BOOLEAN NOT NULL,
     is_lunch_maker BOOLEAN NOT NULL,
     is_lunch_shopper BOOLEAN NOT NULL,
     user_location VARCHAR(120) NOT NULL,
     cohort_id INT REFERENCES cohort(id),
-    user_password VARCHAR(30) NOT NULL
+    user_password VARCHAR(10240) NOT NULL
 );
 
 CREATE TABLE cohort(
@@ -26,14 +26,17 @@ CREATE TABLE cohort(
 
 CREATE TABLE events(
     id SERIAL PRIMARY KEY,
-    meeting_location VARCHAR(60),
-    meeting_start VARCHAR(60),
-    meeting_end VARCHAR(60),
-    break_time VARCHAR(60),
+    meeting_location VARCHAR(1024),
+    meeting_postcode VARCHAR(30),
+    meeting_address_1 VARCHAR(1024),
+    meeting_city VARCHAR(1024),
+    meeting_start TIMESTAMP,
+    meeting_end TIMESTAMP,
+    break_time TIMESTAMP,
     lunch_maker_id INT REFERENCES users(id), 
     lunch_shopper_id INT REFERENCES users(id),
-    budget VARCHAR(30),
-    meals INT,
+    budget INT,
+    lunchers INT,
     recipe_id INT REFERENCES recipes(id) 
 );
 
@@ -45,8 +48,8 @@ CREATE TABLE recipes(
     servings INT NOT NULL,
     ratings INT NOT NULL,
     difficulty VARCHAR(20) NOT NULL,
-    preparation_time VARCHAR(30) NOT NULL,
-    total_time VARCHAR(30) NOT NULL
+    preparation_time INT NOT NULL,
+    total_time INT NOT NULL
 );
 
 CREATE TABLE dietary_restrictions(
