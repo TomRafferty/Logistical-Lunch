@@ -6,22 +6,48 @@ import RegisterForm from "../components/RegisterForm";
 import LoginForm from "../components/LoginForm";
 import LoginRegisterButtons from "../components/LoginRegisterButtons";
 
-const FormContainer = styled(Container)({
-	marginTop: "20px",
-	display: "none",
-});
 
 export function LoginPage() {
-	const [displayRegister, setDisplayRegister] = useState(false);
-	const [displayLogin, setDisplayLogin] = useState(false);
+
+	const [displayRegister, setDisplayRegister] = useState({
+		marginTop: "20px",
+		display: "none",
+	});
+	const [displayLogin, setDisplayLogin] = useState({
+		marginTop: "20px",
+		display: "none",
+	});
+
+	const RegisterFormContainer = styled(Container)(displayRegister);
+	const LoginFormContainer = styled(Container)(displayLogin);
+
 	const displayForms = (action) => {
-		//action === "register" || login
-		if (action === "register") {
-			// toggle register form
-			setDisplayRegister(!displayRegister);
-		} else {
-			// toggle login form
-			setDisplayLogin(!displayLogin);
+		//action === "register" || "login"
+		//toggles visibility of forms
+		if(action === "register"){
+			if(displayRegister.visibility === "hidden"){
+				setDisplayRegister({
+					marginTop: "20px",
+					display: "block",
+				});
+			}else{
+				setDisplayRegister({
+					marginTop: "20px",
+					display: "none",
+				});
+			}
+		}else{
+			if (displayLogin.visibility === "hidden") {
+				setDisplayLogin({
+					marginTop: "20px",
+					display: "block",
+				});
+			} else {
+				setDisplayLogin({
+					marginTop: "20px",
+					display: "none",
+				});
+			}
 		}
 	};
 
@@ -29,33 +55,21 @@ export function LoginPage() {
 		<main role="main">
 			<LoginPageHeading />
 			<LoginRegisterButtons displayForms={displayForms} />
-			<FormContainer
+			<RegisterFormContainer
 				className="register-form-container"
 				mt={2}
-				sx={() => {
-					if (displayRegister) {
-						return { display: "none" };
-					} else {
-						return { display: "block" };
-					}
-				}}
+				sx={displayRegister}
 			>
 				<RegisterForm />
-			</FormContainer>
+			</RegisterFormContainer>
 
-			<FormContainer
+			<LoginFormContainer
 				className="login-form-container"
 				mt={2}
-				sx={() => {
-					if (displayLogin) {
-						return { display: "none" };
-					} else {
-						return { display: "block" };
-					}
-				}}
+				sx={displayLogin}
 			>
 				<LoginForm />
-			</FormContainer>
+			</LoginFormContainer>
 		</main>
 	);
 }
