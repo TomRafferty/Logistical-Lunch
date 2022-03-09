@@ -27,11 +27,13 @@ export function LoginPage() {
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "visible",
+					position: "relative",
 				});
 			} else {
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "hidden",
+					position: "absolute",
 				});
 			}
 		} else {
@@ -39,11 +41,13 @@ export function LoginPage() {
 				setDisplayLogin({
 					marginTop: "20px",
 					visibility: "visible",
+					position: "relative",
 				});
 			} else {
 				setDisplayLogin({
 					marginTop: "20px",
 					visibility: "hidden",
+					position: "absolute",
 				});
 			}
 		}
