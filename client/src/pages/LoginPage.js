@@ -6,9 +6,7 @@ import RegisterForm from "../components/RegisterForm";
 import LoginForm from "../components/LoginForm";
 import LoginRegisterButtons from "../components/LoginRegisterButtons";
 
-
 export function LoginPage() {
-
 	const [displayRegister, setDisplayRegister] = useState({
 		marginTop: "20px",
 		visibility: "hidden",
@@ -24,19 +22,19 @@ export function LoginPage() {
 	const displayForms = (action) => {
 		//action === "register" || "login"
 		//toggles visibility of forms
-		if(action === "register"){
-			if(displayRegister.visibility === "hidden"){
+		if (action === "register") {
+			if (displayRegister.visibility === "hidden") {
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "visible",
 				});
-			}else{
+			} else {
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "hidden",
 				});
 			}
-		}else{
+		} else {
 			if (displayLogin.visibility === "hidden") {
 				setDisplayLogin({
 					marginTop: "20px",
