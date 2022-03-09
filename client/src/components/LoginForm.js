@@ -39,7 +39,7 @@ const LoginForm = () => {
 				/>
 
 				<LoginButton variant="contained" size="medium">
-					Register
+					Login
 				</LoginButton>
 			</FormControl>
 		</LoginContainer>
