@@ -73,6 +73,7 @@ export function LoginPage() {
 		<main role="main">
 			<LoginPageHeading />
 			<LoginRegisterButtons displayForms={displayForms} />
+			{/* register form render */}
 			<RegisterFormContainer
 				className="register-form-container"
 				mt={2}
@@ -80,7 +81,7 @@ export function LoginPage() {
 			>
 				<RegisterForm />
 			</RegisterFormContainer>
-
+			{/* login form render */}
 			<LoginFormContainer
 				className="login-form-container"
 				mt={2}

@@ -13,12 +13,14 @@ const LoginRegisterButtons = (props) => {
     };
 
     return (
-			<Box textAlign="center">
+			//I went with % here to be responsive
+			<Box textAlign="center" margin="5%" flexDirection="row" flexWrap="wrap">
 				<div className="login-register-buttons">
 					<Button
 						className="register-button"
 						onClick={() => buttonClicked("register")}
 						variant="contained"
+						sx="margin: 2%"
 					>
 						Register
 					</Button>
@@ -26,6 +28,7 @@ const LoginRegisterButtons = (props) => {
 						className="login-button"
 						onClick={() => buttonClicked("login")}
 						variant="contained"
+						sx="margin: 2%"
 					>
 						Login
 					</Button>
