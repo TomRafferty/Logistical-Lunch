@@ -24,12 +24,20 @@ export function LoginPage() {
 		//toggles visibility of forms
 		if (action === "register") {
 			if (displayRegister.visibility === "hidden") {
+				//hide login
+				setDisplayLogin({
+					marginTop: "20px",
+					visibility: "hidden",
+					position: "absolute",
+				});
+				//show register
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "visible",
 					position: "relative",
 				});
 			} else {
+				//hide register
 				setDisplayRegister({
 					marginTop: "20px",
 					visibility: "hidden",
@@ -38,12 +46,20 @@ export function LoginPage() {
 			}
 		} else {
 			if (displayLogin.visibility === "hidden") {
+				//hide register
+				setDisplayRegister({
+					marginTop: "20px",
+					visibility: "hidden",
+					position: "absolute",
+				});
+				//show login
 				setDisplayLogin({
 					marginTop: "20px",
 					visibility: "visible",
 					position: "relative",
 				});
 			} else {
+				//hide register
 				setDisplayLogin({
 					marginTop: "20px",
 					visibility: "hidden",
