@@ -27,13 +27,13 @@ router.get("/users/allergies", (_, res) => {
 			`
 		)
 		.then((response) => {
-			//check students with dietary restrictions exist
+			//check users with dietary restrictions exist
 			console.log(response);
 			if (response.rowCount < 1) {
-				//no students with dietary restrictions found
-				res.status(400).send("No students with dietary restrictions found.");
+				//no users with dietary restrictions found
+				res.status(400).send("No users with dietary restrictions found.");
 			} else {
-				//found students with dietary restrictions
+				//found users with dietary restrictions
 				res.send(response.rows);
 			}
 		})
