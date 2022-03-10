@@ -6,8 +6,9 @@ import {
 	Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 const LoginContainer = styled(Container)({
 	background: "#fafafa",
@@ -22,28 +23,32 @@ const LoginButton = styled(Button)({
 });
 
 const LoginForm = () => {
-	const navigation = useNavigate();
+	const [submitObjectState, setSubmitObjectState] = useState({ email: "", password: "" });
+	const nav = useNavigate();
 
-	let [submitObjectState, setSubmitObjectState] = { email: "", password: "" };
-	let submitObject = { email: "", password: "" };
-
-	const submitLoginRequest = () => {
-		setSubmitObjectState(submitObject);
+	const tryLogin = () => {
+		fetch("http://localhost:3000/api/login",
+		{
+			method : "POST",
+			body : submitObjectState,
+		}
+		)
+		.then((response) => {
+			if(response === "student"){
+				loginStudent();
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+			throw error;
+		});
 	};
 
-	useEffect(() => {
-		fetch("localhost:3000/api/login", { body: submitObjectState })
-			.then((response) => {
-				//this is temp just to check page switching, I don't know how we want to handle this.
-				if (response === "auth") {
-					navigation.push("/student");
-				}
-			})
-			.catch((error) => {
-				console.error(error);
-				throw error;
-			});
-	},[submitObjectState, navigation]);
+	const loginStudent = () => {
+		nav("/student");
+	};
+
+	let submitObject = { email: "", password: "" };
 	return (
 		<LoginContainer disableGutters={true}>
 			<Typography variant="h4" align="center">
@@ -66,7 +71,10 @@ const LoginForm = () => {
 					}}
 				/>
 
-				<LoginButton variant="contained" size="medium" onClick={submitLoginRequest}>
+				<LoginButton variant="contained" size="medium" onClick={() => {
+					setSubmitObjectState(submitObject);
+					tryLogin();
+				}}>
 					Login
 				</LoginButton>
 			</FormControl>
