@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Menu, MenuItem, IconButton, Typography } from "@mui/material";
+import { AppBar, Toolbar, Menu, MenuItem, IconButton, Typography, Avatar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import LogisticalLunchIcon from "../../images/logistical-lunch-icon.png";
 
 const NavBar = () => {
 	// boilerplate code from mui for a basic menu
@@ -20,6 +20,12 @@ const NavBar = () => {
 	return (
 		<AppBar position="static" sx={{ bgcolor: "rgb(239,239,239)" }}>
 			<Toolbar justify="space">
+				<Avatar
+					alt="logistical-lunch"
+					src={LogisticalLunchIcon}
+					sx={{ height: "40px", width: "40px" }}
+					variant="square"
+				/>
 				<Typography sx={{ flexGrow: 1, color: "black" }} align="center">
 					Hi Student
 				</Typography>
