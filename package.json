@@ -73,8 +73,10 @@
 		"@mui/icons-material": "^5.5.0",
 		"@mui/material": "^5.5.0",
 		"bcrypt": "^5.0.1",
+		"cors": "^2.8.5",
 		"express": "^4.17.2",
 		"helmet": "^5.0.2",
+		"luxon": "^2.3.1",
 		"morgan": "^1.10.0",
 		"pg": "^8.7.3"
 	},
