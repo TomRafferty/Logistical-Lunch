@@ -12,31 +12,30 @@ router.get("/", (_, res) => {
 
 router.post("/login", (req, res) => {
 	const loginObject = req.body;
-	if (loginObject !== { email: "", password: "" }) {
-		client
-			.query(
-				`
-				SELECT * 
-				FROM users 
-				WHERE user_email=$1 AND user_password=$2
-				`,
-				[loginObject.email, loginObject.password]
-			)
-			.then((response) => {
-				if (response.rowCount < 1) {
-					res.status(400).send("Email or password incorrect");
-				} else {
-					res.send("student");
-				}
-			})
-			.catch((error) => {
-				console.error(error);
-				res.status(error.status).send(error);
+	console.log(loginObject);
+	client
+		.query(
+			`
+			SELECT * 
+			FROM users 
+			WHERE user_email=$1 AND user_password=$2
+			`,
+			[loginObject.email, loginObject.password]
+		)
+		.then((response) => {
+			console.log("time to respond");
+			if (response.rowCount < 1) {
+				res.status(400).send("Email or password incorrect");
+			} else {
+				console.log("sending student auth.");
+				res.json({ userType: "student" });
 			}
-		);
-	}else{
-		res.send("login please");
-	}
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(error.status).send(error);
+		}
+	);
 });
 
 router.get("/events", (req,res)=> {

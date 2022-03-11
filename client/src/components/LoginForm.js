@@ -6,9 +6,8 @@ import {
 	Typography,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 const LoginContainer = styled(Container)({
 	background: "#fafafa",
@@ -27,14 +26,19 @@ const LoginForm = () => {
 	const nav = useNavigate();
 
 	const tryLogin = () => {
-		fetch("http://localhost:3000/api/login",
-		{
-			method : "POST",
-			body : submitObjectState,
-		}
-		)
-		.then((response) => {
-			if(response === "student"){
+		const options = {
+			method: "post",
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(submitObjectState),
+		};
+		fetch("http://localhost:3000/api/login", options)
+		.then((response) => response.json())
+		.then((resJson) => {
+			if (resJson.userType === "student"){
+				console.log("received student auth.");
 				loginStudent();
 			}
 		})
@@ -56,9 +60,16 @@ const LoginForm = () => {
 			</Typography>
 			<FormControl margin="dense">
 				{/* field for email */}
-				<TextField id="login-email" label="Email" type="email" margin="dense" onChange={(e) => {
-					submitObject.email = e.target.value;
-				}} />
+				<TextField
+					id="login-email"
+					label="Email"
+					type="email"
+					margin="dense"
+					autoComplete="off"
+					onChange={(e) => {
+						submitObject.email = e.target.value;
+					}}
+				/>
 
 				{/* Field for password */}
 				<TextField
@@ -66,15 +77,20 @@ const LoginForm = () => {
 					label="Password"
 					type="password"
 					margin="dense"
+					autoComplete="new-password"
 					onChange={(e) => {
 						submitObject.password = e.target.value;
 					}}
 				/>
 
-				<LoginButton variant="contained" size="medium" onClick={() => {
-					setSubmitObjectState(submitObject);
-					tryLogin();
-				}}>
+				<LoginButton
+					variant="contained"
+					size="medium"
+					onClick={() => {
+						setSubmitObjectState(submitObject);
+						tryLogin();
+					}}
+				>
 					Login
 				</LoginButton>
 			</FormControl>
