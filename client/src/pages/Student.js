@@ -1,5 +1,6 @@
 import React from "react";
 import NavBar from "../components/NavBar";
+import StudentCard from "../components/StudentCard"
 import { Container } from "@mui/material";
 
 export function Student() {
@@ -8,6 +9,7 @@ export function Student() {
 		<div sx={{ padding: 0 }}>
 			<Container>
 				<NavBar />
+				<StudentCard />
 			</Container>
 		</div>
 	);

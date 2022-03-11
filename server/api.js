@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+
 import pool from "./db";
 
 const router = Router();
@@ -10,10 +11,16 @@ router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-router.get("/events", (req,res)=> {
+router.get("/events/next", (req,res)=> {
+    // a query
+	const eventQuery =
+		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
 
-	// const eventQuery="SELECT meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end >=current_date AND meeting_end <= current_date + INTERVAL '7 day'";
-	const evq = `SELECT * FROM events`;
+
+	pool.query(eventQuery)
+	.then((response)=>res.json(response.rows))
+	
+	
 
 	pool.query(evq)
 	.then((result)=>res.json(result))
@@ -21,6 +28,7 @@ router.get("/events", (req,res)=> {
 		console.error(error);
 		res.status(500).json(error);
 	});
+
 });
 
 // endpoint for register form
@@ -69,6 +77,7 @@ router.post("/register", async (req, res) => {
 					.catch(() => res.status(400).json({ msg: "Unsuccessful. Please try again later" }));
 			}
 		});
+
 });
 
 export default router;

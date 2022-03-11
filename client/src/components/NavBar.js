@@ -19,7 +19,7 @@ const NavBar = () => {
 	let nav = useNavigate();
 	return (
 		<AppBar position="static" sx={{ bgcolor: "rgb(239,239,239)" }}>
-			<Toolbar justify="space">
+			<Toolbar>
 				<Avatar
 					alt="logistical-lunch"
 					src={LogisticalLunchIcon}
