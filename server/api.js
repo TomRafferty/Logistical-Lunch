@@ -11,7 +11,7 @@ router.get("/", (_, res) => {
 router.get("/events/next", (req,res)=> {
     // a query
 	const eventQuery =
-		"SELECT meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
+		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
 
 	client.query(eventQuery)
 	.then((response)=>res.json(response.rows))

@@ -23,7 +23,6 @@ const StudentCard = () => {
         throw `${response.status} ${response.statusText}`;
       })
       .then(function(data) {
-          console.log(typeof data[0].meeting_start);
         setCardData(data);
       })
       .catch(function (error) {
@@ -55,7 +54,7 @@ const StudentCard = () => {
 
 			{cardData.map((element) => {
 				return (
-					<Card key={element.index} sx={{ mt: 2 }}>
+					<Card key={element.id} sx={{ mt: 2 }}>
 						<CardContent>
 							<Typography variant="h6">
 								Location:
