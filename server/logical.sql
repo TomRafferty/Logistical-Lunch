@@ -19,7 +19,7 @@ CREATE TABLE users(
     is_admin BOOLEAN NOT NULL,
     is_lunch_maker BOOLEAN NOT NULL,
     is_lunch_shopper BOOLEAN NOT NULL,
-    user_location VARCHAR(120) NOT NULL,
+    user_location VARCHAR(120),
     cohort_id INT REFERENCES cohort(id),
     user_password VARCHAR(10240) NOT NULL
 );
@@ -66,4 +66,3 @@ CREATE TABLE recipe_allergies(
     recipe_id INT REFERENCES recipes(id) NOT NULL,
     allergy_id INT REFERENCES allergies(id) NOT NULL
 );
-
