@@ -1,7 +1,5 @@
 import { Router } from "express";
-import query from "./db";
-
-const client = query;
+import pool from "./db";
 
 const router = Router();
 // const pool =  Pool();
@@ -13,7 +11,7 @@ router.get("/", (_, res) => {
 router.post("/login", (req, res) => {
 	const loginObject = req.body;
 	console.log(loginObject);
-	client
+	pool
 		.query(
 			`
 			SELECT * 
@@ -45,7 +43,7 @@ router.get("/events", (req,res)=> {
 				SELECT * 
 				FROM events
 				`;
-	client
+	pool
 	.query(evq)
 	.then((result)=>res.json(result))
 	.catch((error)=>{

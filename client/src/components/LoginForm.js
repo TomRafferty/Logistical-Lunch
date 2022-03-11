@@ -53,6 +53,14 @@ const LoginForm = () => {
 	};
 
 	let submitObject = { email: "", password: "" };
+
+	const updateField = (e) => {
+		setSubmitObjectState({
+			...submitObjectState,
+			[e.target.name]: e.target.value,
+		});
+	};
+
 	return (
 		<LoginContainer disableGutters={true}>
 			<Typography variant="h4" align="center">
@@ -64,10 +72,11 @@ const LoginForm = () => {
 					id="login-email"
 					label="Email"
 					type="email"
+					name="email"
 					margin="dense"
 					autoComplete="off"
 					onChange={(e) => {
-						submitObject.email = e.target.value;
+						updateField(e);
 					}}
 				/>
 
@@ -76,10 +85,11 @@ const LoginForm = () => {
 					id="login-password"
 					label="Password"
 					type="password"
+					name="password"
 					margin="dense"
 					autoComplete="new-password"
 					onChange={(e) => {
-						submitObject.password = e.target.value;
+						updateField(e);
 					}}
 				/>
 
@@ -88,7 +98,13 @@ const LoginForm = () => {
 					size="medium"
 					onClick={() => {
 						setSubmitObjectState(submitObject);
-						tryLogin();
+						/*
+							this gets rid of the error for sending an empty string on this side
+							but this is not a solution this is just a patch.
+						*/
+						if(submitObjectState.email.length > 0 && submitObjectState.password.length > 0){
+							tryLogin();
+						}
 					}}
 				>
 					Login
