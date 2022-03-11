@@ -49,7 +49,7 @@ const StudentCard = () => {
 			<Paper>
 				<Typography variant="h5" sx={{ mb: 2, mt: 2 }} align="center">
                     {/* optional heading, this can be changed */}
-					{cardData.length > 1 ? `You have ${cardData.length} Meetings`: "You have 1 Meeting"}
+					{cardData.length === 0 ? "You have no Meetings" : cardData.length === 1 ? "You have 1 Meeting" : `You have ${cardData.length} Meetings`}
 				</Typography>
 			</Paper>
 
