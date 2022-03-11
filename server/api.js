@@ -1,5 +1,6 @@
 import { Router } from "express";
 import pool from "./db";
+const bcrypt = require("bcrypt");
 
 const router = Router();
 // const pool =  Pool();
@@ -10,7 +11,14 @@ router.get("/", (_, res) => {
 
 router.post("/login", (req, res) => {
 	const loginObject = req.body;
-	console.log(loginObject);
+
+	//password hashing
+	const receivedPassword = loginObject.password;
+	const saltRounds = 10;
+	const salt = bcrypt.genSaltSync(saltRounds);
+	const hash = bcrypt.hashSync(receivedPassword, salt);
+	// this wont work on this branch due to the register endpoint not existing
+	// so basically I don't have any hashed passwords in my local db.
 	pool
 		.query(
 			`
@@ -18,7 +26,7 @@ router.post("/login", (req, res) => {
 			FROM users 
 			WHERE user_email=$1 AND user_password=$2
 			`,
-			[loginObject.email, loginObject.password]
+			[loginObject.email, hash]
 		)
 		.then((response) => {
 			console.log("time to respond");
