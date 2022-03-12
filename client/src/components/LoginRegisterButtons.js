@@ -1,5 +1,10 @@
 import Button from "@mui/material/Button";
+import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
+
+const StyledButton = styled(Button)({
+	margin: "2%",
+});
 
 const LoginRegisterButtons = (props) => {
 
@@ -16,22 +21,20 @@ const LoginRegisterButtons = (props) => {
 			//I went with % here to be responsive
 			<Box textAlign="center" margin="5%" flexDirection="row" flexWrap="wrap">
 				<div className="login-register-buttons">
-					<Button
+					<StyledButton
 						className="register-button"
 						onClick={() => buttonClicked("register")}
 						variant="contained"
-						sx="margin: 2%"
 					>
 						Register
-					</Button>
-					<Button
+					</StyledButton>
+					<StyledButton
 						className="login-button"
 						onClick={() => buttonClicked("login")}
 						variant="contained"
-						sx="margin: 2%"
 					>
 						Login
-					</Button>
+					</StyledButton>
 				</div>
 			</Box>
 		);
