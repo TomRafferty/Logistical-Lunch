@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 //stores the options for the dropdown lists
 const roles = ["Admin", "Student"];
@@ -30,6 +32,9 @@ const RegisterButton = styled(Button)({
 
 //Register Form Component
 const RegisterForm = () => {
+	//variable for the useNavigate hook
+	let navigation = useNavigate();
+
 	//states for storing the values of the inputs
 	const [formData, setFormData] = React.useState({
 		name: "",
@@ -42,43 +47,51 @@ const RegisterForm = () => {
 	});
 
 	//states for form inputs errors
-		const [nameError, setNameError] = React.useState(false);
-		const [emailError, setEmailError] = React.useState(false);
-		const [roleError, setRoleError] = React.useState(false);
-		const [regionError, setRegionError] = React.useState(false);
-		const [classNrError, setClassNrError] = React.useState(false);
-		const [passwordError, setPasswordError] = React.useState(false);
-		const [retypedPasswordError, setRetypedPasswordError] = React.useState(false);
-
+	const [nameError, setNameError] = React.useState(false);
+	const [emailError, setEmailError] = React.useState(false);
+	const [roleError, setRoleError] = React.useState(false);
+	const [regionError, setRegionError] = React.useState(false);
+	const [classNrError, setClassNrError] = React.useState(false);
+	const [passwordError, setPasswordError] = React.useState(false);
+	const [retypedPasswordError, setRetypedPasswordError] = React.useState(false);
 
 	//functions to validate form inputs
-	const isNameValid = (name) => name.length < 5 ? false : true;
+	const isNameValid = (name) => (name.length < 5 ? false : true);
 
 	const isEmailValid = (email) => {
 		const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 		return emailRegex.test(email) ? true : false;
 	};
 
-	const isSelectFieldValid = (value) => value.length < 1 ? false : true;
+	const isSelectFieldValid = (value) => (value.length < 1 ? false : true);
 
-	const isPasswordValid = (password) => password.length < 5 ? false : true;
+	const isPasswordValid = (password) => (password.length < 5 ? false : true);
 
 	const isRetypedPasswordValid = (retypedPassword) =>
 		formData.password == retypedPassword && retypedPassword.length > 5
 			? true
 			: false;
 
-
 	//calling all the validation functions in order to set the states for errors
 	//returning a boolean so I can do a general validation when the user try to submit the form
 	const areTheFieldsValid = () => {
 		isNameValid(formData.name) ? setNameError(false) : setNameError(true);
 		isEmailValid(formData.email) ? setEmailError(false) : setEmailError(true);
-		isSelectFieldValid(formData.role) ? setRoleError(false) : setRoleError(true);
-		isSelectFieldValid(formData.region) ? setRegionError(false) : setRegionError(true);
-		isSelectFieldValid(formData.classNr) ? setClassNrError(false) : setClassNrError(true);
-		isPasswordValid(formData.password) ? setPasswordError(false) : setPasswordError(true);
-		isRetypedPasswordValid(formData.retypedPassword) ? setRetypedPasswordError(false) : setRetypedPasswordError(true);
+		isSelectFieldValid(formData.role)
+			? setRoleError(false)
+			: setRoleError(true);
+		isSelectFieldValid(formData.region)
+			? setRegionError(false)
+			: setRegionError(true);
+		isSelectFieldValid(formData.classNr)
+			? setClassNrError(false)
+			: setClassNrError(true);
+		isPasswordValid(formData.password)
+			? setPasswordError(false)
+			: setPasswordError(true);
+		isRetypedPasswordValid(formData.retypedPassword)
+			? setRetypedPasswordError(false)
+			: setRetypedPasswordError(true);
 
 		return (
 			isNameValid(formData.name) &&
@@ -91,7 +104,6 @@ const RegisterForm = () => {
 		);
 	};
 
-
 	//event for storing the input values in the formData state
 	const handleChangeInput = (event) => {
 		const objectKey = event.target.name;
@@ -101,7 +113,6 @@ const RegisterForm = () => {
 
 	//submit form event
 	const handleSubmit = () => {
-
 		if (!areTheFieldsValid()) {
 			return;
 		} else {
@@ -111,7 +122,17 @@ const RegisterForm = () => {
 				body: JSON.stringify(formData),
 			})
 				.then((res) => res.json())
-				.then((data) => console.log(data))
+				.then((data) => {
+					if (data.msg == "Register successful" && formData.role == "Student") {
+						localStorage.setItem("userType", "student");
+						navigation("/student");
+					}else if (data.msg == "Register successful" && formData.role == "Admin") {
+						localStorage.setItem("userType", "admin");
+						navigation("/student");
+					} else {
+						alert(data.msg);
+					}
+				} )
 				.catch((err) => console.log(err));
 		}
 	};

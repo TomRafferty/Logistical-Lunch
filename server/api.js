@@ -109,7 +109,7 @@ router.post("/register", async (req, res) => {
 		.then((result) => {
 			if (result.rows.length > 0) {
 				return res
-					.status(400)
+					.status(409)
 					.json({ msg: "This email address already has an account" });
 			}else{
 				//if email is not already used, insert new user to the users table
