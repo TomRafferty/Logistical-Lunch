@@ -23,6 +23,7 @@ const StudentCard = () => {
         throw `${response.status} ${response.statusText}`;
       })
       .then(function(data) {
+		console.log(data);
         setCardData(data);
       })
       .catch(function (error) {
