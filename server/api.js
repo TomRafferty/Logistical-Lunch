@@ -16,14 +16,8 @@ router.get("/events/next", (req,res)=> {
 	const eventQuery =
 		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
 
-
 	pool.query(eventQuery)
 	.then((response)=>res.json(response.rows))
-	
-	
-
-	pool.query(evq)
-	.then((result)=>res.json(result))
 	.catch((error)=>{
 		console.error(error);
 		res.status(500).json(error);
@@ -57,7 +51,7 @@ router.post("/register", async (req, res) => {
 		.then((result) => {
 			if (result.rows.length > 0) {
 				return res
-					.status(400)
+					.status(409)
 					.json({ msg: "This email address already has an account" });
 			}else{
 				//if email is not already used, insert new user to the users table
