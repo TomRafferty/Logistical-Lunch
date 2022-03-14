@@ -7,12 +7,8 @@ router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
-
-	// this wont work on this branch due to the register endpoint not existing
-	// so basically I don't have any hashed passwords in my local db.
 
 	pool
 		.query(
@@ -24,14 +20,26 @@ router.post("/login", async (req, res) => {
 			[email]
 		)
 		.then((response) => {
-			console.log(response.rows[0].user_password);
 			bcrypt.compare(
 				password,
 				response.rows[0].user_password,
 				function (err, result) {
 					if(result){
 						//success
-						res.json({ userType: "student" });
+						//res.json({ userType: "student" });
+						pool.query(
+							`SELECT * 
+							FROM users 
+							WHERE email=$1`,
+							[email]
+						)
+						.then((userInfo) => {
+							res(userInfo.rows);
+						})
+						.catch((error) => {
+							console.error(error);
+							res.status(error.status).send(error);
+						});
 					}else{
 						//failure
 						res.status(400).send("Email or password incorrect");
@@ -43,30 +51,6 @@ router.post("/login", async (req, res) => {
 			console.error(error);
 			res.status(error.status).send(error);
 		});
-
-	// pool
-	// 	.query(
-	// 		`
-	// 		SELECT *
-	// 		FROM users
-	// 		WHERE user_email=$1 AND user_password=$2
-	// 		`,
-	// 		[email, encryptedPassword]
-	// 	)
-	// 	.then((response) => {
-	// 		console.log("time to respond");
-	// 		if (response.rowCount < 1) {
-	// 			res.status(400).send("Email or password incorrect");
-	// 		} else {
-	// 			console.log("sending student auth.");
-	// 			res.json({ userType: "student" });
-	// 		}
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error(error);
-	// 		res.status(error.status).send(error);
-	// 	}
-	// );
 });
 
 router.get("/events/next", (req,res)=> {

@@ -37,10 +37,8 @@ const LoginForm = () => {
 		fetch("http://localhost:3000/api/login", options)
 		.then((response) => response.json())
 		.then((resJson) => {
-			if (resJson.userType === "student"){
-				console.log("received student auth.");
-				loginStudent();
-			}
+			//create session object of user
+			login();
 		})
 		.catch((error) => {
 			console.error(error);
@@ -48,7 +46,8 @@ const LoginForm = () => {
 		});
 	};
 
-	const loginStudent = () => {
+	const login = () => {
+		//this will have to be a variable depending on how we handle the userType
 		nav("/student");
 	};
 
