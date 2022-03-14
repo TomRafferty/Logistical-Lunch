@@ -8,16 +8,13 @@ router.get("/", (_, res) => {
 });
 
 
+//login
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
-
-	// this wont work on this branch due to the register endpoint not existing
-	// so basically I don't have any hashed passwords in my local db.
-
 	pool
 		.query(
 			`
-			SELECT user_password 
+			SELECT * 
 			FROM users 
 			WHERE user_email=$1
 			`,
@@ -31,7 +28,7 @@ router.post("/login", async (req, res) => {
 				function (err, result) {
 					if(result){
 						//success
-						res.json({ userType: "student" });
+						res.json(response.rows[0]);
 					}else{
 						//failure
 						res.status(400).send("Email or password incorrect");
@@ -43,30 +40,6 @@ router.post("/login", async (req, res) => {
 			console.error(error);
 			res.status(error.status).send(error);
 		});
-
-	// pool
-	// 	.query(
-	// 		`
-	// 		SELECT *
-	// 		FROM users
-	// 		WHERE user_email=$1 AND user_password=$2
-	// 		`,
-	// 		[email, encryptedPassword]
-	// 	)
-	// 	.then((response) => {
-	// 		console.log("time to respond");
-	// 		if (response.rowCount < 1) {
-	// 			res.status(400).send("Email or password incorrect");
-	// 		} else {
-	// 			console.log("sending student auth.");
-	// 			res.json({ userType: "student" });
-	// 		}
-	// 	})
-	// 	.catch((error) => {
-	// 		console.error(error);
-	// 		res.status(error.status).send(error);
-	// 	}
-	// );
 });
 
 router.get("/events/next", (req,res)=> {

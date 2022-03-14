@@ -1,16 +1,17 @@
 import React from "react";
-import { Box, BottomNavigation, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
 const FooterBox = styled(Box)({
 	background: "#f3f3f3",
     height: "60px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     marginTop: "auto",
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    textAlign: "center",
 });
-
 
 const Footer = () => {
     return (
