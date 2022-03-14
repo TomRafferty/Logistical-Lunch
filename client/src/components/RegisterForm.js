@@ -10,11 +10,26 @@ import styled from "@emotion/styled";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-
 //stores the options for the dropdown lists
 const roles = ["Admin", "Student"];
 const regions = ["London", "West Midlands", "Scotland", "Manchester"];
-const classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"];
+const classes = [
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"10",
+	"11",
+	"12",
+	"13",
+	"14",
+	"15",
+];
 
 //Applying styles to elements
 const RegisterContainer = styled(Container)({
@@ -56,7 +71,7 @@ const RegisterForm = () => {
 	const [retypedPasswordError, setRetypedPasswordError] = React.useState(false);
 
 	//functions to validate form inputs
-	const isNameValid = (name) => (name.length < 5 ? false : true);
+	const isNameValid = (name) => (name.length < 3 ? false : true);
 
 	const isEmailValid = (email) => {
 		const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
@@ -124,15 +139,18 @@ const RegisterForm = () => {
 				.then((res) => res.json())
 				.then((data) => {
 					if (data.msg == "Register successful" && formData.role == "Student") {
-						localStorage.setItem("userType", "student");
+						sessionStorage.setItem("userType", "student");
 						navigation("/student");
-					}else if (data.msg == "Register successful" && formData.role == "Admin") {
-						localStorage.setItem("userType", "admin");
+					} else if (
+						data.msg == "Register successful" &&
+						formData.role == "Admin"
+					) {
+						sessionStorage.setItem("userType", "admin");
 						navigation("/student");
 					} else {
 						alert(data.msg);
 					}
-				} )
+				})
 				.catch((err) => console.log(err));
 		}
 	};
