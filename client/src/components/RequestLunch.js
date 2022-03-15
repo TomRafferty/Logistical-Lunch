@@ -8,11 +8,11 @@ import {
 	FormControlLabel,
 	Radio,
 	FormGroup,
-	Checkbox,
 	TextField,
 	Button,
 	Typography,
 } from "@mui/material";
+import CheckboxLabel from "./CheckboxLabel";
 
 //applying styles to different elements
 const SubmitButton = styled(Button)({
@@ -77,6 +77,8 @@ const RequestLunch = () => {
 
 	//submit form event
 	const handleSubmit = () => {
+		console.log(dietaryRestrictions);
+		console.log(dietaryRequirements);
 		fetch("http://localhost:3100/api/lunch/dietary", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -123,72 +125,20 @@ const RequestLunch = () => {
 						>
 							Do you have any dietary restrictions?
 						</FormLabel>
-						<Box sx={{ display: "flex" }}>
-							<FormGroup>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.milk}
+						<FormGroup>
+							<Box sx={{ display: "flex" }}>
+								{Object.keys(dietaryRestrictions).map((restriction, index) => {
+									return (
+										<CheckboxLabel
+											key={index}
+											checkboxName={restriction}
+											isChecked={dietaryRestrictions[restriction]}
 											onChange={handleChangeInputRestrictions}
-											name="milk"
 										/>
-									}
-									label="Milk"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.eggs}
-											onChange={handleChangeInputRestrictions}
-											name="eggs"
-										/>
-									}
-									label="Eggs"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.peanuts}
-											onChange={handleChangeInputRestrictions}
-											name="peanuts"
-										/>
-									}
-									label="Peanuts"
-								/>
-							</FormGroup>
-							<FormGroup>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.fish}
-											onChange={handleChangeInputRestrictions}
-											name="fish"
-										/>
-									}
-									label="Fish"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.soy}
-											onChange={handleChangeInputRestrictions}
-											name="soy"
-										/>
-									}
-									label="Soy"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRestrictions.wheat}
-											onChange={handleChangeInputRestrictions}
-											name="wheat"
-										/>
-									}
-									label="Wheat"
-								/>
-							</FormGroup>
-						</Box>
+									);
+								})}
+							</Box>
+						</FormGroup>
 
 						{/* text field so the user can input any others dietary restrictions */}
 						<TextField
@@ -208,53 +158,20 @@ const RequestLunch = () => {
 						>
 							Do you have any dietary requirements?
 						</FormLabel>
-						<Box sx={{ display: "flex" }}>
-							<FormGroup>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRequirements.vegetarian}
+						<FormGroup>
+							<Box sx={{ display: "flex" }}>
+								{Object.keys(dietaryRequirements).map((requirement, index) => {
+									return (
+										<CheckboxLabel
+											key={index}
+											checkboxName={requirement}
+											isChecked={dietaryRequirements[requirement]}
 											onChange={handleChangeInputRequirements}
-											name="vegetarian"
 										/>
-									}
-									label="Vegetarian"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRequirements.vegan}
-											onChange={handleChangeInputRequirements}
-											name="vegan"
-										/>
-									}
-									label="Vegan"
-								/>
-							</FormGroup>
-
-							<FormGroup>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRequirements.halal}
-											onChange={handleChangeInputRequirements}
-											name="halal"
-										/>
-									}
-									label="Halal"
-								/>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={dietaryRequirements.diabetic}
-											onChange={handleChangeInputRequirements}
-											name="diabetic"
-										/>
-									}
-									label="Diabetic"
-								/>
-							</FormGroup>
-						</Box>
+									);
+								})}
+							</Box>
+						</FormGroup>
 					</>
 				) : (
 					<div></div>
