@@ -15,7 +15,7 @@ const NavBar = () => {
 		setAnchorEl(null);
 	};
 
-	//storing the role of the user into the local storage so we can display the nav accordingly.
+	//storing the role of the user into the  sessionStorage so we can display the nav accordingly.
 	const userType = sessionStorage.getItem("userType");
 
 	//setting different styles for the navbar depending if the user is logged in or not
