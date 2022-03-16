@@ -43,9 +43,11 @@ router.post("/login", async (req, res) => {
 });
 // endpoint to update location
 router.put("/users/location", (req,res)=>{
-	console.log(req.body);
     const location = req.body.location;
 	const id = req.body.id;
+	if(!location) {
+		res.status(400).json({ msg: "Please provide a location" });
+	}
 	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
 	pool.query(locationQuery,[location,id])
 	.then(()=>{
