@@ -87,6 +87,24 @@ exports.up = (knex) => {
 			.onDelete("cascade");
 		addDefaultColumn(table);
 	});
+	const lunch_requirements= knex.schema.createTable("lunch_requirements", (table) => {
+		table.increments("id").notNullable;
+		table.string("requirement_name", 120).notNullable();
+		addDefaultColumn(table);
+	});
+	const dietary_requirements = knex.schema.createTable("dietary_requirements", (table) => {
+		table
+			.integer("user_id").
+			references("id").
+			inTable("users").
+			onDelete("cascade");
+		table
+			.integer("requirement_id")
+			.references("id")
+			.inTable("lunch_requirements")
+			.onDelete("cascade");
+		addDefaultColumn(table);
+	});
 	const recipe_allergies = knex.schema.createTable("recipe_allergies", (table) => {
 		table
 			.integer("recipe_id")
@@ -100,7 +118,17 @@ exports.up = (knex) => {
 			.onDelete("cascade");
 		addDefaultColumn(table);
 	});
-    return Promise.all([cohort, users, recipes, events, allergies, dietary_restrictions, recipe_allergies]);
+    return Promise.all([
+			cohort,
+			users,
+			recipes,
+			events,
+			allergies,
+			dietary_restrictions,
+			recipe_allergies,
+			lunch_requirements,
+			dietary_requirements,
+		]);
 };
 
 /**
@@ -108,13 +136,19 @@ exports.up = (knex) => {
  * @returns { Promise<void> }
  */
 exports.down = async (knex) => {
-    await Promise.all([
-			"cohort",
-			"users",
-			"recipes",
-			"events",
-			"allergies",
-			"dietary_restrictions",
-			"recipe_allergies",
-		].reverse().map((table) => knex.schema.dropTableIfExists(table)));
+    await Promise.all(
+			[
+				"cohort",
+				"users",
+				"recipes",
+				"events",
+				"allergies",
+				"dietary_restrictions",
+				"recipe_allergies",
+				"lunch_requirements",
+				"dietary_requirements",
+			]
+				.reverse()
+				.map((table) => knex.schema.dropTableIfExists(table))
+		);
 };

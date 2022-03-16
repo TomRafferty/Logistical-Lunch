@@ -1,6 +1,7 @@
 import React from "react";
 import StudentCard from "../components/StudentCard";
 import { Container } from "@mui/material";
+import RequestLunch from "../components/RequestLunch";
 
 export function Student() {
 
@@ -9,6 +10,7 @@ export function Student() {
 			<Container>
 				<StudentCard />
 			</Container>
+			<RequestLunch />
 		</div>
 	);
 }
