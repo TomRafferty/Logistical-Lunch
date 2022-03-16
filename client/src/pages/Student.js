@@ -12,7 +12,7 @@ export function Student() {
 			<Container>
 				{isLunchMaker? <LunchMakerInformation /> : false}
 
-				<StudentCard />
+				{/* <StudentCard /> commented out to stop errors*/}
 			</Container>
 		</div>
 	);

@@ -1,9 +1,9 @@
 import { Card, List, ListItem, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { Box } from "@mui/system";
+import { useEffect, useState } from "react";
 
-const dietaryRestrictions = ["No Nuts", "No Carbs", "Vegan"];
-const numberOfServings = 13;
+const numberOfServings = 13; //I don't have access to the user eat count
 const lunchShopper = "Tom - oh dear...";
 
 const TypographyInner = styled(Typography)({
@@ -15,6 +15,23 @@ const TypographyInner = styled(Typography)({
 });
 
 const LunchMakerInformation = () => {
+	const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+	useEffect(() => {
+		fetch("http://localhost:3000/api/lunchMakerInfo")
+			.then((response) => {
+				if (response.ok) {
+					return response.json();
+				}
+				throw `${response.status} ${response.statusText}`;
+			})
+			.then((data) => {
+				const arr = Object.values(data).flat();
+				setDietaryRestrictions(arr);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}, []);
     return (
 			<Box>
 				<Typography variant="h5" textAlign={"center"}>This Weeks Lunch Information:</Typography>

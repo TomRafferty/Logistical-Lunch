@@ -7,6 +7,27 @@ router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
+router.get("/lunchMakerInfo", (_, res) => {
+	let lunchMakerInfo = {};
+	// allergy name
+	pool
+		.query(
+		`
+			SELECT * FROM allergies
+		`
+		)
+		.then((response) => {
+			lunchMakerInfo["allergies"] = response.rows.map((allergy) => {
+				return allergy.allergy_name;
+			});
+			res.json(lunchMakerInfo);
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(error.status).send(error);
+		});
+});
+
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
 
@@ -56,7 +77,7 @@ router.post("/login", async (req, res) => {
 router.get("/events/next", (req,res)=> {
     // a query
 	const eventQuery =
-		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
+		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
 
 	pool.query(eventQuery)
 	.then((response)=>res.json(response.rows))
