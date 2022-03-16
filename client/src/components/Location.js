@@ -30,15 +30,18 @@ const Location = () => {
         let sessionData = JSON.parse(sessionStorage.getItem("userLocation"));
         sessionData=newLocal;
         sessionStorage.setItem("userLocation", JSON.stringify(sessionData));
-        fetch("api/users/location",{
-            method: "put",
-            headers: {
-                    "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ location: newLocal, id:"5" }),
-        }).then(()=>{
-            setUpdate(!update);
-        });
+        fetch("api/users/location", {
+					method: "put",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						location: newLocal,
+						id: sessionStorage.getItem("userId"),
+					}),
+				}).then(() => {
+					setUpdate(!update);
+				});
     };
 
     return (
