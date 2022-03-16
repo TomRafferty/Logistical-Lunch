@@ -15,7 +15,7 @@ const StudentCard = () => {
 
   // hook to fetch the event information and display it within the card
   useEffect(() => {
-    fetch("http://localhost:3000/api/events/next")
+    fetch("http://localhost:3000/api/next")
       .then(function (response) {
         if (response.ok) {
           return response.json();
@@ -23,7 +23,6 @@ const StudentCard = () => {
         throw `${response.status} ${response.statusText}`;
       })
       .then(function(data) {
-		console.log(data);
         setCardData(data);
       })
       .catch(function (error) {
@@ -89,7 +88,7 @@ const StudentCard = () => {
 
 							<Typography variant="h6">
 								Address:
-								<TypographyInner>{element.meeting_address_1}</TypographyInner>
+								<TypographyInner>{element.meeting_address}</TypographyInner>
 							</Typography>
 
 							<Typography variant="h6">
