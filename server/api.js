@@ -28,13 +28,13 @@ router.get("/lunchMakerInfo", (_, res) => {
 		});
 });
 
+//login
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
-
 	pool
 		.query(
 			`
-			SELECT user_password 
+			SELECT * 
 			FROM users 
 			WHERE user_email=$1
 			`,
@@ -47,7 +47,6 @@ router.post("/login", async (req, res) => {
 				function (err, result) {
 					if(result){
 						//success
-						//res.json({ userType: "student" });
 						pool.query(
 							`SELECT * 
 							FROM users 
@@ -61,6 +60,7 @@ router.post("/login", async (req, res) => {
 							console.error(error);
 							res.status(error.status).send(error);
 						});
+						// res.json(response.rows[0]);
 					}else{
 						//failure
 						res.status(400).send("Email or password incorrect");
@@ -136,5 +136,10 @@ router.post("/register", async (req, res) => {
 		});
 
 });
+
+router.post("/lunch/dietary", async (req, res) => {
+	console.log(req.body);
+});
+
 
 export default router;

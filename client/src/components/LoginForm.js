@@ -37,8 +37,17 @@ const LoginForm = () => {
 		fetch("http://localhost:3000/api/login", options)
 		.then((response) => response.json())
 		.then((resJson) => {
-			//create session object of user
-			login();
+			//storing the user's info into the sessionStorage
+			sessionStorage.setItem("userType", resJson.is_admin == false ? "student" : "admin" );
+			sessionStorage.setItem("cohortId", resJson.cohort_id);
+			sessionStorage.setItem("userId", resJson.id);
+			sessionStorage.setItem("isLunchMaker", resJson.is_lunch_maker);
+			sessionStorage.setItem("isLunchShopper", resJson.is_lunch_shopper);
+			sessionStorage.setItem("userLocation", resJson.user_location);
+			sessionStorage.setItem("userName", resJson.user_name);
+			if (resJson.is_admin === false){
+				login();
+			}
 		})
 		.catch((error) => {
 			console.error(error);
