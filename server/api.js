@@ -41,6 +41,23 @@ router.post("/login", async (req, res) => {
 			res.status(error.status).send(error);
 		});
 });
+// endpoint to update location
+router.put("/users/location", (req,res)=>{
+    const location = req.body.location;
+	const id = req.body.id;
+	if(!location) {
+		res.status(400).json({ msg: "Please provide a location" });
+	}
+	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
+	pool.query(locationQuery,[location,id])
+	.then(()=>{
+	res.json({ msg: "user location updated" });
+	}).catch((error)=>{
+		console.error(error);
+		res.status(500).json(error);
+	});
+});
+
 
 router.get("/events/next", (req,res)=> {
     // a query
@@ -55,6 +72,22 @@ router.get("/events/next", (req,res)=> {
 	});
 
 });
+
+//endpoint to get user by id
+router.get("/users/:id", (req,res)=> {
+	const userId = req.params.id;
+
+	const userQuery = "SELECT * FROM users WHERE id=$1";
+	pool.query(userQuery,[userId])
+	.then((response)=>res.json(response.rows))
+	.catch((error)=>{
+		console.error(error);
+		res.status(500).json(error);
+	});
+});
+
+
+
 
 // endpoint for register form
 router.post("/register", async (req, res) => {
