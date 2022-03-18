@@ -19,27 +19,35 @@ const SubmitButton = styled(Button)({
 	marginTop: "10px",
 });
 
+const initialDietaryRestrictions = {
+	milk: false,
+	eggs: false,
+	peanuts: false,
+	fish: false,
+	soy: false,
+	wheat: false,
+};
+
+const initialDietaryRequirements = {
+	vegetarian: false,
+	vegan: false,
+	halal: false,
+	diabetic: false,
+};
+
 const RequestLunch = () => {
 	//state for lunch requests - radio buttons
 	const [lunchOption, setLunchOption] = useState("no");
 
 	//states for checkboxes - dietary restrictions
-	const [dietaryRestrictions, setDietaryRestrictions] = useState({
-		milk: false,
-		eggs: false,
-		peanuts: false,
-		fish: false,
-		soy: false,
-		wheat: false,
-	});
+	const [dietaryRestrictions, setDietaryRestrictions] = useState(
+		initialDietaryRestrictions
+	);
 
 	//states for checkboxes - dietary requirements
-	const [dietaryRequirements, setDietaryRequirements] = useState({
-		vegetarian: false,
-		vegan: false,
-		halal: false,
-		diabetic: false,
-	});
+	const [dietaryRequirements, setDietaryRequirements] = useState(
+		initialDietaryRequirements
+	);
 
 	//states for text field - others restrictions
 	const [otherDietaryRestrictions, setOtherDietaryRestrictions] =
@@ -75,23 +83,39 @@ const RequestLunch = () => {
 		setOtherDietaryRestrictions(event.target.value);
 	};
 
+	const transformObjToArray = (obj) => {
+		return Object.keys(obj).filter((item)=> obj[item] == true);
+	};
+
+
 	//submit form event
 	const handleSubmit = () => {
-		console.log(dietaryRestrictions);
-		console.log(dietaryRequirements);
-		fetch("http://localhost:3100/api/lunch/dietary", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				lunchOption: lunchOption,
-				dietaryRestrictions: dietaryRestrictions,
-				dietaryRequirements: dietaryRequirements,
-				otherDietaryRestrictions: otherDietaryRestrictions,
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => alert(data.msg))
-			.catch((err) => console.log(err));
+		const dietaryRestrictionsArray = transformObjToArray(dietaryRestrictions);
+		const dietaryRequirementsArray = transformObjToArray(dietaryRequirements);
+		if(lunchOption == "yes"){
+			fetch("http://localhost:3100/api/lunch/dietary", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					dietaryRestrictions: dietaryRestrictionsArray,
+					dietaryRequirements: dietaryRequirementsArray,
+					otherDietaryRestrictions: otherDietaryRestrictions,
+					userId: sessionStorage.getItem("userId"),
+					cohortId: sessionStorage.getItem("cohortId"),
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) =>{
+					setDietaryRestrictions(initialDietaryRestrictions);
+					setDietaryRequirements(initialDietaryRequirements);
+					setOtherDietaryRestrictions("");
+					setLunchOption("no");
+					alert(data.msg);
+				})
+				.catch((error) => alert(error.msg));
+		}else{
+			alert("Your lunch request was registered");
+		}
 	};
 
 	return (
