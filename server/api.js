@@ -138,4 +138,9 @@ router.post("/register", async (req, res) => {
 
 });
 
+router.post("/lunch/dietary", async (req, res) => {
+	console.log(req.body);
+});
+
+
 export default router;

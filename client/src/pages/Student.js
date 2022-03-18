@@ -2,6 +2,8 @@ import React from "react";
 import StudentCard from "../components/StudentCard";
 import { Container } from "@mui/material";
 import Location from "../components/Location";
+import RequestLunch from "../components/RequestLunch";
+
 export function Student() {
 
 	return (
@@ -10,6 +12,7 @@ export function Student() {
 				<StudentCard />
 				<Location />
 			</Container>
+			<RequestLunch />
 		</div>
 	);
 }
