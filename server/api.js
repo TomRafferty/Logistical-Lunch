@@ -9,20 +9,60 @@ router.get("/", (_, res) => {
 
 router.get("/lunchMakerInfo", (_, res) => {
 	let lunchMakerInfo = {};
-	// allergy name
 	pool
 		.query(
 		`
-			SELECT * FROM allergies
+			SELECT a.allergy_name
+			FROM allergies AS a
+			INNER JOIN dietary_restrictions AS dr
+			ON dr.allergen_id = a.id
 		`
 		)
 		.then((response) => {
 			lunchMakerInfo["allergies"] = response.rows.map((allergy) => {
 				return allergy.allergy_name;
 			});
-			res.json(lunchMakerInfo);
+			pool
+				.query(
+					`
+						SELECT u.user_name
+						FROM users AS u
+						WHERE is_lunch_shopper=true
+					`
+				)
+				.then((response) => {
+					if (response.rowCount === 0) {
+						// shopper not set.
+						lunchMakerInfo["lunchShopper"] = "Shopper not yet chosen.";
+					} else {
+						// shopper set.
+						lunchMakerInfo["lunchShopper"] = response.rows[0];
+					}
+					pool
+						.query(
+							`
+								SELECT e.diners
+								FROM events AS e
+							`
+						)
+						.then((response) => {
+							lunchMakerInfo["numDiners"] = response.rows[0];
+							res.json(lunchMakerInfo);
+						})
+						.catch((error) => {
+							console.log("failed on diner collection");
+							console.error(error);
+							res.status(error.status).send(error);
+						});
+				})
+				.catch((error) => {
+					console.log("failed on shopper collection");
+					console.error(error);
+					res.status(error.status).send(error);
+				});
 		})
 		.catch((error) => {
+			console.log("failed on allergy collection");
 			console.error(error);
 			res.status(error.status).send(error);
 		});
@@ -50,11 +90,11 @@ router.post("/login", async (req, res) => {
 						pool.query(
 							`SELECT * 
 							FROM users 
-							WHERE email=$1`,
+							WHERE user_email=$1`,
 							[email]
 						)
 						.then((userInfo) => {
-							res(userInfo.rows);
+							res.json(userInfo.rows);
 						})
 						.catch((error) => {
 							console.error(error);

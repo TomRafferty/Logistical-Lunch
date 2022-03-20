@@ -37,6 +37,7 @@ const LoginForm = () => {
 		fetch("http://localhost:3000/api/login", options)
 		.then((response) => response.json())
 		.then((resJson) => {
+			console.log(resJson);
 			//storing the user's info into the sessionStorage
 			sessionStorage.setItem("userType", resJson.is_admin == false ? "student" : "admin" );
 			sessionStorage.setItem("cohortId", resJson.cohort_id);
@@ -45,9 +46,7 @@ const LoginForm = () => {
 			sessionStorage.setItem("isLunchShopper", resJson.is_lunch_shopper);
 			sessionStorage.setItem("userLocation", resJson.user_location);
 			sessionStorage.setItem("userName", resJson.user_name);
-			if (resJson.is_admin === false){
-				login();
-			}
+			login(sessionStorage.getItem("userType"));
 		})
 		.catch((error) => {
 			console.error(error);
@@ -55,9 +54,9 @@ const LoginForm = () => {
 		});
 	};
 
-	const login = () => {
+	const login = (userType) => {
 		//this will have to be a variable depending on how we handle the userType
-		nav("/student");
+		nav(`/${userType}`);
 	};
 
 	let submitObject = { email: "", password: "" };
@@ -112,6 +111,9 @@ const LoginForm = () => {
 						*/
 						if(submitObjectState.email.length > 0 && submitObjectState.password.length > 0){
 							tryLogin();
+							console.log("fire");
+						}else{
+							console.log(`fail - ${submitObjectState}`);
 						}
 					}}
 				>
