@@ -45,10 +45,7 @@ const LoginForm = () => {
 			sessionStorage.setItem("isLunchShopper", resJson.is_lunch_shopper);
 			sessionStorage.setItem("userLocation", resJson.user_location);
 			sessionStorage.setItem("userName", resJson.user_name);
-			if (resJson.is_admin === false){
-				console.log("received student auth.");
-				loginStudent();
-			}
+				loginUser();
 		})
 		.catch((error) => {
 			console.error(error);
@@ -56,8 +53,9 @@ const LoginForm = () => {
 		});
 	};
 
-	const loginStudent = () => {
-		nav("/student");
+	const loginUser = () => {
+		const userType =sessionStorage.getItem("userType");
+		userType == "student" ? nav("/student") : nav("/admin");
 	};
 
 	let submitObject = { email: "", password: "" };

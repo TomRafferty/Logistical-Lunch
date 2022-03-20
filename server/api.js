@@ -63,8 +63,7 @@ router.put("/users/location", (req,res)=>{
 router.get("/events/next", (req,res)=> {
     // a query
 	const eventQuery =
-		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
-
+		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
 	pool.query(eventQuery)
 	.then((response)=>res.json(response.rows))
 	.catch((error)=>{
@@ -85,6 +84,55 @@ router.get("/users/:id", (req,res)=> {
 		console.error(error);
 		res.status(500).json(error);
 	});
+});
+
+
+//endpoint to get user by cohort_id
+router.get("/users/cohort/:cohortId", async (req, res) => {
+	const cohortId = req.params.cohortId;
+	const cohortUsers = await knex.select("id", "user_name")
+		.from("users")
+		.where({ "cohort_id": cohortId, "is_admin": false });
+
+	if(cohortUsers.length > 0) {
+		res.status(201).json(cohortUsers);
+	}else{
+		res.status(401).json({ msg: "There was a problem please try again later" });
+	}
+});
+
+//endpoint to get the history of all the lunch makers assigned in the past
+router.get("/history/lunchMaker", async (req, res) => {
+	const historyLunchMaker = await knex.select().table("lunch_maker_history");
+
+	if (historyLunchMaker.length > 0) {
+		res.status(201).json(historyLunchMaker);
+	}else{
+		res.status(401).json({ msg: "There was a problem please try again later" });
+	}
+});
+
+//endpoint to update the is_lunch_maker value for a specific user
+router.post("/lunchMaker", async (req, res) => {
+	const lunchMakerId = req.body.lunchMakerId;
+	const lunchMakerName = req.body.lunchMakerName;
+	try {
+		await knex.transaction(async (trx) => {
+			//overwriting all the previous is_lunch_maker values to false
+			await trx("users").update("is_lunch_maker", false);
+
+			//updating only a specific is_lunch_maker value to true
+			await trx("users").update("is_lunch_maker", true).where("id", lunchMakerId);
+
+			//inserted the nominated lunch_maker name and date into the lunch_maker_history table
+			await trx("lunch_maker_history").insert({ lunch_maker_name: lunchMakerName, created_on: "NOW()" });
+			res
+			.status(201)
+			.json({ msg: "The lunch maker was nominated successfully" });
+		});
+	} catch (error) {
+		res.status(401).json({ msg: "Something went wrong. Please try again later!" });
+	}
 });
 
 
