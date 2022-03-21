@@ -4,15 +4,16 @@ import { Container } from "@mui/material";
 import LunchMakerInformation from "../components/LunchMakerInformation";
 import RequestLunch from "../components/RequestLunch";
 
-const isLunchMaker = true; //temp bool
-
-
 export function Student() {
 
 	return (
 		<div sx={{ padding: 0 }}>
 			<Container>
-				{isLunchMaker? <LunchMakerInformation /> : false}
+				{sessionStorage.getItem("is_lunch_maker") ? (
+					<LunchMakerInformation display="flex" />
+				) : (
+					<LunchMakerInformation display="none" />
+				)}
 
 				{/* <StudentCard /> commented out to stop errors*/}
 			</Container>

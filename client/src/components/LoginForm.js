@@ -39,7 +39,7 @@ const LoginForm = () => {
 		.then((resJson) => {
 			const res = resJson[0];
 			//storing the user's info into the sessionStorage
-			sessionStorage.setItem("userType", resJson.is_admin ? "admin" : "student" );
+			sessionStorage.setItem("userType", res.is_admin ? "admin" : "student" );
 			sessionStorage.setItem("cohortId", res.cohort_id);
 			sessionStorage.setItem("userId", res.id);
 			sessionStorage.setItem("isLunchMaker", res.is_lunch_maker);
@@ -111,9 +111,6 @@ const LoginForm = () => {
 						*/
 						if(submitObjectState.email.length > 0 && submitObjectState.password.length > 0){
 							tryLogin();
-							console.log("fire");
-						}else{
-							console.log(`fail - ${submitObjectState}`);
 						}
 					}}
 				>

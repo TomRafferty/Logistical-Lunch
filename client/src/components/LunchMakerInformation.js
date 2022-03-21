@@ -3,9 +3,6 @@ import styled from "@emotion/styled";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 
-const numberOfServings = 13; //I don't have access to the user eat count
-const lunchShopper = "Tom - oh dear...";
-
 const TypographyInner = styled(Typography)({
 	variant: "h6",
 	display: "inline",
@@ -16,8 +13,20 @@ const TypographyInner = styled(Typography)({
 
 const LunchMakerInformation = () => {
 	const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+	const [numberOfServings, setNumberOfServings] = useState(0);
+	const [lunchShopper, setLunchShopper] = useState("");
+	const thisUserCohort = sessionStorage.getItem("cohortId");
+
 	useEffect(() => {
-		fetch("http://localhost:3000/api/lunchMakerInfo")
+		const options = {
+			method: "post",
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ "cohort_id":thisUserCohort }),
+		};
+		fetch("http://localhost:3000/api/lunchMakerInfo", options)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();
@@ -25,13 +34,19 @@ const LunchMakerInformation = () => {
 				throw `${response.status} ${response.statusText}`;
 			})
 			.then((data) => {
-				const arr = Object.values(data).flat();
-				setDietaryRestrictions(arr);
+				const dietRes = data.allergies.flat();
+				setDietaryRestrictions(dietRes);
+
+				const numServ = Object.values(data.numDiners)[0];
+				setNumberOfServings(numServ);
+
+				const lunchShop = data.lunchShopper;
+				setLunchShopper(lunchShop);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
-	}, []);
+	}, []); //removing the dependency array here will cause infinite requests to be made
     return (
 			<Box>
 				<Typography variant="h5" textAlign={"center"}>This Weeks Lunch Information:</Typography>
