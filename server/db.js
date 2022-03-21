@@ -1,5 +1,7 @@
 require("dotenv").config();
 import { Pool } from "pg";
+import knexClass from "knex";
+import config from "../knexfile";
 
 const dbUrl =
 	process.env.DATABASE_URL || "postgres://localhost:5432/logistical_lunch";
@@ -25,3 +27,4 @@ export const connectDb = async () => {
 export const disconnectDb = () => pool.close();
 
 export default { query: pool.query.bind(pool), pool };
+export const knex = knexClass(config.development);

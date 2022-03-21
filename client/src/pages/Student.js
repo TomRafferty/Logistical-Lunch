@@ -2,6 +2,7 @@ import React from "react";
 import StudentCard from "../components/StudentCard";
 import { Container } from "@mui/material";
 import LunchMakerInformation from "../components/LunchMakerInformation";
+import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 
 export function Student() {
@@ -14,8 +15,8 @@ export function Student() {
 				) : (
 					<LunchMakerInformation display="none" />
 				)}
-
-				{/* <StudentCard /> commented out to stop errors*/}
+				<StudentCard />
+				<Location />
 			</Container>
 			<RequestLunch />
 		</div>
