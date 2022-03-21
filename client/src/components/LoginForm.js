@@ -37,18 +37,16 @@ const LoginForm = () => {
 		fetch("http://localhost:3000/api/login", options)
 		.then((response) => response.json())
 		.then((resJson) => {
+			const res = resJson[0];
 			//storing the user's info into the sessionStorage
-			sessionStorage.setItem("userType", resJson.is_admin == false ? "student" : "admin" );
-			sessionStorage.setItem("cohortId", resJson.cohort_id);
-			sessionStorage.setItem("userId", resJson.id);
-			sessionStorage.setItem("isLunchMaker", resJson.is_lunch_maker);
-			sessionStorage.setItem("isLunchShopper", resJson.is_lunch_shopper);
-			sessionStorage.setItem("userLocation", resJson.user_location);
-			sessionStorage.setItem("userName", resJson.user_name);
-			if (resJson.is_admin === false){
-				console.log("received student auth.");
-				loginStudent();
-			}
+			sessionStorage.setItem("userType", res.is_admin ? "admin" : "student" );
+			sessionStorage.setItem("cohortId", res.cohort_id);
+			sessionStorage.setItem("userId", res.id);
+			sessionStorage.setItem("isLunchMaker", res.is_lunch_maker);
+			sessionStorage.setItem("isLunchShopper", res.is_lunch_shopper);
+			sessionStorage.setItem("userLocation", res.user_location);
+			sessionStorage.setItem("userName", res.user_name);
+			login(sessionStorage.getItem("userType"));
 		})
 		.catch((error) => {
 			console.error(error);
@@ -56,8 +54,9 @@ const LoginForm = () => {
 		});
 	};
 
-	const loginStudent = () => {
-		nav("/student");
+	const login = (userType) => {
+		//this will have to be a variable depending on how we handle the userType
+		nav(`/${userType}`);
 	};
 
 	let submitObject = { email: "", password: "" };
