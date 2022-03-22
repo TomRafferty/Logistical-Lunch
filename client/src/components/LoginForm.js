@@ -38,7 +38,6 @@ const LoginForm = () => {
 		.then((response) => response.json())
 		.then((resJson) => {
 			const res = resJson[0];
-			//storing the user's info into the sessionStorage
 			sessionStorage.setItem("userType", res.is_admin ? "admin" : "student" );
 			sessionStorage.setItem("cohortId", res.cohort_id);
 			sessionStorage.setItem("userId", res.id);
