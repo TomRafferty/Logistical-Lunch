@@ -4,7 +4,6 @@ import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useState } from "react";
 import { MobileDatePicker } from "@mui/lab";
-import { DateTime } from "luxon";
 
 const Header = styled(Typography)({
     align: "center",
@@ -23,33 +22,24 @@ const StyledInput = styled(FormControl)({
 });
 
 const CreateEventForm = () => {
-	// start date state and set function
-	const [selectedStartDate, setSelectedStartDate] = useState(
-		new Date("2090-12-30")
-	);
-	const handleStartDateChange = (date) => {
-		setSelectedStartDate(date);
-	};
-	// end date state and set function
-	const [selectedEndDate, setSelectedEndDate] = useState(
-		new Date("2090-12-30")
-	);
-	const handleEndDateChange = (date) => {
-		setSelectedEndDate(date);
-	};
 
 	// submit state and change handler
 	const subObj = {
 		location: "",
 		postcode: "",
 		address: "",
-		meeting_start: DateTime,
-		meeting_end: DateTime,
+		meeting_start: "",
+		meeting_end: "",
 	};
 	const [submitState, setSubmitState] = useState({});
 	const changeSubProp = (property, value) => {
 		subObj[property] = value;
-		console.log(subObj);
+	};
+
+	// format new date from picker
+	const formatDate = (dateObj) => {
+		// this will need to be changed to reflect the format used in the database
+		return `${new Date(`${dateObj.year}-${dateObj.month}-${dateObj.day}`)}`;
 	};
 
     return (
@@ -92,15 +82,13 @@ const CreateEventForm = () => {
 						<MobileDatePicker
 							disableToolbar
 							variant="inline"
-							format="MM/dd/yyy"
 							margin="normal"
 							id="meeting-start-date-picker"
 							label="meeting-start-date"
-							value={selectedStartDate}
+							value={new Date("2090-12-30")}
 							name="meeting_start"
 							onChange={(newDate) => {
-								handleStartDateChange(newDate);
-								changeSubProp("meeting_start", newDate);
+								changeSubProp("meeting_start", formatDate(newDate));
 							}}
 							keyboardButtonProps={{
 								"aria-label": "change date",
@@ -117,15 +105,13 @@ const CreateEventForm = () => {
 						<MobileDatePicker
 							disableToolbar
 							variant="inline"
-							format="MM/dd/yyy"
 							margin="normal"
 							id="meeting-end-date-picker"
 							label="meeting-end-date"
-							value={selectedEndDate}
+							value={new Date("2090-12-30")}
 							name="meeting_End"
 							onChange={(newDate) => {
-								handleEndDateChange(newDate);
-								changeSubProp("meeting_end", newDate);
+								changeSubProp("meeting_end", formatDate(newDate));
 							}}
 							keyboardButtonProps={{
 								"aria-label": "change date",
@@ -142,7 +128,10 @@ const CreateEventForm = () => {
 						variant="contained"
 						onClick={() => {
 							setSubmitState(subObj);
-							console.log(submitState);
+							// patch to avoid sending empty request. - temporary fix, needs proper solution
+							if(submitState.location !== undefined && submitState.location !== ""){
+								console.log(submitState);
+							}
 						}}
 					>
 						Submit
