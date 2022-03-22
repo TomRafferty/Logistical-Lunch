@@ -12,22 +12,24 @@ import { DateTime } from "luxon";
 
 const StudentCard = () => {
       const [cardData, setCardData] = useState([]);
+      const cohort = JSON.parse(sessionStorage.getItem("cohortId"));
 
   // hook to fetch the event information and display it within the card
   useEffect(() => {
-    fetch("http://localhost:3000/api/next")
-      .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        }
-        throw `${response.status} ${response.statusText}`;
-      })
-      .then(function(data) {
-        setCardData(data);
-      })
-      .catch(function (error) {
-        console.log("An error occurred:", error);
-      });
+    fetch(`http://localhost:3000/api/events/next?cohId=${cohort}`)
+			.then(function (response) {
+				if (response.ok) {
+					return response.json();
+				}
+				throw `${response.status} ${response.statusText}`;
+			})
+			.then(function (data) {
+				setCardData(data);
+				console.log(data);
+			})
+			.catch(function (error) {
+				console.log("An error occurred:", error);
+			});
   }, []);
 
   // function to convert timestamp string into an array of time an date
@@ -43,12 +45,23 @@ const StudentCard = () => {
     fontWeight: "bold",
   });
 
+// getting region and class to display in heading
+  const region = cardData.map((element)=> {
+	  return element.region;
+  });
+  const year = cardData.map((element)=>{
+	  return element.class_number;
+  });
   return (
 		<Box>
 			<Paper>
 				<Typography variant="h5" sx={{ mb: 2, mt: 2 }} align="center">
-                    {/* optional heading, this can be changed */}
-					{cardData.length === 0 ? "You have no Meetings" : cardData.length === 1 ? "You have 1 Meeting" : `You have ${cardData.length} Meetings`}
+					{/* optional heading, this can be changed */}
+					{cardData.length === 0
+						? `${region} ${year} have no Meetings`
+						: cardData.length === 1
+						? `${region} ${year} have 1 Meeting`
+						: `${region} ${year} have ${cardData.length} Meetings`}
 				</Typography>
 			</Paper>
 

@@ -61,11 +61,14 @@ router.put("/users/location", (req,res)=>{
 
 
 router.get("/events/next", (req,res)=> {
-    // a query
+    const cohortId = req.query.cohId;
+	console.log(cohortId);
 	const eventQuery =
-		"SELECT id, meeting_location, meeting_start, meeting_end, meeting_address_1, meeting_city, meeting_postcode FROM events WHERE meeting_end BETWEEN NOW() AND NOW() + INTERVAL '7 day'";
+		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, recipe_id, cohort_id, class_number, region FROM events INNER JOIN cohort ON events.cohort_id=cohort.id WHERE $1=events.cohort_id";
 
-	pool.query(eventQuery)
+		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
+
+	pool.query(eventQuery,[cohortId])
 	.then((response)=>res.json(response.rows))
 	.catch((error)=>{
 		console.error(error);
