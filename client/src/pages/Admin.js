@@ -4,6 +4,7 @@ import { Container } from "@mui/material";
 import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
+import CreateEventForm from "../components/CreateEventForm";
 
 
 export function Admin() {
@@ -15,6 +16,7 @@ export function Admin() {
 			</Container>
 			<RequestLunch />
 			<SetLunchMaker />
+			<CreateEventForm />
 		</div>
 	);
 }
