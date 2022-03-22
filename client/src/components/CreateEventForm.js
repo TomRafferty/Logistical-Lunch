@@ -4,6 +4,7 @@ import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useState } from "react";
 import { MobileDatePicker } from "@mui/lab";
+import { DateTime } from "luxon";
 
 const Header = styled(Typography)({
     align: "center",
@@ -22,14 +23,33 @@ const StyledInput = styled(FormControl)({
 });
 
 const CreateEventForm = () => {
-
-	const [selectedStartDate, setSelectedStartDate] = useState(new Date("9999-12-30T00:00:00"));
-	const [selectedEndDate, setSelectedEndDate] = useState(new Date("9999-12-30T00:00:00"));
+	// start date state and set function
+	const [selectedStartDate, setSelectedStartDate] = useState(
+		new Date("2090-12-30")
+	);
 	const handleStartDateChange = (date) => {
 		setSelectedStartDate(date);
 	};
+	// end date state and set function
+	const [selectedEndDate, setSelectedEndDate] = useState(
+		new Date("2090-12-30")
+	);
 	const handleEndDateChange = (date) => {
 		setSelectedEndDate(date);
+	};
+
+	// submit state and change handler
+	const subObj = {
+		location: "",
+		postcode: "",
+		address: "",
+		meeting_start: DateTime,
+		meeting_end: DateTime,
+	};
+	const [submitState, setSubmitState] = useState({});
+	const changeSubProp = (property, value) => {
+		subObj[property] = value;
+		console.log(subObj);
 	};
 
     return (
@@ -39,19 +59,31 @@ const CreateEventForm = () => {
 				{/* location */}
 				<StyledInput sx={{ width: 1 / 2 }}>
 					<InputLabel htmlFor="location-input">Location</InputLabel>
-					<Input id="location-input" />
+					<Input
+						id="location-input"
+						name="location"
+						onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+					/>
 				</StyledInput>
 
 				{/* postcode */}
 				<StyledInput>
 					<InputLabel htmlFor="postcode-input">postcode</InputLabel>
-					<Input id="postcode-input" />
+					<Input
+						id="postcode-input"
+						name="postcode"
+						onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+					/>
 				</StyledInput>
 
 				{/* address */}
 				<StyledInput>
 					<InputLabel htmlFor="address-input">address</InputLabel>
-					<Input id="address-input" />
+					<Input
+						id="address-input"
+						name="address"
+						onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+					/>
 				</StyledInput>
 
 				{/* meeting start */}
@@ -65,7 +97,11 @@ const CreateEventForm = () => {
 							id="meeting-start-date-picker"
 							label="meeting-start-date"
 							value={selectedStartDate}
-							onChange={() => handleStartDateChange}
+							name="meeting_start"
+							onChange={(newDate) => {
+								handleStartDateChange(newDate);
+								changeSubProp("meeting_start", newDate);
+							}}
 							keyboardButtonProps={{
 								"aria-label": "change date",
 							}}
@@ -86,7 +122,11 @@ const CreateEventForm = () => {
 							id="meeting-end-date-picker"
 							label="meeting-end-date"
 							value={selectedEndDate}
-							onChange={() => handleEndDateChange}
+							name="meeting_End"
+							onChange={(newDate) => {
+								handleEndDateChange(newDate);
+								changeSubProp("meeting_end", newDate);
+							}}
 							keyboardButtonProps={{
 								"aria-label": "change date",
 							}}
@@ -98,7 +138,13 @@ const CreateEventForm = () => {
 
 				{/* submit button */}
 				<StyledInput>
-					<Button variant="contained">
+					<Button
+						variant="contained"
+						onClick={() => {
+							setSubmitState(subObj);
+							console.log(submitState);
+						}}
+					>
 						Submit
 					</Button>
 				</StyledInput>
