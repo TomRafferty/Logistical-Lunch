@@ -4,6 +4,7 @@ import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useState } from "react";
 import { MobileDatePicker } from "@mui/lab";
+import { DateTime } from "luxon";
 
 const Header = styled(Typography)({
     align: "center",
@@ -38,8 +39,15 @@ const CreateEventForm = () => {
 
 	// format new date from picker
 	const formatDate = (dateObj) => {
-		// this will need to be changed to reflect the format used in the database
-		return `${new Date(`${dateObj.year}-${dateObj.month}-${dateObj.day}`)}`;
+		return DateTime.fromObject({
+			year: dateObj.year,
+			month: dateObj.month,
+			day: dateObj.day,
+			hour: dateObj.hour,
+			minute: dateObj.minute,
+			second: dateObj.second,
+			millisecond: dateObj.millisecond,
+		}).toSQL();
 	};
 
     return (
