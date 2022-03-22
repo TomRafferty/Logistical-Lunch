@@ -196,6 +196,7 @@ router.get("/events/next", (req,res)=> {
 
 });
 
+
 //endpoint to get user by id
 router.get("/users/:id", (req,res)=> {
 	const userId = req.params.id;
@@ -209,11 +210,10 @@ router.get("/users/:id", (req,res)=> {
 	});
 });
 
-
 //endpoint to get user by cohort_id
 router.get("/users/cohort/:cohortId", async (req, res) => {
 	const cohortId = req.params.cohortId;
-	const cohortUsers = await knex.select("id", "user_name")
+	const cohortUsers = await knex.select("id", "user_name", "is_lunch_maker", "is_lunch_shopper")
 		.from("users")
 		.where({ "cohort_id": cohortId, "is_admin": false });
 
@@ -230,6 +230,17 @@ router.get("/history/lunchMaker", async (req, res) => {
 
 	if (historyLunchMaker.length > 0) {
 		res.status(201).json(historyLunchMaker);
+	}else{
+		res.status(401).json({ msg: "There was a problem please try again later" });
+	}
+});
+
+//endpoint to get the history of all the lunch shoppers assigned in the past
+router.get("/history/lunchShopper", async (req, res) => {
+	const historyLunchShopper = await knex.select().table("lunch_shopper_history");
+
+	if (historyLunchShopper.length > 0) {
+		res.status(201).json(historyLunchShopper);
 	}else{
 		res.status(401).json({ msg: "There was a problem please try again later" });
 	}
@@ -254,11 +265,32 @@ router.post("/lunchMaker", async (req, res) => {
 			.json({ msg: "The lunch maker was nominated successfully" });
 		});
 	} catch (error) {
-		res.status(401).json({ msg: "Something went wrong. Please try again later!" });
+		res.status(500).json({ msg: "Something went wrong. Please try again later!" });
 	}
 });
 
+//endpoint to update the is_lunch_shopper value for a specific user
+router.post("/lunchShopper", async (req, res) => {
+	const lunchShopperId = req.body.lunchShopperId;
+	const lunchShopperName = req.body.lunchShopperName;
+	try {
+		await knex.transaction(async (trx) => {
+			//overwriting all the previous is_lunch_shopper values to false
+			await trx("users").update("is_lunch_shopper", false);
 
+			//updating only a specific is_lunch_shopper value to true
+			await trx("users").update("is_lunch_shopper", true).where("id", lunchShopperId);
+
+			//inserted the nominated lunch_shopper name and date into the lunch_shopper_history table
+			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()" });
+			res
+			.status(201)
+			.json({ msg: "The lunch shopper was nominated successfully" });
+		});
+	} catch (error) {
+		res.status(500).json({ msg: "Something went wrong. Please try again later!" });
+	}
+});
 
 
 // endpoint for register form
