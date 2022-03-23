@@ -59,7 +59,6 @@ router.put("/users/location", (req,res)=>{
 	});
 });
 
-
 router.get("/events/next", (req,res)=> {
     // a query
 	const eventQuery =
@@ -86,9 +85,6 @@ router.get("/users/:id", (req,res)=> {
 		res.status(500).json(error);
 	});
 });
-
-
-
 
 // endpoint for register form
 router.post("/register", async (req, res) => {
@@ -138,7 +134,6 @@ router.post("/register", async (req, res) => {
 		});
 
 });
-
 
 //lunchRequest
 router.post("/lunch/dietary", async (req, res) => {
@@ -213,7 +208,28 @@ router.post("/lunch/dietary", async (req, res) => {
 	}
 });
 
-
-
+// admin create new event
+router.post("/createNewEvent", (req, res) => {
+	console.log(req.body);
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			INSERT INTO 
+			events
+				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
+			VALUES
+				($1, $2, $3, $4, $5, $6, $7)
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		console.log("added new event");
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
+});
 
 export default router;
