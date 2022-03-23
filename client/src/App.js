@@ -5,7 +5,6 @@ import LoginPage from "./pages/LoginPage";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { Admin } from "./pages/Admin";
-
 const App = () => (
 	<div>
 		<NavBar />
