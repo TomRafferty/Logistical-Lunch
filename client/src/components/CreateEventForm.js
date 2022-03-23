@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, FormControl, Grid, Input, InputLabel, TextField, Typography } from "@mui/material";
+import { Button, Card, FormControl, Grid, Input, InputLabel, TextField, Typography } from "@mui/material";
 import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useState } from "react";
@@ -11,10 +11,12 @@ const Header = styled(Typography)({
     variant: "h3",
 });
 const FormContainer = styled(Grid)({
-    spacing: "0",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+	spacing: "0",
+	flexDirection: "column",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: "30px 50px",
+	background: "#fafafa",
 });
 
 const StyledInput = styled(FormControl)({
@@ -79,7 +81,7 @@ const CreateEventForm = () => {
 			{/* location */}
 			<StyledInput sx={{ width: 1 / 2 }}>
 				<InputLabel htmlFor="location-input">Location</InputLabel>
-				<Input
+				<TextField
 					id="location-input"
 					name="location"
 					onChange={(e) => changeSubProp(e.target.name, e.target.value)}
@@ -89,7 +91,7 @@ const CreateEventForm = () => {
 			{/* postcode */}
 			<StyledInput>
 				<InputLabel htmlFor="postcode-input">postcode</InputLabel>
-				<Input
+				<TextField
 					id="postcode-input"
 					name="postcode"
 					onChange={(e) => changeSubProp(e.target.name, e.target.value)}
@@ -99,7 +101,7 @@ const CreateEventForm = () => {
 			{/* address */}
 			<StyledInput>
 				<InputLabel htmlFor="address-input">address</InputLabel>
-				<Input
+				<TextField
 					id="address-input"
 					name="address"
 					onChange={(e) => changeSubProp(e.target.name, e.target.value)}
@@ -109,7 +111,7 @@ const CreateEventForm = () => {
 			{/* city */}
 			<StyledInput>
 				<InputLabel htmlFor="city-input">city</InputLabel>
-				<Input
+				<TextField
 					id="city-input"
 					name="city"
 					onChange={(e) => changeSubProp(e.target.name, e.target.value)}
