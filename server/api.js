@@ -426,6 +426,55 @@ router.post("/lunch/dietary", async (req, res) => {
 	}
 });
 
+//endpoint to get all the recipes and the name of the selected recipe
+router.post("/recipes", async (req, res) => {
+	const cohortId = req.body.cohortId;
+	try{
+		await knex.transaction(async (trx) => {
+				//get all the recipes
+				const recipes = await knex.select().table("recipes");
+
+				//get the selected recipe id for a specific event
+				const recipeId = await trx("events")
+					.select("recipe_id")
+					.where("cohort_id", cohortId);
+
+				//get the name of the selected recipe id
+				const nameRecipe = await trx("recipes")
+					.select("recipe_name")
+					.where("id", recipeId[0].recipe_id)
+					.returning("recipe_name");
+
+					res
+						.status(201)
+						.json({ recipes: recipes, selectedRecipe: nameRecipe[0].recipe_name });
+			});
+	} catch (error) {
+		res.status(500).json({ msg: "There was a problem please try again later" });
+	}
+
+});
+
+
+//endpoint to update the chosen recipe id in the events table;
+router.post("/eventRecipeId", async (req, res) => {
+	const recipeId = req.body.recipeId;
+	const cohortId = req.body.cohortId;
+	try {
+		//update the recipe_id column
+		await knex.transaction(async (trx) => {
+			await trx("events")
+				.update("recipe_id", recipeId)
+				.where("cohort_id", cohortId);
+
+			res.status(201).json({ msg: "Your choice was successfully submitted" });
+		});
+	} catch (error) {
+		res
+			.status(500)
+			.json({ msg: "Something went wrong. Please try again later!" });
+	}
+});
 
 // admin create new event
 router.post("/createNewEvent", (req, res) => {
@@ -489,6 +538,7 @@ router.get("/lunch/dietary",(req,res)=> {
 
 	const lunchQuery = "SELECT DISTINCT requirement_name FROM lunch_requirements INNER JOIN dietary_requirements ON lunch_requirements.id=dietary_requirements.requirement_id INNER JOIN users ON dietary_requirements.user_id=users.id INNER JOIN cohort ON users.cohort_id=cohort.id WHERE cohort.id=$1";
 
+
 	pool
 		.query(allergyQuery, [dietCohort])
 		.then((response) => dietArray.push(response.rows))
@@ -503,5 +553,6 @@ router.get("/lunch/dietary",(req,res)=> {
 			console.log(error);
 		});
 });
+  
+  export default router;
 
-export default router;

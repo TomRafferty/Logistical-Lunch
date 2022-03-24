@@ -4,6 +4,8 @@ import Student from "./pages/Student";
 import LoginPage from "./pages/LoginPage";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+import { Admin } from "./pages/Admin";
+import LunchMaker from "./pages/LunchMaker";
 
 import Shopper from "./components/Shopper";
 import { Admin } from "./pages/Admin";
@@ -15,6 +17,7 @@ const App = () => (
 			<Route path="/student" element={<Student />} />
 			<Route path="/shopper" element={<Shopper />} />
 			<Route path="/admin" element={<Admin />} />
+			<Route path="/recipes" element={<LunchMaker />} />
 		</Routes>
 		<Footer />
 	</div>
