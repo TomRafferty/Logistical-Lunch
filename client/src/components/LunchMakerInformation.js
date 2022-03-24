@@ -40,7 +40,7 @@ const LunchMakerInformation = () => {
 				const numServ = Object.values(data.numDiners)[0];
 				setNumberOfServings(numServ);
 
-				const lunchShop = data.lunchShopper;
+				const lunchShop = data.lunchShopper.user_name;
 				setLunchShopper(lunchShop);
 			})
 			.catch((error) => {
