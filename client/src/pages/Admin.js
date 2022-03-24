@@ -4,7 +4,9 @@ import { Container, Box, Typography } from "@mui/material";
 import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
+import CreateEventForm from "../components/CreateEventForm";
 import SetLunchShopper from "../components/SetLunchShopper";
+
 
 
 export default function Admin() {
@@ -15,6 +17,7 @@ export default function Admin() {
 				<Location />
 			</Container>
 			<RequestLunch />
+			<CreateEventForm />
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 				<Typography variant="h5" sx={{ mb: 2 }} align="center">
 					Nominate Lunch Maker & Lunch Shopper

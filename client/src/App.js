@@ -7,7 +7,6 @@ import Footer from "./components/Footer";
 
 import Shopper from "./components/Shopper";
 import { Admin } from "./pages/Admin";
-
 const App = () => (
 	<div>
 		<NavBar />

@@ -192,7 +192,6 @@ router.get("/events/shopper", (req, res) => {
 		});
 });
 
-
 router.get("/events/next", (req,res)=> {
     const cohortId = req.query.cohId;
 	const eventQuery =
@@ -305,7 +304,6 @@ router.post("/lunchShopper", async (req, res) => {
 	}
 });
 
-
 // endpoint for register form
 router.post("/register", async (req, res) => {
 	const { name, email, region, classNr, password } = req.body;
@@ -354,7 +352,6 @@ router.post("/register", async (req, res) => {
 		});
 
 });
-
 
 //lunchRequest
 router.post("/lunch/dietary", async (req, res) => {
@@ -429,6 +426,30 @@ router.post("/lunch/dietary", async (req, res) => {
 	}
 });
 
+
+// admin create new event
+router.post("/createNewEvent", (req, res) => {
+	console.log(req.body);
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			INSERT INTO 
+			events
+				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
+			VALUES
+				($1, $2, $3, $4, $5, $6, $7)
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		console.log("added new event");
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
+
 // route to get nearby shops for the users postcode
 router.get("/google", (req,res)=> {
 	const getLat = req.query.lat;
@@ -458,6 +479,7 @@ router.get("/google/distance", (req, res) => {
 			console.log(error);
 });
 });
+  
 // endpoint for getting dietary information for cohort
 router.get("/lunch/dietary",(req,res)=> {
 	const dietCohort = parseInt(req.query.diets);
