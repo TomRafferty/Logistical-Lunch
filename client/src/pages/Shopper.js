@@ -1,6 +1,6 @@
 import React from "react";
-import Info from "./Info";
-import Shops from "./Shops";
+import Info from "../components/Info";
+import Shops from "../components/Shops";
 
 const Shopper = () => {
     return (

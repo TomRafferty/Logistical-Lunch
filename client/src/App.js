@@ -4,11 +4,10 @@ import Student from "./pages/Student";
 import LoginPage from "./pages/LoginPage";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import { Admin } from "./pages/Admin";
+import Admin from "./pages/Admin";
 import LunchMaker from "./pages/LunchMaker";
+import Shopper from "./pages/Shopper";
 
-import Shopper from "./components/Shopper";
-import { Admin } from "./pages/Admin";
 const App = () => (
 	<div>
 		<NavBar />

@@ -498,6 +498,7 @@ router.post("/createNewEvent", (req, res) => {
 		console.error(error);
 		res.status(error.status).send(error);
 	});
+});
 
 // route to get nearby shops for the users postcode
 router.get("/google", (req,res)=> {
@@ -528,7 +529,7 @@ router.get("/google/distance", (req, res) => {
 			console.log(error);
 });
 });
-  
+
 // endpoint for getting dietary information for cohort
 router.get("/lunch/dietary",(req,res)=> {
 	const dietCohort = parseInt(req.query.diets);
@@ -553,6 +554,6 @@ router.get("/lunch/dietary",(req,res)=> {
 			console.log(error);
 		});
 });
-  
+
   export default router;
 
