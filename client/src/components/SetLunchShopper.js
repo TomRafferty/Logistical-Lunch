@@ -1,10 +1,17 @@
-
-import  React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { Typography, Box, Container, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
-import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
+import {
+	Typography,
+	Box,
+	Container,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	Button,
+} from "@mui/material";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import ModalHistory from "./ModalHistory";
-
 
 //styling the heading and the button
 const HeadingContainer = styled(Container)({
@@ -18,18 +25,18 @@ const SubmitButton = styled(Button)({
 	marginTop: "10px",
 });
 
-const SetLunchMaker = () => {
-	//state for updating the lunch maker id;
-	const [lunchMakerId, setLunchMakerId] = useState("");
+const SetLunchShopper = () => {
+	//state for updating the lunch shopper id;
+	const [lunchShopperId, setLunchShopperId] = useState("");
 
 	//state to trigger a rerender
 	const [update, setUpdate] = useState(true);
 
-	//state for lunch maker's name
-	const [lunchMakerName, setLunchMakerName] = useState("");
+	//state for lunch shopper's name
+	const [lunchShopperName, setLunchShopperName] = useState("");
 
 	//state for updating all the users that are part of the same cohort
-	const [lunchMakerOptions, setLunchMakerOptions] = useState([]);
+	const [lunchShopperOptions, setLunchShopperOptions] = useState([]);
 
 	//storing the cohortId of the admin in a variable
 	const cohortId = sessionStorage.getItem("cohortId");
@@ -44,47 +51,45 @@ const SetLunchMaker = () => {
 				throw `${response.status} ${response.statusText}`;
 			})
 			.then((response) => {
-				setLunchMakerOptions(response);
-				setLunchMakerName(getLunchMakerNameFromResponse(response));
+
+				setLunchShopperOptions(response);
+				setLunchShopperName(getLunchShopperNameFromResponse(response));
 			})
 			.catch((error) => {
 				console.log("An error occurred:", error);
 			});
 	}, [cohortId, update]);
 
-	//event for updating the lunchMakerId state with the id of the nominated user
+	//event for updating the lunchShopperId state with the id of the nominated user
 	const handleChangeDropDown = (event) => {
-		setLunchMakerId(event.target.value);
+		setLunchShopperId(event.target.value);
 	};
 
-	//function to get the name of the assigned lunch maker from BACKEND RESPONSE
-	const getLunchMakerNameFromResponse = (array) =>
-		array
-			.filter((user) => user.is_lunch_maker == true)
-			.map((u) => u.user_name);
+	//function to get the name of the assigned lunch shopper from BACKEND RESPONSE
+	const getLunchShopperNameFromResponse = (array) =>
+		array.filter((user) => user.is_lunch_shopper == true).map((u) => u.user_name);
 
-	//function to get the name of the assigned lunch maker
-	const getLunchMakerName = (id) =>
-		lunchMakerOptions
+	//function to get the name of the assigned lunch shopper
+	const getLunchShopperNameFromList = (id) =>
+		lunchShopperOptions
 			.filter((option) => option.id == id)
 			.map((obj) => obj.user_name)[0];
 
-	//event submit lunch maker
+	//event submit lunch shopper
 	const handleSubmit = () => {
-		const lunchMakerName = getLunchMakerName(lunchMakerId);
-
-		fetch("http://localhost:3100/api/lunchMaker", {
+		const lunchShopperName = getLunchShopperNameFromList(lunchShopperId);
+		fetch("http://localhost:3100/api/lunchShopper", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				lunchMakerId: lunchMakerId,
-				lunchMakerName: lunchMakerName,
+				lunchShopperId: lunchShopperId,
+				lunchShopperName: lunchShopperName,
 			}),
 		})
 			.then((res) => res.json())
 			.then(() => {
 				setUpdate(!update);
-				setLunchMakerId("");
+				setLunchShopperId("");
 			})
 			.catch((error) => alert(error.msg));
 	};
@@ -92,31 +97,27 @@ const SetLunchMaker = () => {
 	return (
 		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "50%" }}>
 			<HeadingContainer>
-				<DinnerDiningIcon fontSize="large"></DinnerDiningIcon>
+				<ShoppingCartCheckoutIcon fontSize="large"></ShoppingCartCheckoutIcon>
 				<Typography variant="h6" sx={{ ml: 2 }}>
-					{" "}
-					Lunch Maker{" "}
+					Lunch Shopper
 				</Typography>
 			</HeadingContainer>
-			<Typography
-				variant="subtitle2"
-				sx={{ mb: 2, textAlign: "center", color: "primary.main" }}
-			>
-				{lunchMakerName.length > 0
-					? `${lunchMakerName} was nominated as a lunch maker for this week event.`
-					: "Please nominate a lunch maker"}
+			<Typography variant="subtitle2" sx={{ mb: 2, textAlign: "center", color: "primary.main" }}>
+				{lunchShopperName.length > 0
+					? `${lunchShopperName} was nominated as a lunch shopper for this week event.`
+					: "Please nominate a lunch shopper"}
 			</Typography>
 			<FormControl fullWidth>
-				<InputLabel id="demo-simple-select-label">Lunch maker</InputLabel>
+				<InputLabel id="demo-simple-select-label">Lunch shopper</InputLabel>
 				<Select
 					labelId="demo-simple-select-label"
 					id="demo-simple-select"
-					value={lunchMakerId}
-					label="Lunch Maker"
+					value={lunchShopperId}
+					label="Lunch Shopper"
 					onChange={handleChangeDropDown}
 				>
 					{/* mapping the array of objects received so we can display all the students name into the dropdown */}
-					{lunchMakerOptions.map((option, index) => {
+					{lunchShopperOptions.map((option, index) => {
 						return (
 							<MenuItem key={index} value={option.id}>
 								{option.user_name}
@@ -133,14 +134,14 @@ const SetLunchMaker = () => {
 					Submit
 				</SubmitButton>
 			</FormControl>
-			{/* displaying the modal window containing all the history of lunch makers */}
+			{/* displaying the modal window containing all the history of lunch shoppers */}
 			<ModalHistory
-				instance={"Lunch Maker"}
-				userInstance={"lunchMaker"}
-				keyName={"lunch_maker_name"}
+				instance={"Lunch Shopper"}
+				userInstance={"lunchShopper"}
+				keyName={"lunch_shopper_name"}
 			/>
 		</Box>
 	);
 };
 
-export default SetLunchMaker;
+export default SetLunchShopper;

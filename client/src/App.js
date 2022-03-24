@@ -4,6 +4,7 @@ import Student from "./pages/Student";
 import LoginPage from "./pages/LoginPage";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
+
 import Shopper from "./components/Shopper";
 import { Admin } from "./pages/Admin";
 
