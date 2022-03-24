@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import styled from "@emotion/styled";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 //stores the options for the dropdown lists
 const roles = ["Admin", "Student"];
@@ -47,8 +46,6 @@ const RegisterButton = styled(Button)({
 
 //Register Form Component
 const RegisterForm = () => {
-	//variable for the useNavigate hook
-	let navigation = useNavigate();
 
 	//states for storing the values of the inputs
 	const [formData, setFormData] = React.useState({
@@ -140,13 +137,12 @@ const RegisterForm = () => {
 				.then((data) => {
 					if (data.msg == "Register successful" && formData.role == "Student") {
 						sessionStorage.setItem("userType", "student");
-						navigation("/student");
-					} else if (
-						data.msg == "Register successful" &&
-						formData.role == "Admin"
-					) {
+						alert(
+							"Your account was created successfully. You can now login."
+						);
+					} else if (data.msg == "Register successful" && formData.role == "Admin") {
 						sessionStorage.setItem("userType", "admin");
-						navigation("/student");
+						alert("Your account was created successfully. You can now login.");
 					} else {
 						alert(data.msg);
 					}

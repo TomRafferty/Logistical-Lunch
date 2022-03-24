@@ -5,8 +5,7 @@ import LunchMakerInformation from "../components/LunchMakerInformation";
 import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 
-export function Student() {
-
+const Student = () => {
 	return (
 		<div sx={{ padding: 0 }}>
 			<Container>
@@ -21,6 +20,6 @@ export function Student() {
 			<RequestLunch />
 		</div>
 	);
-}
+};
 
 export default Student;

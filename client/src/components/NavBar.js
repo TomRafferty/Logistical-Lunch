@@ -40,7 +40,7 @@ const NavBar = () => {
 				{userType != null ? (
 					<>
 						<Typography sx={{ flexGrow: 1, color: "black" }} align="center">
-							Hi Student
+							Hi {sessionStorage.getItem("userName")}
 						</Typography>
 						<IconButton
 							aria-label="menu"
@@ -51,9 +51,9 @@ const NavBar = () => {
 							<MenuIcon sx={{ fontSize: 35 }} />
 						</IconButton>
 						<Menu id="menu" anchorEl={anchorEl} open={open} onClose={close}>
-							<MenuItem onClick={close}>Recipes</MenuItem>
+							<MenuItem onClick={() => nav("/recipes")}>Recipes</MenuItem>
 							<MenuItem onClick={close}> Edit Profile</MenuItem>
-							<MenuItem onClick={close}> Meeting Info</MenuItem>
+							<MenuItem onClick={() => nav("/student")}> Meeting Info</MenuItem>
 							<MenuItem
 								onClick={() => {
 									sessionStorage.removeItem("userType");
