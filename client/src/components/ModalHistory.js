@@ -14,6 +14,7 @@ const style = {
 	bgcolor: "background.paper",
 	boxShadow: 24,
 	p: 4,
+	height: "50%",
 };
 
 //a modal window that will display a list with all the lunch makers nominated in the past.
@@ -36,7 +37,6 @@ const ModalHistory = (props) => {
 				throw `${response.status} ${response.statusText}`;
 			})
 			.then((response) => {
-				console.log(response);
 				setUsersHistory(response);
 			})
 			.catch((error) => {
@@ -61,14 +61,14 @@ const ModalHistory = (props) => {
 					<Typography id="modal-modal-title" variant="h6" component="h2">
 						{props.instance} History
 					</Typography>
-					<List>
+					<List sx={{ height: "90%", overflowY: "scroll" }}>
 						{
 							//mapping the array of objects received so we can create a list item for each lunch maker assigned in the past
 							usersHistory.map((user, index) => {
 								return (
 									<ListItemButton key={index}>
 										<ListItemText
-											primary={user.lunch_maker_name}
+											primary={user[props.keyName]}
 											secondary={new Date(`${user.created_on}`).toDateString()}
 										/>
 									</ListItemButton>
