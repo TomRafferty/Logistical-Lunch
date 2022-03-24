@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { knex } from "./db";
 import pool from "./db";
+import fetch from "node-fetch";
 const bcrypt = require("bcrypt");
 const router = Router();
 
@@ -177,11 +178,23 @@ router.put("/users/location", (req,res)=>{
 		res.status(500).json(error);
 	});
 });
+//  endpoint for event details for shopper
+router.get("/events/shopper", (req, res) => {
+	const shopPerson = req.query.shopperId;
+	const shopperQuery =
+		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, lunch_shopper_id, diners, recipe_id, events.cohort_id, class_number, region, user_name, user_email FROM events INNER JOIN cohort ON events.cohort_id=cohort.id INNER JOIN users ON events.lunch_maker_id=users.id WHERE events.lunch_shopper_id=$1";
+	pool
+		.query(shopperQuery, [shopPerson])
+		.then((response) => res.json(response.rows))
+		.catch((error) => {
+			console.error(error);
+			res.status(500).json(error);
+		});
+});
 
 
 router.get("/events/next", (req,res)=> {
     const cohortId = req.query.cohId;
-	console.log(cohortId);
 	const eventQuery =
 		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, recipe_id, cohort_id, class_number, region FROM events INNER JOIN cohort ON events.cohort_id=cohort.id WHERE $1=events.cohort_id";
 
@@ -384,7 +397,57 @@ router.post("/lunch/dietary", async (req, res) => {
 	}
 });
 
+// route to get nearby shops for the users postcode
+router.get("/google", (req,res)=> {
+	const getLat = req.query.lat;
+	const getLong = req.query.long;
 
+	fetch(
+		`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${getLat},${getLong}&radius=1500&type=supermarket&key=${process.env.API_KEY}`
+	)
+		.then((response) => response.json())
+		.then((data) => res.json(data))
+		.catch(function (error) {
+			console.log(error);
+		});
+	});
 
+// distance matrix endpoint
+router.get("/google/distance", (req, res) => {
+	const startCoords = req.query.start;
+	const endsCoords = req.query.ends;
+
+	fetch(
+		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&key=${process.env.API_KEY}`
+	)
+		.then((response) => response.json())
+		.then((data) => res.json(data))
+		.catch(function (error) {
+			console.log(error);
+});
+});
+// endpoint for getting dietary information for cohort
+router.get("/lunch/dietary",(req,res)=> {
+	const dietCohort = parseInt(req.query.diets);
+	const dietArray = [];
+
+	const allergyQuery = "SELECT DISTINCT allergy_name FROM allergies INNER JOIN dietary_restrictions ON allergies.id=dietary_restrictions.allergen_id INNER JOIN users ON dietary_restrictions.user_id=users.id INNER JOIN cohort ON users.cohort_id=cohort.id WHERE cohort.id=$1";
+
+	const lunchQuery = "SELECT DISTINCT requirement_name FROM lunch_requirements INNER JOIN dietary_requirements ON lunch_requirements.id=dietary_requirements.requirement_id INNER JOIN users ON dietary_requirements.user_id=users.id INNER JOIN cohort ON users.cohort_id=cohort.id WHERE cohort.id=$1";
+
+	pool
+		.query(allergyQuery, [dietCohort])
+		.then((response) => dietArray.push(response.rows))
+		.then(() => {
+			return pool.query(lunchQuery,[dietCohort]);
+		})
+		.then((response)=> {
+			return dietArray.push(response.rows);
+		})
+		.then(()=> res.json(dietArray))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
 
 export default router;
