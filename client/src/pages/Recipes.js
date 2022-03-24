@@ -41,7 +41,7 @@ const Recipes = () => {
 				variant="h5"
 				sx={{ mt: 4, textAlign: "center" }}
 			>
-				Recipes
+				Recipe
 			</Typography>
 			{selectedRecipeName.length > 0 ? (
 				<Typography

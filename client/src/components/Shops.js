@@ -3,7 +3,7 @@ import { Card, Typography, Paper, Box, Container } from "@mui/material";
 
 const Shops = () => {
 const [shopResults, setShopResults] = useState([]);
-const location = JSON.parse(sessionStorage.getItem("userLocation"));
+const location = sessionStorage.getItem("userLocation");
 
 // a function that first fetches the latitude and longitude for the students postcode
 async function getPlaces() {
