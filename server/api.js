@@ -20,7 +20,6 @@ router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-
 router.post("/lunchMakerInfo", (req, res) => {
 	let lunchMakerInfo = {};
 	const currentCohort = req.body.cohort_id;
@@ -163,6 +162,7 @@ router.post("/login", async (req, res) => {
 			res.status(error.status).send(error);
 		});
 });
+
 // endpoint to update location
 router.put("/users/location", (req, res) => {
 	const location = req.body.location;
@@ -182,12 +182,25 @@ router.put("/users/location", (req, res) => {
 		});
 });
 
-
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
 	const shopPerson = req.query.shopperId;
 	const shopperQuery =
-		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, lunch_shopper_id, diners, recipe_id, events.cohort_id, class_number, region, user_name, user_email FROM events INNER JOIN cohort ON events.cohort_id=cohort.id INNER JOIN users ON events.lunch_maker_id=users.id WHERE events.lunch_shopper_id=$1";
+		`
+			SELECT 
+				events.id, meeting_location, meeting_postcode,
+				meeting_address, meeting_city, meeting_start,
+				meeting_end, break_time, lunch_maker_id,
+				lunch_shopper_id, diners, recipe_id,
+				events.cohort_id, class_number, region, user_name,
+				user_email 
+			FROM events 
+			INNER JOIN cohort 
+				ON events.cohort_id=cohort.id
+			INNER JOIN users
+				ON events.lunch_maker_id=users.id 
+			WHERE events.lunch_shopper_id=$1
+		`;
 	pool
 		.query(shopperQuery, [shopPerson])
 		.then((response) => res.json(response.rows))
@@ -200,7 +213,17 @@ router.get("/events/shopper", (req, res) => {
 router.get("/events/next", (req,res)=> {
     const cohortId = req.query.cohId;
 	const eventQuery =
-		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, recipe_id, cohort_id, class_number, region FROM events INNER JOIN cohort ON events.cohort_id=cohort.id WHERE $1=events.cohort_id";
+		`
+			SELECT 
+				events.id, meeting_location, meeting_postcode,
+				meeting_address, meeting_city, meeting_start,
+				meeting_end, break_time, lunch_maker_id, recipe_id,
+				cohort_id, class_number, region 
+			FROM events 
+			INNER JOIN cohort 
+				ON events.cohort_id=cohort.id 
+			WHERE $1=events.cohort_id
+		`;
 
 		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
 
@@ -212,7 +235,6 @@ router.get("/events/next", (req,res)=> {
 	});
 
 });
-
 
 //endpoint to get user by id
 router.get("/users/:id", (req,res)=> {
@@ -346,7 +368,11 @@ router.post("/register", async (req, res) => {
 			}else{
 				//if email is not already used, insert new user to the users table
 				const query =
-					"INSERT INTO users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+					`
+						INSERT INTO 
+							users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id)
+						VALUES ($1, $2, $3, $4, $5, $6, $7)
+					`;
 				pool
 					.query(query, [
 						name,
@@ -466,7 +492,6 @@ router.post("/recipes", async (req, res) => {
 
 });
 
-
 //endpoint to update the chosen recipe id in the events table;
 router.post("/eventRecipeId", async (req, res) => {
 	const recipeId = req.body.recipeId;
@@ -566,5 +591,4 @@ router.get("/lunch/dietary",(req,res)=> {
 		});
 });
 
-  export default router;
-
+export default router;
