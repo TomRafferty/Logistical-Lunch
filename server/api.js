@@ -237,19 +237,21 @@ router.get("/users/cohort/:cohortId", async (req, res) => {
 });
 
 //endpoint to get the history of all the lunch makers assigned in the past
-router.get("/history/lunchMaker", async (req, res) => {
-	const historyLunchMaker = await knex.select().table("lunch_maker_history");
+router.get("/history/lunchMaker/:cohortId", async (req, res) => {
+	const cohortId = req.params.cohortId;
+	const historyLunchMaker = await knex("lunch_maker_history").where("cohort_id", cohortId);
 
 	if (historyLunchMaker.length > 0) {
 		res.status(201).json(historyLunchMaker);
-	}else{
+	} else {
 		res.status(401).json({ msg: "There was a problem please try again later" });
 	}
 });
 
 //endpoint to get the history of all the lunch shoppers assigned in the past
-router.get("/history/lunchShopper", async (req, res) => {
-	const historyLunchShopper = await knex.select().table("lunch_shopper_history");
+router.get("/history/lunchShopper/:cohortId", async (req, res) => {
+	const cohortId = req.params.cohortId;
+	const historyLunchShopper = await knex("lunch_shopper_history").where("cohort_id", cohortId);
 
 	if (historyLunchShopper.length > 0) {
 		res.status(201).json(historyLunchShopper);
@@ -262,6 +264,7 @@ router.get("/history/lunchShopper", async (req, res) => {
 router.post("/lunchMaker", async (req, res) => {
 	const lunchMakerId = req.body.lunchMakerId;
 	const lunchMakerName = req.body.lunchMakerName;
+	const cohortId = req.body.cohortId;
 	try {
 		await knex.transaction(async (trx) => {
 			//overwriting all the previous is_lunch_maker values to false
@@ -271,7 +274,9 @@ router.post("/lunchMaker", async (req, res) => {
 			await trx("users").update("is_lunch_maker", true).where("id", lunchMakerId);
 
 			//inserted the nominated lunch_maker name and date into the lunch_maker_history table
-			await trx("lunch_maker_history").insert({ lunch_maker_name: lunchMakerName, created_on: "NOW()" });
+			await trx("lunch_maker_history").insert({
+				lunch_maker_name: lunchMakerName, created_on: "NOW()", cohort_id: cohortId,
+			});
 			res
 			.status(201)
 			.json({ msg: "The lunch maker was nominated successfully" });
@@ -285,6 +290,7 @@ router.post("/lunchMaker", async (req, res) => {
 router.post("/lunchShopper", async (req, res) => {
 	const lunchShopperId = req.body.lunchShopperId;
 	const lunchShopperName = req.body.lunchShopperName;
+	const cohortId = req.body.cohortId;
 	try {
 		await knex.transaction(async (trx) => {
 			//overwriting all the previous is_lunch_shopper values to false
@@ -294,7 +300,7 @@ router.post("/lunchShopper", async (req, res) => {
 			await trx("users").update("is_lunch_shopper", true).where("id", lunchShopperId);
 
 			//inserted the nominated lunch_shopper name and date into the lunch_shopper_history table
-			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()" });
+			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()", cohort_id: cohortId });
 			res
 			.status(201)
 			.json({ msg: "The lunch shopper was nominated successfully" });

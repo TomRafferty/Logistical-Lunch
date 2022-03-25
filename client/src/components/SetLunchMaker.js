@@ -79,6 +79,7 @@ const SetLunchMaker = () => {
 			body: JSON.stringify({
 				lunchMakerId: lunchMakerId,
 				lunchMakerName: lunchMakerName,
+				cohortId: cohortId,
 			}),
 		})
 			.then((res) => res.json())
