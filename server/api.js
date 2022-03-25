@@ -162,27 +162,45 @@ router.post("/login", async (req, res) => {
 			res.status(error.status).send(error);
 		});
 });
+
 // endpoint to update location
-router.put("/users/location", (req,res)=>{
-    const location = req.body.location;
+router.put("/users/location", (req, res) => {
+	const location = req.body.location;
 	const id = req.body.id;
-	if(!location) {
+	if (!location) {
 		res.status(400).json({ msg: "Please provide a location" });
 	}
 	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
-	pool.query(locationQuery,[location,id])
-	.then(()=>{
-	res.json({ msg: "user location updated" });
-	}).catch((error)=>{
-		console.error(error);
-		res.status(500).json(error);
-	});
+	pool
+		.query(locationQuery, [location, id])
+		.then(() => {
+			res.json({ msg: "user location updated" });
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(500).json(error);
+		});
 });
+
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
 	const shopPerson = req.query.shopperId;
 	const shopperQuery =
-		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, lunch_shopper_id, diners, recipe_id, events.cohort_id, class_number, region, user_name, user_email FROM events INNER JOIN cohort ON events.cohort_id=cohort.id INNER JOIN users ON events.lunch_maker_id=users.id WHERE events.lunch_shopper_id=$1";
+		`
+			SELECT 
+				events.id, meeting_location, meeting_postcode,
+				meeting_address, meeting_city, meeting_start,
+				meeting_end, break_time, lunch_maker_id,
+				lunch_shopper_id, diners, recipe_id,
+				events.cohort_id, class_number, region, user_name,
+				user_email 
+			FROM events 
+			INNER JOIN cohort 
+				ON events.cohort_id=cohort.id
+			INNER JOIN users
+				ON events.lunch_maker_id=users.id 
+			WHERE events.lunch_shopper_id=$1
+		`;
 	pool
 		.query(shopperQuery, [shopPerson])
 		.then((response) => res.json(response.rows))
@@ -195,7 +213,17 @@ router.get("/events/shopper", (req, res) => {
 router.get("/events/next", (req,res)=> {
     const cohortId = req.query.cohId;
 	const eventQuery =
-		"SELECT events.id, meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, break_time, lunch_maker_id, recipe_id, cohort_id, class_number, region FROM events INNER JOIN cohort ON events.cohort_id=cohort.id WHERE $1=events.cohort_id";
+		`
+			SELECT 
+				events.id, meeting_location, meeting_postcode,
+				meeting_address, meeting_city, meeting_start,
+				meeting_end, break_time, lunch_maker_id, recipe_id,
+				cohort_id, class_number, region 
+			FROM events 
+			INNER JOIN cohort 
+				ON events.cohort_id=cohort.id 
+			WHERE $1=events.cohort_id
+		`;
 
 		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
 
@@ -207,7 +235,6 @@ router.get("/events/next", (req,res)=> {
 	});
 
 });
-
 
 //endpoint to get user by id
 router.get("/users/:id", (req,res)=> {
@@ -237,19 +264,21 @@ router.get("/users/cohort/:cohortId", async (req, res) => {
 });
 
 //endpoint to get the history of all the lunch makers assigned in the past
-router.get("/history/lunchMaker", async (req, res) => {
-	const historyLunchMaker = await knex.select().table("lunch_maker_history");
+router.get("/history/lunchMaker/:cohortId", async (req, res) => {
+	const cohortId = req.params.cohortId;
+	const historyLunchMaker = await knex("lunch_maker_history").where("cohort_id", cohortId);
 
 	if (historyLunchMaker.length > 0) {
 		res.status(201).json(historyLunchMaker);
-	}else{
+	} else {
 		res.status(401).json({ msg: "There was a problem please try again later" });
 	}
 });
 
 //endpoint to get the history of all the lunch shoppers assigned in the past
-router.get("/history/lunchShopper", async (req, res) => {
-	const historyLunchShopper = await knex.select().table("lunch_shopper_history");
+router.get("/history/lunchShopper/:cohortId", async (req, res) => {
+	const cohortId = req.params.cohortId;
+	const historyLunchShopper = await knex("lunch_shopper_history").where("cohort_id", cohortId);
 
 	if (historyLunchShopper.length > 0) {
 		res.status(201).json(historyLunchShopper);
@@ -262,6 +291,7 @@ router.get("/history/lunchShopper", async (req, res) => {
 router.post("/lunchMaker", async (req, res) => {
 	const lunchMakerId = req.body.lunchMakerId;
 	const lunchMakerName = req.body.lunchMakerName;
+	const cohortId = req.body.cohortId;
 	try {
 		await knex.transaction(async (trx) => {
 			//overwriting all the previous is_lunch_maker values to false
@@ -271,7 +301,9 @@ router.post("/lunchMaker", async (req, res) => {
 			await trx("users").update("is_lunch_maker", true).where("id", lunchMakerId);
 
 			//inserted the nominated lunch_maker name and date into the lunch_maker_history table
-			await trx("lunch_maker_history").insert({ lunch_maker_name: lunchMakerName, created_on: "NOW()" });
+			await trx("lunch_maker_history").insert({
+				lunch_maker_name: lunchMakerName, created_on: "NOW()", cohort_id: cohortId,
+			});
 			res
 			.status(201)
 			.json({ msg: "The lunch maker was nominated successfully" });
@@ -285,6 +317,7 @@ router.post("/lunchMaker", async (req, res) => {
 router.post("/lunchShopper", async (req, res) => {
 	const lunchShopperId = req.body.lunchShopperId;
 	const lunchShopperName = req.body.lunchShopperName;
+	const cohortId = req.body.cohortId;
 	try {
 		await knex.transaction(async (trx) => {
 			//overwriting all the previous is_lunch_shopper values to false
@@ -294,7 +327,7 @@ router.post("/lunchShopper", async (req, res) => {
 			await trx("users").update("is_lunch_shopper", true).where("id", lunchShopperId);
 
 			//inserted the nominated lunch_shopper name and date into the lunch_shopper_history table
-			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()" });
+			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()", cohort_id: cohortId });
 			res
 			.status(201)
 			.json({ msg: "The lunch shopper was nominated successfully" });
@@ -335,7 +368,11 @@ router.post("/register", async (req, res) => {
 			}else{
 				//if email is not already used, insert new user to the users table
 				const query =
-					"INSERT INTO users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+					`
+						INSERT INTO 
+							users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id)
+						VALUES ($1, $2, $3, $4, $5, $6, $7)
+					`;
 				pool
 					.query(query, [
 						name,
@@ -455,7 +492,6 @@ router.post("/recipes", async (req, res) => {
 
 });
 
-
 //endpoint to update the chosen recipe id in the events table;
 router.post("/eventRecipeId", async (req, res) => {
 	const recipeId = req.body.recipeId;
@@ -554,5 +590,4 @@ router.get("/lunch/dietary",(req,res)=> {
 		});
 });
 
-  export default router;
-
+export default router;

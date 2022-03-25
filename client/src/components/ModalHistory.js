@@ -25,11 +25,13 @@ const ModalHistory = (props) => {
 	//states for updating the fetched data
 	const [usersHistory, setUsersHistory] = useState([]);
 
+	const cohortId = sessionStorage.getItem("cohortId");
+
 	//event for opening the modal window
 	const handleOpen = () => {
 		setOpen(true);
 		//fetching information (name & date) from a specific table - used 1 prop to make the component reusable
-		fetch(`http://localhost:3100/api/history/${props.userInstance}`)
+		fetch(`http://localhost:3100/api/history/${props.userInstance}/${cohortId}`)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();

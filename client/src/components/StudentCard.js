@@ -46,22 +46,17 @@ const StudentCard = () => {
   });
 
 // getting region and class to display in heading
-  const region = cardData.map((element)=> {
-	  return element.region;
-  });
-  const year = cardData.map((element)=>{
-	  return element.class_number;
-  });
+
   return (
 		<Box>
 			<Paper>
 				<Typography variant="h5" sx={{ mb: 2, mt: 2 }} align="center">
 					{/* optional heading, this can be changed */}
 					{cardData.length === 0
-						? `${region} ${year} have no Meetings`
+						? "You have no Meetings"
 						: cardData.length === 1
-						? `${region} ${year} have 1 Meeting`
-						: `${region} ${year} have ${cardData.length} Meetings`}
+						? "You have 1 Meeting"
+						: `You have ${cardData.length} Meetings`}
 				</Typography>
 			</Paper>
 
