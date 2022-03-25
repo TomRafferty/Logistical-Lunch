@@ -20,6 +20,7 @@ router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
+
 router.post("/lunchMakerInfo", (req, res) => {
 	let lunchMakerInfo = {};
 	const currentCohort = req.body.cohort_id;
@@ -163,21 +164,26 @@ router.post("/login", async (req, res) => {
 		});
 });
 // endpoint to update location
-router.put("/users/location", (req,res)=>{
-    const location = req.body.location;
+router.put("/users/location", (req, res) => {
+	const location = req.body.location;
 	const id = req.body.id;
-	if(!location) {
+	console.log("john");
+	if (!location) {
 		res.status(400).json({ msg: "Please provide a location" });
 	}
 	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
-	pool.query(locationQuery,[location,id])
-	.then(()=>{
-	res.json({ msg: "user location updated" });
-	}).catch((error)=>{
-		console.error(error);
-		res.status(500).json(error);
-	});
+	pool
+		.query(locationQuery, [location, id])
+		.then(() => {
+			res.json({ msg: "user location updated" });
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(500).json(error);
+		});
 });
+
+
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
 	const shopPerson = req.query.shopperId;

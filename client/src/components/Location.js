@@ -27,9 +27,9 @@ const Location = () => {
     };
     // a function to update the users location in the database
     const handleClick=()=> {
-        let sessionData = JSON.parse(sessionStorage.getItem("userLocation"));
+        let sessionData = sessionStorage.getItem("userLocation");
         sessionData=newLocal;
-        sessionStorage.setItem("userLocation", JSON.stringify(sessionData));
+        sessionStorage.setItem("userLocation", sessionData);
         fetch("api/users/location", {
 					method: "put",
 					headers: {
