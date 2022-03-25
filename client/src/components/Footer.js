@@ -5,7 +5,7 @@ import styled from "@emotion/styled";
 const FooterBox = styled(Box)({
 	background: "#f3f3f3",
     height: "60px",
-    marginTop: "auto",
+    marginTop: "2rem",
     position: "fixed",
     bottom: 0,
     left: 0,

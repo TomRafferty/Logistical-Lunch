@@ -6,6 +6,7 @@ import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
 import CreateEventForm from "../components/CreateEventForm";
 import SetLunchShopper from "../components/SetLunchShopper";
+import EditEventForm from "../components/EditEventForm";
 
 
 
@@ -27,6 +28,7 @@ export default function Admin() {
 					<SetLunchShopper />
 				</Box>
 			</Box>
+			<EditEventForm />
 		</div>
 	);
 }
