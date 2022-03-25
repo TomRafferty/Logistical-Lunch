@@ -167,7 +167,6 @@ router.post("/login", async (req, res) => {
 router.put("/users/location", (req, res) => {
 	const location = req.body.location;
 	const id = req.body.id;
-	console.log("john");
 	if (!location) {
 		res.status(400).json({ msg: "Please provide a location" });
 	}
