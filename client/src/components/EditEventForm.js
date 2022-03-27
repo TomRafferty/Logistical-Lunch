@@ -1,4 +1,5 @@
-import { Grid, OutlinedInput } from "@mui/material";
+import { Grid, MenuItem } from "@mui/material";
+import { Box } from "@mui/system";
 import { useState } from "react";
 
 const { default: styled } = require("@emotion/styled");
@@ -11,6 +12,7 @@ const FormContainer = styled(Grid)({
 	justifyContent: "center",
 	padding: "30px 50px",
 	background: "#fafafa",
+	marginBottom: "2rem",
 });
 
 const EditEventForm = () => {
@@ -20,10 +22,10 @@ const EditEventForm = () => {
 
     const StyledInput = styled(FormControl)({
 			margin: "2rem",
-			width: "40%",
+			width: "50%",
 		});
 
-    const [selectedMeeting, setSelectedMeeting] = useState([]);
+    const [selectedMeetingId, setSelectedMeetingId] = useState("");
 
     // swap this out for live data after testing
     let meetings = [
@@ -47,37 +49,30 @@ const EditEventForm = () => {
         },
     ];
 
-    const changeSelectedMeeting = (value) => {
-        setSelectedMeeting(value);
+    const changeSelectedMeeting = async (event) => {
+		setSelectedMeetingId(event.target.value);
     };
 
     return (
 			<FormContainer>
-				<StyledInput>
-					<InputLabel id="select-meeting-label">
-						Select Meeting to Edit
-					</InputLabel>
+				<FormControl fullWidth>
+					<InputLabel id="demo-simple-select-label">Meeting</InputLabel>
 					<Select
-						labelId="select-meeting-label"
-						id="select-meeting"
-						multiple
-						value={selectedMeeting}
-						onChange={(e) => {
-							changeSelectedMeeting(e.target.value);
-						}}
+						labelId="demo-simple-select-label"
+						id="demo-simple-select"
+						value={""}
+						label="Age"
+						onChange={changeSelectedMeeting}
 					>
-						{meetings.map((meeting) => {
+						{meetings.map((meeting, index) => {
 							return (
-								<option
-									value={meeting.meeting_id}
-									key={`meeting-option-${meeting.meeting_id}`}
-								>
-                                    {`${meeting.meeting_location} ${meeting.meeting_start}-${meeting.meeting_end}`}
-                                </option>
+								<MenuItem key={`meeting-${index}`} value={meeting.meeting_id}>
+									{`${meeting.meeting_location} ${meeting.meeting_start}`}
+								</MenuItem>
 							);
 						})}
 					</Select>
-				</StyledInput>
+				</FormControl>
 			</FormContainer>
 		);
 };
