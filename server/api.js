@@ -236,6 +236,23 @@ router.get("/events/next", (req,res)=> {
 
 });
 
+router.get("/events/get/:cohortId", (req, res) => {
+	pool
+		.query(
+			`
+				SELECT * FROM events WHERE cohort_id=$1
+			`,
+			[req.params.cohortId]
+		)
+		.then((response) => {
+			res.json(response.rows);
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(error.status).send(error);
+		});
+});
+
 //endpoint to get user by id
 router.get("/users/:id", (req,res)=> {
 	const userId = req.params.id;
