@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { MobileDatePicker } from "@mui/lab";
 
 const { default: styled } = require("@emotion/styled");
-const { FormControl, InputLabel } = require("@material-ui/core");
+const { FormControl } = require("@material-ui/core");
 
 const FormContainer = styled(Grid)({
 	spacing: "0",
@@ -28,9 +28,10 @@ const EditEventForm = () => {
 		postcode: "",
 		address: "",
 		city: "",
-		start: "",
-		end: "",
 	});
+
+	const [tempState, setTempState] = useState({});
+
 	useEffect(() => {
 		const options = {
 			method: "get",
@@ -47,8 +48,7 @@ const EditEventForm = () => {
 			.then((result) => {
 				// this assumes we only have one meeting per cohort which is currently the case
 				const event = result[0];
-				console.log(event.meeting_location);
-				setCurrentEvent({
+				setTempState({
 					location: event.meeting_location,
 					postcode: event.meeting_postcode,
 					address: event.meeting_address,
@@ -70,13 +70,26 @@ const EditEventForm = () => {
 		align: "center",
 	});
 
-	const [submitState, setSubmitState] = useState();
+	const [submitState, setSubmitState] = useState({});
 
-	const submit = () => {
-		console.log(submitState);
+	useEffect(() => {
+		// add verification here
+		if(Object.keys(submitState).includes("location")){
+			// submit
+			console.log(submitState);
+		}
+	}, [submitState]);
+
+	const changeCurrentEventProperty = (key, value) => {
+		setCurrentEvent((event) => ({
+			...event,
+			[key] : value,
+		}));
 	};
 
-	let subObj = {};
+	const submit = () => {
+		setSubmitState(currentEvent);
+	};
 
 	// format new date from picker
 	const formatDate = (dateObj) => {
@@ -91,124 +104,134 @@ const EditEventForm = () => {
 		}).toSQL();
 	};
 
+	currentEvent = tempState;
 	return (
 		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
-			<FormContainer container>
-				<Header>{`Edit - ${currentEvent.location}`}</Header>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					submit();
+				}}
+			>
+				<FormContainer container>
+					<Header>{`Edit - ${currentEvent.location}`}</Header>
 
-				{/* location */}
-				<StyledInput sx={{ width: 1 / 2 }}>
-					<TextField
-						label="Location"
-						required
-						id="location-input"
-						name="location"
-						defaultValue={currentEvent.location}
-						onChange={(e) => (subObj[e.target.name] = e.target.value)}
-					/>
-				</StyledInput>
-
-				{/* postcode */}
-				<StyledInput>
-					<TextField
-						label="Postcode"
-						required
-						id="postcode-input"
-						name="postcode"
-						defaultValue={currentEvent.postcode}
-						onChange={(e) => (subObj[e.target.name] = e.target.value)}
-					/>
-				</StyledInput>
-
-				{/* address */}
-				<StyledInput>
-					<TextField
-						label="address"
-						required
-						id="address-input"
-						name="address"
-						defaultValue={currentEvent.address}
-						onChange={(e) => (subObj[e.target.name] = e.target.value)}
-					/>
-				</StyledInput>
-
-				{/* city */}
-				<StyledInput>
-					<TextField
-						label="City"
-						required
-						id="city-input"
-						name="city"
-						defaultValue={currentEvent.city}
-						onChange={(e) => (subObj[e.target.name] = e.target.value)}
-					/>
-				</StyledInput>
-
-				{/* meeting start */}
-				<StyledInput>
-					<LocalizationProvider dateAdapter={DateAdapter}>
-						<MobileDatePicker
+					{/* location */}
+					<StyledInput sx={{ width: 1 / 2 }}>
+						<TextField
+							label="Location"
 							required
-							disableToolbar
-							variant="inline"
-							margin="normal"
-							id="meeting-start-date-picker"
-							label="meeting-start-date"
-							name="meeting_start"
-							onChange={(newDate) => {
-								subObj["meeting_end"] = formatDate(newDate);
-							}}
-							keyboardButtonProps={{
-								"aria-label": "change date",
-							}}
-							openTo="day"
-							renderInput={(params) => <TextField {...params} />}
-						/>
-					</LocalizationProvider>
-				</StyledInput>
-
-				{/* meeting end */}
-				<StyledInput>
-					<LocalizationProvider dateAdapter={DateAdapter}>
-						<MobileDatePicker
-							required
-							disableToolbar
-							variant="inline"
-							margin="normal"
-							id="meeting-end-date-picker"
-							label="meeting-end-date"
-							name="meeting_End"
-							onChange={(newDate) => {
-								subObj["meeting_end"] = formatDate(newDate);
-							}}
-							keyboardButtonProps={{
-								"aria-label": "change date",
-							}}
-							openTo="day"
-							renderInput={(params) => <TextField {...params} />}
-						/>
-					</LocalizationProvider>
-				</StyledInput>
-
-				{/* submit button */}
-				<StyledInput>
-					<Button
-						variant="contained"
-						onClick={() => {
-							setSubmitState(subObj);
-							// patch to avoid sending empty request. - temporary fix, needs proper solution
-							if (
-								submitState.location !== undefined &&
-								submitState.location !== ""
-							) {
-								submit();
+							id="location-input"
+							name="location"
+							defaultValue={currentEvent.location}
+							onChange={(e) =>
+								changeCurrentEventProperty(e.target.name, e.target.value)
 							}
-						}}
-					>
-						Submit
-					</Button>
-				</StyledInput>
-			</FormContainer>
+						/>
+					</StyledInput>
+
+					{/* postcode */}
+					<StyledInput>
+						<TextField
+							label="Postcode"
+							required
+							id="postcode-input"
+							name="postcode"
+							defaultValue={currentEvent.postcode}
+							onChange={(e) =>
+								changeCurrentEventProperty(e.target.name, e.target.value)
+							}
+						/>
+					</StyledInput>
+
+					{/* address */}
+					<StyledInput>
+						<TextField
+							label="address"
+							required
+							id="address-input"
+							name="address"
+							defaultValue={currentEvent.address}
+							onChange={(e) =>
+								changeCurrentEventProperty(e.target.name, e.target.value)
+							}
+						/>
+					</StyledInput>
+
+					{/* city */}
+					<StyledInput>
+						<TextField
+							label="City"
+							required
+							id="city-input"
+							name="city"
+							defaultValue={currentEvent.city}
+							onChange={(e) =>
+								changeCurrentEventProperty(e.target.name, e.target.value)
+							}
+						/>
+					</StyledInput>
+
+					{/* meeting start */}
+					<StyledInput>
+						<LocalizationProvider dateAdapter={DateAdapter}>
+							<MobileDatePicker
+								required
+								disableToolbar
+								variant="inline"
+								margin="normal"
+								id="meeting-start-date-picker"
+								label="meeting-start-date"
+								name="meeting_start"
+								onChange={(newDate) => {
+									changeCurrentEventProperty(
+										"meeting_end",
+										formatDate(newDate)
+									);
+								}}
+								keyboardButtonProps={{
+									"aria-label": "change date",
+								}}
+								openTo="day"
+								renderInput={(params) => <TextField {...params} />}
+							/>
+						</LocalizationProvider>
+					</StyledInput>
+
+					{/* meeting end */}
+					<StyledInput>
+						<LocalizationProvider dateAdapter={DateAdapter}>
+							<MobileDatePicker
+								required
+								disableToolbar
+								variant="inline"
+								margin="normal"
+								id="meeting-end-date-picker"
+								label="meeting-end-date"
+								name="meeting_End"
+								onChange={(newDate) => {
+									changeCurrentEventProperty(
+										"meeting_end",
+										formatDate(newDate)
+									);
+								}}
+								keyboardButtonProps={{
+									"aria-label": "change date",
+								}}
+								openTo="day"
+								renderInput={(params) => <TextField {...params} />}
+							/>
+						</LocalizationProvider>
+					</StyledInput>
+
+					{/* submit button */}
+					<StyledInput>
+						<Button variant="contained" type="submit" value="Submit">
+							Submit
+						</Button>
+					</StyledInput>
+				</FormContainer>
+			</form>
 		</Box>
 	);
 };
