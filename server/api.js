@@ -277,6 +277,9 @@ router.post("/lunchMaker", async (req, res) => {
 			await trx("lunch_maker_history").insert({
 				lunch_maker_name: lunchMakerName, created_on: "NOW()", cohort_id: cohortId,
 			});
+
+			//update the nominated lunch maker id into the events table
+			await trx("events").update("lunch_maker_id", lunchMakerId).where("cohort_id", cohortId);
 			res
 			.status(201)
 			.json({ msg: "The lunch maker was nominated successfully" });
@@ -297,13 +300,24 @@ router.post("/lunchShopper", async (req, res) => {
 			await trx("users").update("is_lunch_shopper", false);
 
 			//updating only a specific is_lunch_shopper value to true
-			await trx("users").update("is_lunch_shopper", true).where("id", lunchShopperId);
+			await trx("users")
+				.update("is_lunch_shopper", true)
+				.where("id", lunchShopperId);
 
 			//inserted the nominated lunch_shopper name and date into the lunch_shopper_history table
-			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()", cohort_id: cohortId });
+			await trx("lunch_shopper_history").insert({
+				lunch_shopper_name: lunchShopperName,
+				created_on: "NOW()",
+				cohort_id: cohortId,
+			});
+
+			//update the nominated lunch shopper id into the events table
+			await trx("events")
+				.update("lunch_shopper_id", lunchShopperId)
+				.where("cohort_id", cohortId);
 			res
-			.status(201)
-			.json({ msg: "The lunch shopper was nominated successfully" });
+				.status(201)
+				.json({ msg: "The lunch shopper was nominated successfully" });
 		});
 	} catch (error) {
 		res.status(500).json({ msg: "Something went wrong. Please try again later!" });
