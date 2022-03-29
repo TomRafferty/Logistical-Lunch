@@ -4,7 +4,7 @@ import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { MobileDatePicker } from "@mui/lab";
+import { DateTimePicker } from "@mui/lab";
 
 const { default: styled } = require("@emotion/styled");
 const { FormControl } = require("@material-ui/core");
@@ -38,6 +38,9 @@ const EditEventForm = () => {
 		address: "",
 		city: "",
 	});
+	// dates to display and use to update the subObj:
+	const [displayedStartDate, setDisplayedStartDate] = useState(new Date());
+	const [displayedEndDate, setDisplayedEndDate] = useState(new Date());
 	// --------------------------------------------------------------------------------
 	// this object stores all the information ready to be sent off to the database + stops rerendering while using states
 	let subObj = {};
@@ -69,8 +72,8 @@ const EditEventForm = () => {
 					postcode: event.meeting_postcode,
 					address: event.meeting_address,
 					city: event.meeting_city,
-					start: event.meeting_start,
-					end: event.meeting_end,
+					start: DateTime.fromSQL(event.meeting_start),
+					end: DateTime.fromSQL(event.meeting_end),
 				};
 				setEventToEdit(setEvent, setData());
 			})
@@ -91,10 +94,14 @@ const EditEventForm = () => {
 	// submit
 	useEffect(() => {
 		// this is where the actual submission will take place
-		console.log(`final submission state - ${submitState}`);
-		console.log(`final submission state keys - ${Object.keys(submitState)}`);
-		console.log(`final submission state values - ${Object.values(submitState)}`);
-	}, [submitState]);
+		if(submitState !== (eventToEdit || {})){
+			console.log(`final submission state - ${submitState}`);
+			console.log(`final submission state keys - ${Object.keys(submitState)}`);
+			console.log(
+				`final submission state values - ${Object.values(submitState)}`
+			);
+		}
+	});
 	// this refreshes the use effect above
 	const submit = () => {
 		// this will check if all the values have been adjusted,
@@ -110,20 +117,17 @@ const EditEventForm = () => {
 	// handle changes to the subObj
 	const handleSubObjChange = (key, value) => {
 		subObj[key] = value;
+		console.log(`just set ${key} to ${value} subObj now = ${Object.values(subObj)}`);
 	};
 
-	// format new date from picker
-	const formatDate = (dateObj) => {
-		return DateTime.fromObject({
-			year: dateObj.year,
-			month: dateObj.month,
-			day: dateObj.day,
-			hour: dateObj.hour,
-			minute: dateObj.minute,
-			second: dateObj.second,
-			millisecond: dateObj.millisecond,
-		}).toSQL();
-	};
+	// change date useEffect will refresh the date value in subObj
+	useEffect(() => {
+		subObj.start = displayedStartDate;
+	});
+	useEffect(() => {
+		subObj.end = displayedEndDate;
+	});
+
 	return (
 		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 			<form
@@ -198,7 +202,7 @@ const EditEventForm = () => {
 					{/* meeting start */}
 					<StyledInput>
 						<LocalizationProvider dateAdapter={DateAdapter}>
-							<MobileDatePicker
+							<DateTimePicker
 								required
 								disableToolbar
 								variant="inline"
@@ -206,9 +210,9 @@ const EditEventForm = () => {
 								id="meeting-start-date-picker"
 								label="meeting-start-date"
 								name="meeting_start"
-								value={new Date()}
+								value={displayedStartDate}
 								onChange={(newDate) => {
-									handleSubObjChange("start", formatDate(newDate));
+									setDisplayedStartDate(newDate);
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
@@ -222,7 +226,7 @@ const EditEventForm = () => {
 					{/* meeting end */}
 					<StyledInput>
 						<LocalizationProvider dateAdapter={DateAdapter}>
-							<MobileDatePicker
+							<DateTimePicker
 								required
 								disableToolbar
 								variant="inline"
@@ -230,9 +234,9 @@ const EditEventForm = () => {
 								id="meeting-end-date-picker"
 								label="meeting-end-date"
 								name="meeting_End"
-								value={new Date()}
+								value={displayedEndDate}
 								onChange={(newDate) => {
-									handleSubObjChange("end", formatDate(newDate));
+									setDisplayedEndDate(newDate);
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
