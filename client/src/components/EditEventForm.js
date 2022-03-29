@@ -9,6 +9,15 @@ import { MobileDatePicker } from "@mui/lab";
 const { default: styled } = require("@emotion/styled");
 const { FormControl } = require("@material-ui/core");
 
+const StyledInput = styled(FormControl)({
+	margin: "2rem",
+	width: "50%",
+});
+const Header = styled(Typography)({
+	variant: "h4",
+	align: "center",
+});
+
 const FormContainer = styled(Grid)({
 	spacing: "0",
 	flexDirection: "column",
@@ -20,40 +29,53 @@ const FormContainer = styled(Grid)({
 });
 
 const EditEventForm = () => {
-	//select the meeting (drop down)
-	//when meeting is selected display form containing all the information already in the database
-	//update those values in a fresh object to send off to the api that will update the old entry
-	let [currentEvent, setCurrentEvent] = useState({
+	// states:
+	const [submitState, setSubmitState] = useState({});
+	// this is where the data is stored from the database to display initial values
+	const [eventToEdit, setEventToEdit] = useState({
 		location: "",
 		postcode: "",
 		address: "",
 		city: "",
 	});
-
-	const [tempState, setTempState] = useState({});
-
+	// --------------------------------------------------------------------------------
+	// this object stores all the information ready to be sent off to the database + stops rerendering while using states
+	let subObj = {};
+	// set up the initial data inside of the subObj
+	const setData = () => {
+		subObj = eventToEdit;
+	};
+	// get current cohort data
+	const options = {
+		method: "get",
+		headers: {
+			Accept: "application/json, text/plain, */*",
+			"Content-Type": "application/json",
+		},
+	};
+	// change the number on the end here to be the session stored cohort id.
+	// ${sessionStorage.getItem("cohortId")}
 	useEffect(() => {
-		const options = {
-			method: "get",
-			headers: {
-				Accept: "application/json, text/plain, */*",
-				"Content-Type": "application/json",
-			},
-		};
-		// change the number on the end here to be the session stored cohort id.
-		// ${sessionStorage.getItem("cohortId")}
-
 		fetch("http://localhost:3000/api/events/get/378", options)
 			.then((response) => response.json())
 			.then((result) => {
 				// this assumes we only have one meeting per cohort which is currently the case
-				const event = result[0];
-				setTempState({
+				return result[0];
+			})
+			.then((event) => {
+				// this will set both the eventToEdit and subObj to be the same initially
+				console.log(`logging all of event:
+				${event.meeting_location}
+				${event.meeting_postcode}
+				${event.meeting_address}
+				${event.meeting_city}`);
+				const setEvent = {
 					location: event.meeting_location,
 					postcode: event.meeting_postcode,
 					address: event.meeting_address,
 					city: event.meeting_city,
-				});
+				};
+				setEventToEdit(setEvent, setData());
 			})
 			.catch((error) => {
 				console.error(error);
@@ -61,34 +83,34 @@ const EditEventForm = () => {
 			});
 	}, []);
 
-	const StyledInput = styled(FormControl)({
-		margin: "2rem",
-		width: "50%",
-	});
-	const Header = styled(Typography)({
-		variant: "h4",
-		align: "center",
-	});
 
-	const [submitState, setSubmitState] = useState({});
-
-	useEffect(() => {
-		// add verification here
-		if(Object.keys(submitState).includes("location")){
-			// submit
-			console.log(submitState);
-		}
-	}, [submitState]);
-
-	const changeCurrentEventProperty = (key, value) => {
-		setCurrentEvent((event) => ({
-			...event,
-			[key] : value,
+	// reformat submit
+	const reformatSubmit = (keyName) => {
+		setSubmitState((prevState) => ({
+			...prevState,
+			[keyName]: eventToEdit[keyName],
 		}));
 	};
-
+	// submit
+	useEffect(() => {
+		// add verification here
+		console.log(submitState);
+	}, [submitState]);
+	// this refreshes the use effect above
 	const submit = () => {
-		setSubmitState(currentEvent);
+		setSubmitState(subObj);
+		// this will check if all the values have been adjusted,
+		// if not it will apply the previously set values to them.
+		Object.keys(eventToEdit).forEach((key) => {
+			if(!Object.keys(submitState).includes(key)){
+				reformatSubmit(key);
+			}
+		});
+	};
+
+	// handle changes to the subObj
+	const handleSubObjChange = (key, value) => {
+		subObj[key] = value;
 	};
 
 	// format new date from picker
@@ -103,8 +125,6 @@ const EditEventForm = () => {
 			millisecond: dateObj.millisecond,
 		}).toSQL();
 	};
-
-	currentEvent = tempState;
 	return (
 		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 			<form
@@ -114,7 +134,7 @@ const EditEventForm = () => {
 				}}
 			>
 				<FormContainer container>
-					<Header>{`Edit - ${currentEvent.location}`}</Header>
+					<Header>{`Edit - ${eventToEdit.location}`}</Header>
 
 					{/* location */}
 					<StyledInput sx={{ width: 1 / 2 }}>
@@ -123,9 +143,10 @@ const EditEventForm = () => {
 							required
 							id="location-input"
 							name="location"
-							defaultValue={currentEvent.location}
+							key={eventToEdit.location}
+							defaultValue={eventToEdit.location}
 							onChange={(e) =>
-								changeCurrentEventProperty(e.target.name, e.target.value)
+								handleSubObjChange(e.target.name, e.target.value)
 							}
 						/>
 					</StyledInput>
@@ -137,9 +158,10 @@ const EditEventForm = () => {
 							required
 							id="postcode-input"
 							name="postcode"
-							defaultValue={currentEvent.postcode}
+							key={eventToEdit.postcode}
+							defaultValue={eventToEdit.postcode}
 							onChange={(e) =>
-								changeCurrentEventProperty(e.target.name, e.target.value)
+								handleSubObjChange(e.target.name, e.target.value)
 							}
 						/>
 					</StyledInput>
@@ -151,9 +173,10 @@ const EditEventForm = () => {
 							required
 							id="address-input"
 							name="address"
-							defaultValue={currentEvent.address}
+							key={eventToEdit.address}
+							defaultValue={eventToEdit.address}
 							onChange={(e) =>
-								changeCurrentEventProperty(e.target.name, e.target.value)
+								handleSubObjChange(e.target.name, e.target.value)
 							}
 						/>
 					</StyledInput>
@@ -165,9 +188,10 @@ const EditEventForm = () => {
 							required
 							id="city-input"
 							name="city"
-							defaultValue={currentEvent.city}
+							key={eventToEdit.city}
+							defaultValue={eventToEdit.city}
 							onChange={(e) =>
-								changeCurrentEventProperty(e.target.name, e.target.value)
+								handleSubObjChange(e.target.name, e.target.value)
 							}
 						/>
 					</StyledInput>
@@ -183,11 +207,9 @@ const EditEventForm = () => {
 								id="meeting-start-date-picker"
 								label="meeting-start-date"
 								name="meeting_start"
+								value={new Date()}
 								onChange={(newDate) => {
-									changeCurrentEventProperty(
-										"meeting_end",
-										formatDate(newDate)
-									);
+									handleSubObjChange("meeting_end", formatDate(newDate));
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
@@ -209,11 +231,9 @@ const EditEventForm = () => {
 								id="meeting-end-date-picker"
 								label="meeting-end-date"
 								name="meeting_End"
+								value={new Date()}
 								onChange={(newDate) => {
-									changeCurrentEventProperty(
-										"meeting_end",
-										formatDate(newDate)
-									);
+									handleSubObjChange("meeting_end", formatDate(newDate));
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
