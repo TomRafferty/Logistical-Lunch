@@ -5,17 +5,6 @@ import fetch from "node-fetch";
 const bcrypt = require("bcrypt");
 const router = Router();
 
-const makeArrayUnique = (arr) => {
-	// reusable array formatter for ensuring every element only appears once.
-	let newArr = [];
-	arr.forEach((element) => {
-		if(!newArr.includes(element)){
-			newArr.push(element);
-		}
-	});
-	return newArr;
-};
-
 router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
@@ -60,8 +49,6 @@ router.post("/lunchMakerInfo", (req, res) => {
 					lunchMakerInfo["allergies"].push(response.rows.map((requirement) => {
 						return requirement.requirement_name;
 					}));
-					const allAllergies = lunchMakerInfo["allergies"];
-					lunchMakerInfo["allergies"] = makeArrayUnique(allAllergies);
 
 					pool
 						.query(

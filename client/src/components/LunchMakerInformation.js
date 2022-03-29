@@ -11,6 +11,17 @@ const TypographyInner = styled(Typography)({
 	fontWeight: "bold",
 });
 
+const makeArrayUnique = (arr) => {
+	// reusable array formatter for ensuring every element only appears once.
+	let newArr = [];
+	arr.forEach((element) => {
+		if (!newArr.includes(element)) {
+			newArr.push(element);
+		}
+	});
+	return newArr;
+};
+
 const LunchMakerInformation = () => {
 	const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
 	const [numberOfServings, setNumberOfServings] = useState(0);
@@ -34,7 +45,7 @@ const LunchMakerInformation = () => {
 				throw `${response.status} ${response.statusText}`;
 			})
 			.then((data) => {
-				const dietRes = data.allergies.flat();
+				const dietRes = makeArrayUnique(data.allergies.flat());
 				setDietaryRestrictions(dietRes);
 
 				const numServ = Object.values(data.numDiners)[0];
