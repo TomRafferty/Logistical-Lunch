@@ -64,16 +64,13 @@ const EditEventForm = () => {
 			})
 			.then((event) => {
 				// this will set both the eventToEdit and subObj to be the same initially
-				console.log(`logging all of event:
-				${event.meeting_location}
-				${event.meeting_postcode}
-				${event.meeting_address}
-				${event.meeting_city}`);
 				const setEvent = {
 					location: event.meeting_location,
 					postcode: event.meeting_postcode,
 					address: event.meeting_address,
 					city: event.meeting_city,
+					start: event.meeting_start,
+					end: event.meeting_end,
 				};
 				setEventToEdit(setEvent, setData());
 			})
@@ -86,26 +83,28 @@ const EditEventForm = () => {
 
 	// reformat submit
 	const reformatSubmit = (keyName) => {
-		setSubmitState((prevState) => ({
-			...prevState,
-			[keyName]: eventToEdit[keyName],
-		}));
+		// this essentially makes sure everything has a value when
+		// it is submitted; so if nothing was changed, it will use
+		// the old value.
+		handleSubObjChange(keyName, eventToEdit[keyName]);
 	};
 	// submit
 	useEffect(() => {
-		// add verification here
-		console.log(submitState);
+		// this is where the actual submission will take place
+		console.log(`final submission state - ${submitState}`);
+		console.log(`final submission state keys - ${Object.keys(submitState)}`);
+		console.log(`final submission state values - ${Object.values(submitState)}`);
 	}, [submitState]);
 	// this refreshes the use effect above
 	const submit = () => {
-		setSubmitState(subObj);
 		// this will check if all the values have been adjusted,
 		// if not it will apply the previously set values to them.
 		Object.keys(eventToEdit).forEach((key) => {
-			if(!Object.keys(submitState).includes(key)){
+			if (!Object.keys(subObj).includes(key)) {
 				reformatSubmit(key);
 			}
 		});
+		setSubmitState(subObj);
 	};
 
 	// handle changes to the subObj
@@ -209,7 +208,7 @@ const EditEventForm = () => {
 								name="meeting_start"
 								value={new Date()}
 								onChange={(newDate) => {
-									handleSubObjChange("meeting_end", formatDate(newDate));
+									handleSubObjChange("start", formatDate(newDate));
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
@@ -233,7 +232,7 @@ const EditEventForm = () => {
 								name="meeting_End"
 								value={new Date()}
 								onChange={(newDate) => {
-									handleSubObjChange("meeting_end", formatDate(newDate));
+									handleSubObjChange("end", formatDate(newDate));
 								}}
 								keyboardButtonProps={{
 									"aria-label": "change date",
