@@ -45,6 +45,7 @@ const LoginForm = () => {
 			sessionStorage.setItem("isLunchShopper", res.is_lunch_shopper);
 			sessionStorage.setItem("userLocation", res.user_location);
 			sessionStorage.setItem("userName", res.user_name);
+			sessionStorage.setItem("transportType", res.transport_type);
 			login(sessionStorage.getItem("userType"));
 		})
 		.catch((error) => {

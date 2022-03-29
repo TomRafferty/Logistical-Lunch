@@ -182,6 +182,29 @@ router.put("/users/location", (req, res) => {
 		});
 });
 
+// endpoint to update chosen travel type
+router.put("/users/transport", (req, res) => {
+	const transport = req.body.transport;
+	const id = req.body.id;
+	if (!transport) {
+		res.status(400).json({ msg: "Please provide a transport option" });
+	}
+	const locationQuery = "UPDATE users SET transport_type=$1 WHERE id=$2";
+	pool
+		.query(locationQuery, [transport, id])
+		.then(() => {
+			res.json({ msg: "transport_type updated" });
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(500).json(error);
+		});
+});
+
+
+
+
+
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
 	const shopPerson = req.query.shopperId;
