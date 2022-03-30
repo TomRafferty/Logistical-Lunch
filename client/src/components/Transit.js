@@ -26,6 +26,7 @@ const Transit = () => {
         useEffect(()=>{
              getId();
         },[update]);
+
     // on change the value of the option will be sent to sessionStorage and as an update to the database
     const handleChange=(e)=> {
         let sessionData = sessionStorage.getItem("transportType");
@@ -65,7 +66,7 @@ const Transit = () => {
 					);
 				})}
 				<FormControl sx={{ width: "175px", marginLeft: "20px" }}>
-					<InputLabel id="travel">Travel</InputLabel>
+					<InputLabel id="travel">Go</InputLabel>
 					<Select
 						id="travel"
 						value={travel}
