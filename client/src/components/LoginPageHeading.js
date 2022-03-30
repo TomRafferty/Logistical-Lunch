@@ -24,7 +24,7 @@ const Heading = styled(Typography)({
 
 const LoginPageHeading = () => {
     return (
-			<HeadingContainer disableGutters={true} maxWidth="xl">
+			<HeadingContainer disableGutters={true} maxWidth="false">
 				<IconBox
 					variant="square"
 					src={LogisticalLunchIcon}

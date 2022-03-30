@@ -5,7 +5,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 const LunchMakerGuide = () => {
  return (
     <Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
-        <Container sx={{ display: "flex", alignItems: "center" }}>
+        <Container sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}>
             <EngineeringIcon fontSize="large"></EngineeringIcon>
             <Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
                 How does it work?

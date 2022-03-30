@@ -53,7 +53,9 @@ const LunchMakerInformation = () => {
 	}, []); //removing the dependency array here will cause infinite requests to be made
     return (
 			<Grid>
-				<Container sx={{ display: "flex", alignItems: "center" }}>
+				<Container
+					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+				>
 					<LunchDiningRoundedIcon fontSize="large"></LunchDiningRoundedIcon>
 					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
 						Lunch Information
@@ -62,7 +64,10 @@ const LunchMakerInformation = () => {
 				<Box sx={{ mt: 2, p: 0 }}>
 					<Typography>
 						<strong>Number of servings required:</strong>
-						<Typography component="span" sx={{ color: "primary.main", m: "5px" }}>
+						<Typography
+							component="span"
+							sx={{ color: "primary.main", m: "5px" }}
+						>
 							{numberOfServings}
 						</Typography>
 					</Typography>
@@ -82,7 +87,11 @@ const LunchMakerInformation = () => {
 						})}
 					</ListStyled>
 					<Typography>
-						<strong>The lunch shopper this week is:</strong><Typography component="span" sx={{ color: "primary.main" }}> {lunchShopper}</Typography>
+						<strong>The lunch shopper this week is:</strong>
+						<Typography component="span" sx={{ color: "primary.main" }}>
+							{" "}
+							{lunchShopper}
+						</Typography>
 					</Typography>
 				</Box>
 			</Grid>
