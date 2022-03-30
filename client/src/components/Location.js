@@ -44,7 +44,7 @@ const Location = () => {
 					boxShadow: 3,
 					p: 4,
 					width: "40%",
-					minHeight: "150px",
+					minHeight: "150px", 
 				}}
 			>
 				<Container
