@@ -8,7 +8,7 @@ const HeadingContainer = styled(Container)({
 	background: "rgb(239,239,239)",
 	display: "flex",
 	alignItems: "center",
-	margin: 0,
+	marginTop: "20px",
 	paddingLeft: 40,
 	paddingRight: 40,
 });

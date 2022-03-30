@@ -1,15 +1,19 @@
-import { Card, List, ListItem, Typography } from "@mui/material";
-import styled from "@emotion/styled";
-import { Box } from "@mui/system";
+import { Container, List, ListItem, Typography, Grid } from "@mui/material";
+import { Box, styled } from "@mui/system";
 import { useEffect, useState } from "react";
+import LunchDiningRoundedIcon from "@mui/icons-material/LunchDiningRounded";
 
-const TypographyInner = styled(Typography)({
-	variant: "h6",
-	display: "inline",
-	marginLeft: "10px",
-	color: "text.primary",
-	fontWeight: "bold",
+const ListStyled = styled(List)({
+	display: "flex",
+	flexWrap: "wrap",
 });
+
+const ListItemStyled = styled(ListItem)({
+	width: "150px",
+	border: "1px solid #2196f3",
+	margin: "5px 10px",
+});
+
 
 const LunchMakerInformation = () => {
 	const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
@@ -41,30 +45,47 @@ const LunchMakerInformation = () => {
 				setNumberOfServings(numServ);
 
 				const lunchShop = data.lunchShopper;
-				setLunchShopper(lunchShop);
+				setLunchShopper(lunchShop.user_name);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
 	}, []); //removing the dependency array here will cause infinite requests to be made
     return (
-			<Box>
-				<Typography variant="h5" textAlign={"center"}>This Weeks Lunch Information:</Typography>
-				<Card sx={{ mt: 2 }}>
-					<TypographyInner>{`Number of Servings Required: ${numberOfServings}`}</TypographyInner>
-					<List>
-						<TypographyInner>Dietary Restrictions:</TypographyInner>
+			<Grid>
+				<Container sx={{ display: "flex", alignItems: "center" }}>
+					<LunchDiningRoundedIcon fontSize="large"></LunchDiningRoundedIcon>
+					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+						Lunch Information
+					</Typography>
+				</Container>
+				<Box sx={{ mt: 2, p: 0 }}>
+					<Typography>
+						<strong>Number of servings required:</strong>
+						<Typography component="span" sx={{ color: "primary.main", m: "5px" }}>
+							{numberOfServings}
+						</Typography>
+					</Typography>
+
+					<Typography>
+						<strong>Dietary restrictions:</strong>
+					</Typography>
+					<ListStyled>
 						{dietaryRestrictions.map((restriction, index) => {
 							return (
-								<ListItem key={`restriction-${index}-key`}>
-									<TypographyInner>{restriction}</TypographyInner>
-								</ListItem>
+								<ListItemStyled key={`restriction-${index}-key`}>
+									<Typography sx={{ color: "primary.main" }}>
+										{restriction}
+									</Typography>
+								</ListItemStyled>
 							);
 						})}
-					</List>
-					<TypographyInner>{`Your Lunch Shopper This Week Is: ${lunchShopper}`}</TypographyInner>
-				</Card>
-			</Box>
+					</ListStyled>
+					<Typography>
+						<strong>The lunch shopper this week is:</strong><Typography component="span" sx={{ color: "primary.main" }}> {lunchShopper}</Typography>
+					</Typography>
+				</Box>
+			</Grid>
 		);
 };
 export default LunchMakerInformation;
