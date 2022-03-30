@@ -589,6 +589,21 @@ router.get("/google/distance", (req, res) => {
 });
 });
 
+// google matrix endpoint two
+router.get("/google/admin", (req, res) => {
+	const startCoords = req.query.begin;
+	const endsCoords = req.query.finish;
+	const transitMode = req.query.transit;
+	fetch(
+		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&mode=${transitMode}&key=${process.env.API_KEY}`
+	)
+		.then((response) => response.json())
+		.then((data) => res.json(data))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
 // endpoint for getting dietary information for cohort
 router.get("/lunch/dietary",(req,res)=> {
 	const dietCohort = parseInt(req.query.diets);
@@ -613,5 +628,19 @@ router.get("/lunch/dietary",(req,res)=> {
 			console.log(error);
 		});
 });
+
+router.get("/postcodes", (req, res) => {
+	const allPostCodes = parseInt(req.query.codesCohort);
+	const postcodeQuery =
+		"SELECT user_name, user_location, transport_type FROM users WHERE cohort_id=$1";
+	pool
+		.query(postcodeQuery, [allPostCodes])
+		.then((response) => res.json(response.rows))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
+
 
 export default router;
