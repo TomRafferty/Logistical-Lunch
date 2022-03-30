@@ -8,17 +8,20 @@ import StandardStudentGuide from "../components/StandardStudentGuide";
 
 const Student = () => {
 	return (
-		<Box
-			sx={{ width: "80%", mx: "auto", mb: 6 }}
-		>
+		<Box sx={{ width: "80%", mx: "auto", mb: 6 }}>
 			<StandardStudentGuide />
 			<StudentCard />
 			<Box
 				disableGutters
-				sx={{ display: "flex", justifyContent: "space-between" }}
+				sx={{ display: "flex", flexDirection: "column" }}
 			>
-				<Location />
-				<Transit />
+				<Box
+					disableGutters
+					sx={{ display: "flex", justifyContent: "space-between", mb: 6 }}
+				>
+					<Location />
+					<Transit />
+				</Box>
 				<RequestLunch />
 			</Box>
 		</Box>

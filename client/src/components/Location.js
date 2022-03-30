@@ -39,7 +39,14 @@ const Location = () => {
                     }
                 };
     return (
-			<Box sx={{ boxShadow: 3, p: 4, width: "40%", alignSelf: "flex-start" }}>
+			<Box
+				sx={{
+					boxShadow: 3,
+					p: 4,
+					width: "40%",
+					minHeight: "150px",
+				}}
+			>
 				<Container
 					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
 				>
@@ -48,17 +55,19 @@ const Location = () => {
 						Location
 					</Typography>
 				</Container>
-				{ sessionStorage.getItem("userLocation")=== "null" ? (
-						<Typography marginTop={2} marginBottom={1}>
-							We do not have your location details. Please enter your Postcode
-						</Typography>
-					) : (
-						<Typography marginTop={2} marginBottom={1}>
-							Your Postcode is {sessionStorage.getItem("userLocation")}. Would you like to enter
-							a different location?
-						</Typography>
-					)
-				}
+				{sessionStorage.getItem("userLocation") === "null" ? (
+					<Typography marginTop={2} marginBottom={1}>
+						We do not have your location details. Please enter your Postcode
+					</Typography>
+				) : (
+					<Typography marginTop={2} marginBottom={1}>
+						Your Postcode is{" "}
+						<Typography component="span" sx={{ color: "primary.main" }}>
+							{sessionStorage.getItem("userLocation")}.
+						</Typography>{" "}
+						Would you like to enter a different location?
+					</Typography>
+				)}
 				<Box
 					component="form"
 					sx={{

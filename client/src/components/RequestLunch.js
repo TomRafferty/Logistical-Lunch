@@ -121,7 +121,7 @@ const RequestLunch = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, p: 4, width: "40%" }}>
+		<Box sx={{ boxShadow: 3, p: 4, minWidth: "40%", alignSelf: "center" }}>
 			<Container
 				sx={{ display: "flex", alignItems: "center", marginLeft: "0", mb:2 }}
 			>
