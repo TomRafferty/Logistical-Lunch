@@ -24,7 +24,6 @@ const StudentCard = () => {
 			})
 			.then(function (data) {
 				setCardData(data);
-				console.log(data);
 			})
 			.catch(function (error) {
 				console.log("An error occurred:", error);

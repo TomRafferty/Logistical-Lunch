@@ -207,7 +207,8 @@ router.put("/users/transport", (req, res) => {
 
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
-	const shopPerson = req.query.shopperId;
+	const shopPerson = parseInt(req.query.shopperId);
+	console.log(shopPerson);
 	const shopperQuery =
 		`
 			SELECT 
@@ -215,11 +216,11 @@ router.get("/events/shopper", (req, res) => {
 				meeting_address, meeting_city, meeting_start,
 				meeting_end, break_time, lunch_maker_id,
 				lunch_shopper_id, diners, recipe_id,
-				events.cohort_id, class_number, region, user_name,
-				user_email 
+				events.cohort_id, user_name,
+				user_email, recipes.ingredients, recipes.recipe_name
 			FROM events 
-			INNER JOIN cohort 
-				ON events.cohort_id=cohort.id
+			INNER JOIN recipes 
+				ON events.recipe_id=recipes.id 
 			INNER JOIN users
 				ON events.lunch_maker_id=users.id 
 			WHERE events.lunch_shopper_id=$1
@@ -579,7 +580,7 @@ router.get("/google", (req,res)=> {
 	const getLong = req.query.long;
 
 	fetch(
-		`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${getLat},${getLong}&radius=1500&type=supermarket&key=${process.env.API_KEY}`
+		`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${getLat},${getLong}&radius=2000&type=supermarket&key=${process.env.API_KEY}`
 	)
 		.then((response) => response.json())
 		.then((data) => res.json(data))

@@ -18,6 +18,7 @@ const NavBar = () => {
 	//storing the role of the user into the  sessionStorage so we can display the nav accordingly.
 	const userType = sessionStorage.getItem("userType");
 	const isLunchMaker = sessionStorage.getItem("isLunchMaker");
+	const isLunchShopper = sessionStorage.getItem("isLunchShopper");
 
 	//setting different styles for the navbar depending if the user is logged in or not
 	const bgColor = userType != null ? "rgb(239,239,239)" : "rgb(255,255,255)";
@@ -52,7 +53,17 @@ const NavBar = () => {
 							<MenuIcon sx={{ fontSize: 35 }} />
 						</IconButton>
 						<Menu id="menu" anchorEl={anchorEl} open={open} onClose={close}>
-							{isLunchMaker === "true" ? <MenuItem onClick={() => nav("/recipes")}>Lunch Maker</MenuItem> : ""}
+
+							{isLunchMaker === "true" ? (
+								<MenuItem onClick={() => nav("/recipes")}>Lunch Maker</MenuItem>
+							) : (
+								""
+							)}
+							{isLunchShopper === "true" ? (
+								<MenuItem onClick={() => nav("/shopper")}>Lunch Shopper</MenuItem>
+							) : (
+								""
+							)}
 							<MenuItem onClick={() => nav("/student")}> Meeting Info</MenuItem>
 							<MenuItem
 								onClick={() => {
