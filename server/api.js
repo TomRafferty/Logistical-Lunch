@@ -555,7 +555,6 @@ router.post("/eventRecipeId", async (req, res) => {
 
 // admin create new event
 router.post("/createNewEvent", (req, res) => {
-	console.log(`hit request with body = ${req.body}`);
 	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
 	pool
 	.query(
@@ -569,7 +568,7 @@ router.post("/createNewEvent", (req, res) => {
 		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
 	)
 	.then(() => {
-		console.log("added new event");
+		res.status(200).json({ message:"added new event" });
 	})
 	.catch((error) => {
 		console.error(error);

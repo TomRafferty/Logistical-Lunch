@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 import styled from "@emotion/styled";
 import { Box, Button, FormControl, Grid, InputLabel, TextField, Typography } from "@mui/material";
 import DateAdapter from "@mui/lab/AdapterLuxon";
@@ -36,33 +37,23 @@ const CreateEventForm = () => {
 		// currentCohort: sessionStorage.getItem("cohortId"),
 	};
 	const subObj = emptyEvent;
-	const [submitState, setSubmitState] = useState(subObj);
-	// handle changes to the subObj
-	const handleSubObjChange = (key, value) => {
-		subObj[key] = value;
-		console.log(`just changed ${key} to = ${value}`);
-		console.log(`subObj values now = ${Object.values(subObj)}`);
-	};
+	const [submitState, setSubmitState] = useState(emptyEvent);
+
 	// dates to display and use to update the subObj:
 	const [displayedStartDate, setDisplayedStartDate] = useState(new Date());
 	const [displayedEndDate, setDisplayedEndDate] = useState(new Date());
 	// change date useEffect will refresh the date value in subObj
 	useEffect(() => {
-		subObj.meeting_start = displayedStartDate;
+		subObj.meeting_start = DateTime.local(displayedStartDate).toSQL();
 	});
 	useEffect(() => {
-		subObj.meeting_end = displayedEndDate;
+		subObj.meeting_end = DateTime.local(displayedEndDate).toSQL();
 	});
 
-	// TODO fix fetch request
-
-	// submission refresh useEffect:
-	useEffect(() => {
-		// even though the fields are required this just ensures that no empty objects get sent through
+	// async function which will recall the useEffect for submission when called
+	const submitReq = async () => {
 		const shouldPass = submitState.location !== "" ? true : false;
 		if (shouldPass) {
-			console.log(`should pass = ${shouldPass}`);
-			// currently it gets this far but doesn't make it to the api...
 			const options = {
 				method: "post",
 				headers: {
@@ -71,29 +62,34 @@ const CreateEventForm = () => {
 				},
 				body: JSON.stringify(submitState),
 			};
-			fetch("http://localhost:3000/api/createNewEvent", options)
+			await fetch("http://localhost:3000/api/createNewEvent", options)
 				.then((response) => {
 					console.log(`hello there! here is the fetch response ${response}`);
 					console.log("Created new event");
 				})
 				.catch((error) => {
-					console.error(error);
+					console.error(`error - ${error}`);
 					throw error;
 				});
 		}
+	};
+
+	// submission refresh useEffect:
+	useEffect(() => {
+		submitReq();
 	}, []);
-	// sending off the submission object
-	const submit = () => {
-		console.log("clicked submit");
-		// this sets the state, causing a refresh of the above useEffect
+	// handle changes to the subObj
+	const handleSubObjChange = (key, value) => {
+		subObj[key] = value;
 		setSubmitState(subObj);
+		console.log(subObj);
 	};
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				submit();
+				submitReq();
 			}}
 		>
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
