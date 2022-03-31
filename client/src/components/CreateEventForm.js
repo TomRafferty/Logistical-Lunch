@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { DateTimePicker, MobileDatePicker } from "@mui/lab";
 import { DateTime } from "luxon";
 
+// styles:
 const Header = styled(Typography)({
-    align: "center",
-    variant: "h3",
+	align: "center",
+	variant: "h3",
 });
 const FormContainer = styled(Grid)({
 	spacing: "0",
@@ -18,26 +19,29 @@ const FormContainer = styled(Grid)({
 	padding: "30px 50px",
 	background: "#fafafa",
 });
-
 const StyledInput = styled(FormControl)({
 	margin: "2rem",
 	width: "40%",
 });
-
 const CreateEventForm = () => {
 	// submit state and change handler
-	const subObj = {
+	const emptyEvent = {
 		location: "",
 		postcode: "",
 		address: "",
 		city: "",
 		meeting_start: "",
 		meeting_end: "",
-		currentCohort: sessionStorage.getItem("cohortId"),
+		currentCohort: 378, //TODO change to session storage
+		// currentCohort: sessionStorage.getItem("cohortId"),
 	};
-	const [submitState, setSubmitState] = useState({});
-	const changeSubProp = (property, value) => {
-		subObj[property] = value;
+	const subObj = emptyEvent;
+	const [submitState, setSubmitState] = useState(subObj);
+	// handle changes to the subObj
+	const handleSubObjChange = (key, value) => {
+		subObj[key] = value;
+		console.log(`just changed ${key} to = ${value}`);
+		console.log(`subObj values now = ${Object.values(subObj)}`);
 	};
 	// dates to display and use to update the subObj:
 	const [displayedStartDate, setDisplayedStartDate] = useState(new Date());
@@ -50,30 +54,37 @@ const CreateEventForm = () => {
 		subObj.meeting_end = displayedEndDate;
 	});
 
+	// TODO fix fetch request
 
 	// submission refresh useEffect:
 	useEffect(() => {
-		console.log(`getting to useEffect in create submission with the subObj values of: ${Object.values(subObj)}`);
-		const options = {
-			method: "post",
-			headers: {
-				Accept: "application/json, text/plain, */*",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(submitState),
-		};
-		fetch("http://localhost:3000/api/createNewEvent", options)
-			.then((response) => {
-				console.log(response);
-				console.log("Created new event");
-			})
-			.catch((error) => {
-				console.error(error);
-				throw error;
-			});
-	});
+		// even though the fields are required this just ensures that no empty objects get sent through
+		const shouldPass = submitState.location !== "" ? true : false;
+		if (shouldPass) {
+			console.log(`should pass = ${shouldPass}`);
+			// currently it gets this far but doesn't make it to the api...
+			const options = {
+				method: "post",
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(submitState),
+			};
+			fetch("http://localhost:3000/api/createNewEvent", options)
+				.then((response) => {
+					console.log(`hello there! here is the fetch response ${response}`);
+					console.log("Created new event");
+				})
+				.catch((error) => {
+					console.error(error);
+					throw error;
+				});
+		}
+	}, []);
 	// sending off the submission object
 	const submit = () => {
+		console.log("clicked submit");
 		// this sets the state, causing a refresh of the above useEffect
 		setSubmitState(subObj);
 	};
@@ -96,7 +107,9 @@ const CreateEventForm = () => {
 							required
 							id="location-input"
 							name="location"
-							onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+							onChange={(e) =>
+								handleSubObjChange(e.target.name, e.target.value)
+							}
 						/>
 					</StyledInput>
 
@@ -107,7 +120,9 @@ const CreateEventForm = () => {
 							required
 							id="postcode-input"
 							name="postcode"
-							onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+							onChange={(e) =>
+								handleSubObjChange(e.target.name, e.target.value)
+							}
 						/>
 					</StyledInput>
 
@@ -118,7 +133,9 @@ const CreateEventForm = () => {
 							required
 							id="address-input"
 							name="address"
-							onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+							onChange={(e) =>
+								handleSubObjChange(e.target.name, e.target.value)
+							}
 						/>
 					</StyledInput>
 
@@ -129,7 +146,9 @@ const CreateEventForm = () => {
 							required
 							id="city-input"
 							name="city"
-							onChange={(e) => changeSubProp(e.target.name, e.target.value)}
+							onChange={(e) =>
+								handleSubObjChange(e.target.name, e.target.value)
+							}
 						/>
 					</StyledInput>
 
@@ -183,11 +202,7 @@ const CreateEventForm = () => {
 
 					{/* submit button */}
 					<StyledInput>
-						<Button
-							variant="contained"
-							type="submit"
-							value="Submit"
-						>
+						<Button variant="contained" type="submit" value="Submit">
 							Submit
 						</Button>
 					</StyledInput>

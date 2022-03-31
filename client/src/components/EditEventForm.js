@@ -94,7 +94,7 @@ const EditEventForm = () => {
 	// submit
 	useEffect(() => {
 		// this is where the actual submission will take place
-		if(submitState !== (eventToEdit || {})){
+		if(Object.keys(submitState).length > 0){
 			console.log(`final submission state - ${submitState}`);
 			console.log(`final submission state keys - ${Object.keys(submitState)}`);
 			console.log(
@@ -117,7 +117,6 @@ const EditEventForm = () => {
 	// handle changes to the subObj
 	const handleSubObjChange = (key, value) => {
 		subObj[key] = value;
-		console.log(`just set ${key} to ${value} subObj now = ${Object.values(subObj)}`);
 	};
 
 	// change date useEffect will refresh the date value in subObj
