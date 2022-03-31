@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { TextField, Typography, Box, Button, FormControl } from "@mui/material";
 
 const Location = () => {
@@ -13,9 +13,11 @@ const Location = () => {
             setNewLocal(e.target.value);
         }
     };
-    // a function to update the users location in the database
-    const handleClick=()=> {
-        if(newLocal.length>0) {
+    // a function to validate the inputted postcode and update the users location in the database
+    async function handleClick() {
+        const validate = await fetch(`https://api.postcodes.io/postcodes/${newLocal}/validate`);
+        const data = await validate.json();
+        if(data.result===true) {
             fetch("api/users/location", {
                         method: "put",
                         headers: {
@@ -36,7 +38,12 @@ const Location = () => {
                             console.log("An error occurred:", error);
                         });
                     }
-                };
+                }
+
+    useEffect(()=>{
+        handleClick();
+    },[])
+
     return (
 			<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 				{ sessionStorage.getItem("userLocation")=== "null" ? (
