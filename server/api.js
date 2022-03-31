@@ -3,7 +3,7 @@ import { knex } from "./db";
 import pool from "./db";
 import fetch from "node-fetch";
 const bcrypt = require("bcrypt");
-const router = Router();
+const router = Router("nodemailer");
 
 const makeArrayUnique = (arr) => {
 	// reusable array formatter for ensuring every element only appears once.

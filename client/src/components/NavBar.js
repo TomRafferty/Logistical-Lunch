@@ -29,7 +29,7 @@ const NavBar = () => {
 	return (
 		<AppBar
 			position="static"
-			sx={{ bgcolor: `${bgColor}`, boxShadow: `${boxShadow}` }}
+			sx={{ bgcolor: `${bgColor}`, boxShadow: `${boxShadow}`, paddingLeft: "40px" }}
 		>
 			<Toolbar>
 				<Avatar
@@ -53,7 +53,6 @@ const NavBar = () => {
 						</IconButton>
 						<Menu id="menu" anchorEl={anchorEl} open={open} onClose={close}>
 							{isLunchMaker === "true" ? <MenuItem onClick={() => nav("/recipes")}>Lunch Maker</MenuItem> : ""}
-							<MenuItem onClick={close}> Edit Profile</MenuItem>
 							<MenuItem onClick={() => nav("/student")}> Meeting Info</MenuItem>
 							<MenuItem
 								onClick={() => {
