@@ -169,6 +169,29 @@ router.put("/users/location", (req, res) => {
 		});
 });
 
+// endpoint to update chosen travel type
+router.put("/users/transport", (req, res) => {
+	const transport = req.body.transport;
+	const id = req.body.id;
+	if (!transport) {
+		res.status(400).json({ msg: "Please provide a transport option" });
+	}
+	const locationQuery = "UPDATE users SET transport_type=$1 WHERE id=$2";
+	pool
+		.query(locationQuery, [transport, id])
+		.then(() => {
+			res.json({ msg: "transport_type updated" });
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(500).json(error);
+		});
+});
+
+
+
+
+
 //  endpoint for event details for shopper
 router.get("/events/shopper", (req, res) => {
 	const shopPerson = req.query.shopperId;
@@ -308,6 +331,9 @@ router.post("/lunchMaker", async (req, res) => {
 			await trx("lunch_maker_history").insert({
 				lunch_maker_name: lunchMakerName, created_on: "NOW()", cohort_id: cohortId,
 			});
+
+			//update the nominated lunch maker id into the events table
+			await trx("events").update("lunch_maker_id", lunchMakerId).where("cohort_id", cohortId);
 			res
 			.status(201)
 			.json({ msg: "The lunch maker was nominated successfully" });
@@ -328,13 +354,24 @@ router.post("/lunchShopper", async (req, res) => {
 			await trx("users").update("is_lunch_shopper", false);
 
 			//updating only a specific is_lunch_shopper value to true
-			await trx("users").update("is_lunch_shopper", true).where("id", lunchShopperId);
+			await trx("users")
+				.update("is_lunch_shopper", true)
+				.where("id", lunchShopperId);
 
 			//inserted the nominated lunch_shopper name and date into the lunch_shopper_history table
-			await trx("lunch_shopper_history").insert({ lunch_shopper_name: lunchShopperName, created_on: "NOW()", cohort_id: cohortId });
+			await trx("lunch_shopper_history").insert({
+				lunch_shopper_name: lunchShopperName,
+				created_on: "NOW()",
+				cohort_id: cohortId,
+			});
+
+			//update the nominated lunch shopper id into the events table
+			await trx("events")
+				.update("lunch_shopper_id", lunchShopperId)
+				.where("cohort_id", cohortId);
 			res
-			.status(201)
-			.json({ msg: "The lunch shopper was nominated successfully" });
+				.status(201)
+				.json({ msg: "The lunch shopper was nominated successfully" });
 		});
 	} catch (error) {
 		res.status(500).json({ msg: "Something went wrong. Please try again later!" });
@@ -570,6 +607,21 @@ router.get("/google/distance", (req, res) => {
 });
 });
 
+// google matrix endpoint two
+router.get("/google/admin", (req, res) => {
+	const startCoords = req.query.begin;
+	const endsCoords = req.query.finish;
+	const transitMode = req.query.transit;
+	fetch(
+		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&mode=${transitMode}&key=${process.env.API_KEY}`
+	)
+		.then((response) => response.json())
+		.then((data) => res.json(data))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
 // endpoint for getting dietary information for cohort
 router.get("/lunch/dietary",(req,res)=> {
 	const dietCohort = parseInt(req.query.diets);
@@ -594,5 +646,19 @@ router.get("/lunch/dietary",(req,res)=> {
 			console.log(error);
 		});
 });
+
+router.get("/postcodes", (req, res) => {
+	const allPostCodes = parseInt(req.query.codesCohort);
+	const postcodeQuery =
+		"SELECT user_name, user_location, transport_type FROM users WHERE cohort_id=$1";
+	pool
+		.query(postcodeQuery, [allPostCodes])
+		.then((response) => res.json(response.rows))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
+
 
 export default router;
