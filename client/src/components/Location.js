@@ -1,5 +1,8 @@
+
 import { React, useState, useEffect } from "react";
-import { TextField, Typography, Box, Button, FormControl } from "@mui/material";
+import { TextField, Typography, Box, Button, FormControl, Container } from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+
 
 const Location = () => {
     // const [userData, setUserData] = useState([]);
@@ -45,54 +48,69 @@ const Location = () => {
     },[])
 
     return (
-			<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-				{ sessionStorage.getItem("userLocation")=== "null" ? (
-						<Typography padding="20px 20px 10px 20px">
-							We do not have your location details. Please enter your Postcode
-						</Typography>
-					) : (
-						<Typography padding="20px 20px 10px 20px">
-							Your Postcode is {sessionStorage.getItem("userLocation")}. Would you like to enter
-							a different location?
-						</Typography>
-					)
-				}
-				<Box
-                component="form"
-                sx={{
-                    display: "flex",
-                    gap: "10px",
-                    paddingLeft: "10px",
-                    alignItems: "end",
-                }}
+			<Box
+				sx={{
+					boxShadow: 3,
+					p: 4,
+					width: "40%",
+					minHeight: "150px", 
+				}}
+			>
+				<Container
+					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
 				>
-				<FormControl
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "10px",
-                    }}
-                >
-                    <TextField
-                        size="small"
-                        id="location"
-                        name="location"
-                        label="Postcode"
-                        sx={{ width: "180px" }}
-                        onChange={handleChange}
-                        required
-                    ></TextField>
-                    <Button
-                        type="reset"
-                        variant="contained"
-                        margin="10px"
-                        size="small"
-                        sx={{ height: "40px" }}
-                        onClick={handleClick}
-                    >
-                        Submit Postcode
-                    </Button>
-                </FormControl>
+					<LocationOnIcon fontSize="large"></LocationOnIcon>
+					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+						Location
+					</Typography>
+				</Container>
+				{sessionStorage.getItem("userLocation") === "null" ? (
+					<Typography marginTop={2} marginBottom={1}>
+						We do not have your location details. Please enter your Postcode
+					</Typography>
+				) : (
+					<Typography marginTop={2} marginBottom={1}>
+						Your Postcode is{" "}
+						<Typography component="span" sx={{ color: "primary.main" }}>
+							{sessionStorage.getItem("userLocation")}.
+						</Typography>{" "}
+						Would you like to enter a different location?
+					</Typography>
+				)}
+				<Box
+					component="form"
+					sx={{
+						display: "flex",
+						gap: "20px",
+						alignItems: "end",
+					}}
+				>
+					<FormControl
+						sx={{
+							display: "flex",
+							flexDirection: "row",
+							gap: "10px",
+						}}
+					>
+						<TextField
+							size="small"
+							id="location"
+							name="location"
+							label="Postcode"
+							sx={{ width: "180px" }}
+							onChange={handleChange}
+							required
+						></TextField>
+						<Button
+							type="reset"
+							variant="contained"
+							size="medium"
+							sx={{ width: "max-content" }}
+							onClick={handleClick}
+						>
+							Submit
+						</Button>
+					</FormControl>
 				</Box>
 			</Box>
 		);

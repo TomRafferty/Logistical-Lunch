@@ -9,7 +9,6 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import { Typography, Box, List, ListItemButton, ListItemText, Button } from "@mui/material";
-import { red } from "@mui/material/colors";
 import MoreTimeIcon from "@mui/icons-material/MoreTime";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -71,7 +70,7 @@ const RecipeCard = (props) => {
 			sx={{
 				boxShadow: 3,
 				mx: "auto",
-				my: 6,
+				mt: 6,
 				p: 2,
 				maxWidth: 370,
 				display: "flex",
@@ -80,7 +79,7 @@ const RecipeCard = (props) => {
 		>
 			<CardHeader
 				avatar={
-					<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+					<Avatar sx={{ bgcolor: "black" }} aria-label="recipe">
 						<MenuBookOutlinedIcon />
 					</Avatar>
 				}
@@ -188,7 +187,6 @@ const RecipeCard = (props) => {
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
 				<CardContent>
 					<Typography
-						variant="h6"
 						textAlign="center"
 						sx={{ textDecoration: "underline" }}
 					>
@@ -207,7 +205,6 @@ const RecipeCard = (props) => {
 						}
 					</List>
 					<Typography
-						variant="h6"
 						textAlign="center"
 						sx={{ textDecoration: "underline" }}
 					>

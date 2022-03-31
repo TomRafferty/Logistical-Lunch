@@ -1,14 +1,13 @@
 import React from "react";
 import {
   Typography,
-  Card,
-  CardContent,
+  Container,
   Box,
-  Paper,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { DateTime } from "luxon";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 
 const StudentCard = () => {
       const [cardData, setCardData] = useState([]);
@@ -37,81 +36,102 @@ const StudentCard = () => {
   };
   // typography styling
   const TypographyInner = styled(Typography)({
-    variant: "h6",
     display: "inline",
-    marginLeft: "10px",
-    color: "text.primary",
-    fontWeight: "bold",
+    margin: "10px",
   });
 
 // getting region and class to display in heading
 
   return (
-		<Box>
-			<Paper>
-				<Typography variant="h5" sx={{ mb: 2, mt: 2 }} align="center">
-					{/* optional heading, this can be changed */}
-					{cardData.length === 0
-						? "You have no Meetings"
-						: cardData.length === 1
-						? "You have 1 Meeting"
-						: `You have ${cardData.length} Meetings`}
-				</Typography>
-			</Paper>
+		<Box
+			sx={{
+				boxShadow: 3,
+				display: "flex",
+				my: 6,
+				p: 4,
+			}}
+		>
+			<Container disableGutters>
+				<Container
+					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+				>
+					<DateRangeIcon fontSize="large"></DateRangeIcon>
+					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+						{/* optional heading, this can be changed */}
+						{cardData.length === 0
+							? "You have no Meetings"
+							: cardData.length === 1
+							? "You have 1 Meeting"
+							: `You have ${cardData.length} Meetings`}
+					</Typography>
+				</Container>
 
-			{cardData.map((element) => {
-				return (
-					<Card key={element.id} sx={{ mt: 2 }}>
-						<CardContent>
-							<Typography variant="h6">
-								Location:
-								<TypographyInner>{element.meeting_location}</TypographyInner>
-							</Typography>
-							<Typography variant="h6">
-								Date:
-								<TypographyInner>
-									{DateTime.fromISO(
-										timeSplitter(element.meeting_start)[0]
-									).toFormat("DDDD")}
-								</TypographyInner>
-							</Typography>
-							<Typography variant="h6">
-								Meeting starts:
-								<TypographyInner>
-									{DateTime.fromISO(
-										timeSplitter(element.meeting_start)[1]
-									).toFormat("HH:mm a")}
-								</TypographyInner>
-							</Typography>
+				{cardData.map((element) => {
+					return (
+						<Box key={element.id} sx={{ mt: 2, p: 0 }}>
+							<Container disableGutters>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Location:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{element.meeting_location}
+									</TypographyInner>
+								</Typography>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Date:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{DateTime.fromISO(
+											timeSplitter(element.meeting_start)[0]
+										).toFormat("DDDD")}
+									</TypographyInner>
+								</Typography>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Meeting starts:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{DateTime.fromISO(
+											timeSplitter(element.meeting_start)[1]
+										).toFormat("HH:mm a")}
+									</TypographyInner>
+								</Typography>
 
-							<Typography variant="h6">
-								Meeting ends:
-								<TypographyInner>
-									{DateTime.fromISO(
-										timeSplitter(element.meeting_end)[1]
-									).toFormat("HH:mm a")}
-								</TypographyInner>
-							</Typography>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Meeting ends:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{DateTime.fromISO(
+											timeSplitter(element.meeting_end)[1]
+										).toFormat("HH:mm a")}
+									</TypographyInner>
+								</Typography>
 
-							<Typography variant="h6">
-								Address:
-								<TypographyInner>{element.meeting_address}</TypographyInner>
-							</Typography>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Address:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{element.meeting_address}
+									</TypographyInner>
+								</Typography>
 
-							<Typography variant="h6">
-								Postcode:
-								<TypographyInner>{element.meeting_postcode}</TypographyInner>
-							</Typography>
+								<Typography sx={{ mb: "5px" }}>
+									<strong>Postcode:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{element.meeting_postcode}
+									</TypographyInner>
+								</Typography>
 
-							<Typography variant="h6">
-								City:
-								<TypographyInner>{element.meeting_city}</TypographyInner>
-							</Typography>
-						</CardContent>
-						<></>
-					</Card>
-				);
-			})}
+								<Typography>
+									<strong>City:</strong>
+									<TypographyInner sx={{ color: "primary.main" }}>
+										{element.meeting_city}
+									</TypographyInner>
+								</Typography>
+							</Container>
+						</Box>
+					);
+				})}
+			</Container>
+			<img
+				src="https://media.istockphoto.com/vectors/important-business-meeting-medical-masks-vector-id1297193695?k=20&m=1297193695&s=612x612&w=0&h=FuKYn8KTxJmab23gc4G5zvKc_QxFCwLmFNe0FyenuMo="
+				alt="meeting people"
+				width="500px"
+			/>
 		</Box>
 	);
 };
