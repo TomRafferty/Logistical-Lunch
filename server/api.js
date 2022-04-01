@@ -575,6 +575,25 @@ router.post("/createNewEvent", (req, res) => {
 		res.status(error.status).send(error);
 	});
 });
+router.put("/editEvent", (req, res) => {
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			UPDATE events
+			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
+			WHERE cohort_id=$7
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		res.status(200).json({ message: "successfully updated event" });
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
+});
 
 // route to get nearby shops for the users postcode
 router.get("/google", (req,res)=> {

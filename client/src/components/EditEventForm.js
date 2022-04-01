@@ -29,14 +29,27 @@ const FormContainer = styled(Grid)({
 });
 
 const EditEventForm = () => {
+	// just stops the alert before editing the form being displayed incorrectly
+	let editFormLoaded = false;
 	// states:
-	const [submitState, setSubmitState] = useState({});
+	const [submitState, setSubmitState] = useState({
+		location: "",
+		postcode: "",
+		address: "",
+		city: "",
+		meeting_start: "",
+		meeting_end: "",
+		currentCohort: sessionStorage.getItem("cohortId"),
+	});
 	// this is where the data is stored from the database to display initial values
 	const [eventToEdit, setEventToEdit] = useState({
 		location: "",
 		postcode: "",
 		address: "",
 		city: "",
+		meeting_start: "",
+		meeting_end: "",
+		currentCohort: sessionStorage.getItem("cohortId"),
 	});
 	// dates to display and use to update the subObj:
 	const [displayedStartDate, setDisplayedStartDate] = useState(new Date());
@@ -56,10 +69,8 @@ const EditEventForm = () => {
 			"Content-Type": "application/json",
 		},
 	};
-	// change the number on the end here to be the session stored cohort id.
-	// ${sessionStorage.getItem("cohortId")}
-	useEffect(() => {
-		fetch("http://localhost:3000/api/events/get/378", options)
+	const fetchCurrentMeeting = async () => {
+		await fetch("http://localhost:3000/api/events/get/378", options)
 			.then((response) => response.json())
 			.then((result) => {
 				// this assumes we only have one meeting per cohort which is currently the case
@@ -72,8 +83,9 @@ const EditEventForm = () => {
 					postcode: event.meeting_postcode,
 					address: event.meeting_address,
 					city: event.meeting_city,
-					start: DateTime.fromSQL(event.meeting_start),
-					end: DateTime.fromSQL(event.meeting_end),
+					meeting_start: DateTime.fromSQL(event.meeting_start),
+					meeting_end: DateTime.fromSQL(event.meeting_end),
+					currentCohort: sessionStorage.getItem("cohortId"),
 				};
 				setEventToEdit(setEvent, setData());
 			})
@@ -81,29 +93,54 @@ const EditEventForm = () => {
 				console.error(error);
 				throw error;
 			});
+	};
+	useEffect(() => {
+		fetchCurrentMeeting();
 	}, []);
 
+	// submit
+	const submitReq = async () => {
+		const shouldPass = submitState.location !== "" ? true : false;
+		if(shouldPass){
+			const options = {
+				method: "put",
+				headers: {
+					Accept: "application/json, text/plain, */*",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(submitState),
+			};
+			await fetch("http://localhost:3000/api/editEvent", options)
+				.then((response) => {
+					if(response.ok){
+						console.log(response.json());
+					}
+				})
+				.catch((error) => {
+					console.error(`error - ${error}`);
+					throw error;
+				});
+		}else if(!shouldPass && editFormLoaded){
+			alert("please edit the form before trying to update");
+		}
+	};
+	useEffect(() => {
+		submitReq();
+	}, []);
 
-	// reformat submit
+	// reformat subObj key - plant old value in place of undefined change
 	const reformatSubmit = (keyName) => {
-		// this essentially makes sure everything has a value when
-		// it is submitted; so if nothing was changed, it will use
-		// the old value.
+		/*
+		this essentially makes sure everything has a value when
+		it is submitted; so if nothing was changed, it will use
+		the old value.
+		*/
 		handleSubObjChange(keyName, eventToEdit[keyName]);
 	};
-	// submit
-	useEffect(() => {
-		// this is where the actual submission will take place
-		if(Object.keys(submitState).length > 0){
-			console.log(`final submission state - ${submitState}`);
-			console.log(`final submission state keys - ${Object.keys(submitState)}`);
-			console.log(
-				`final submission state values - ${Object.values(submitState)}`
-			);
-		}
-	});
-	// this refreshes the use effect above
-	const submit = () => {
+
+	// handle changes to the subObj
+	const handleSubObjChange = (key, value) => {
+		subObj[key] = value;
 		// this will check if all the values have been adjusted,
 		// if not it will apply the previously set values to them.
 		Object.keys(eventToEdit).forEach((key) => {
@@ -114,25 +151,22 @@ const EditEventForm = () => {
 		setSubmitState(subObj);
 	};
 
-	// handle changes to the subObj
-	const handleSubObjChange = (key, value) => {
-		subObj[key] = value;
-	};
-
 	// change date useEffect will refresh the date value in subObj
 	useEffect(() => {
-		subObj.start = displayedStartDate;
+		subObj.meeting_start = DateTime.local(displayedStartDate).toSQL();
 	});
 	useEffect(() => {
-		subObj.end = displayedEndDate;
+		subObj.meeting_end = DateTime.local(displayedEndDate).toSQL();
 	});
 
 	return (
 		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 			<form
 				onSubmit={(e) => {
+					// basically if you can click submit, then the form is likely loaded.
+					editFormLoaded = true;
 					e.preventDefault();
-					submit();
+					submitReq();
 				}}
 			>
 				<FormContainer container>
@@ -249,7 +283,7 @@ const EditEventForm = () => {
 					{/* submit button */}
 					<StyledInput>
 						<Button variant="contained" type="submit" value="Submit">
-							Submit
+							Update
 						</Button>
 					</StyledInput>
 				</FormContainer>

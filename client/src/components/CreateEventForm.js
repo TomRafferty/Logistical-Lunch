@@ -25,7 +25,7 @@ const StyledInput = styled(FormControl)({
 	width: "40%",
 });
 const CreateEventForm = () => {
-	// submit state and change handler
+	// submit state
 	const emptyEvent = {
 		location: "",
 		postcode: "",
@@ -33,8 +33,7 @@ const CreateEventForm = () => {
 		city: "",
 		meeting_start: "",
 		meeting_end: "",
-		currentCohort: 378, //TODO change to session storage
-		// currentCohort: sessionStorage.getItem("cohortId"),
+		currentCohort: sessionStorage.getItem("cohortId"),
 	};
 	const subObj = emptyEvent;
 	const [submitState, setSubmitState] = useState(emptyEvent);
@@ -54,6 +53,7 @@ const CreateEventForm = () => {
 	const submitReq = async () => {
 		const shouldPass = submitState.location !== "" ? true : false;
 		if (shouldPass) {
+			console.log(submitState);
 			const options = {
 				method: "post",
 				headers: {
@@ -63,8 +63,7 @@ const CreateEventForm = () => {
 				body: JSON.stringify(submitState),
 			};
 			await fetch("http://localhost:3000/api/createNewEvent", options)
-				.then((response) => {
-					console.log(`hello there! here is the fetch response ${response}`);
+				.then(() => {
 					console.log("Created new event");
 				})
 				.catch((error) => {
@@ -82,7 +81,6 @@ const CreateEventForm = () => {
 	const handleSubObjChange = (key, value) => {
 		subObj[key] = value;
 		setSubmitState(subObj);
-		console.log(subObj);
 	};
 
 	return (
@@ -199,7 +197,7 @@ const CreateEventForm = () => {
 					{/* submit button */}
 					<StyledInput>
 						<Button variant="contained" type="submit" value="Submit">
-							Submit
+							Create
 						</Button>
 					</StyledInput>
 				</FormContainer>
