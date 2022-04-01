@@ -1,6 +1,6 @@
 import React from "react";
 import StudentCard from "../components/StudentCard";
-import { Container, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
@@ -11,23 +11,30 @@ import DistanceMatrix from "../components/DistanceMatrix";
 
 export default function Admin() {
 	return (
-		<div sx={{ padding: 0 }}>
-			<Container>
-				<StudentCard />
+		<Box sx={{ width: "80%", mx: "auto", mb: 6 }}>
+			<StudentCard />
+			<Box
+				disableGutters
+				sx={{ display: "flex", justifyContent: "space-between", mb: 6 }}
+			>
 				<Location />
-			</Container>
-			<RequestLunch />
+				<RequestLunch />
+			</Box>
+
 			<DistanceMatrix />
 			<CreateEventForm />
-			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
-				<Typography variant="h5" sx={{ mb: 2 }} align="center">
+			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
+				<Typography fontSize="20px" fontWeight="bold" textAlign="center" marginBottom="16px">
 					Nominate Lunch Maker & Lunch Shopper
 				</Typography>
-				<Box>
+				<Box
+					disableGutters
+					sx={{ display: "flex", justifyContent: "space-between"}}
+				>
 					<SetLunchMaker />
 					<SetLunchShopper />
 				</Box>
 			</Box>
-		</div>
+		</Box>
 	);
 }
