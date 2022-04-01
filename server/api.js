@@ -217,7 +217,7 @@ router.get("/events/shopper", (req, res) => {
 				meeting_end, break_time, lunch_maker_id,
 				lunch_shopper_id, diners, recipe_id,
 				events.cohort_id, user_name,
-				user_email, recipes.ingredients, recipes.recipe_name
+				user_email, recipes.ingredients, recipes.recipe_name, recipes.servings
 			FROM events 
 			INNER JOIN recipes 
 				ON events.recipe_id=recipes.id 
@@ -245,8 +245,8 @@ router.get("/events/next", (req,res)=> {
 				cohort_id, class_number, region 
 			FROM events 
 			INNER JOIN cohort 
-				ON events.cohort_id=cohort.id 
-			WHERE $1=events.cohort_id
+				ON events.cohort_id=cohort.id
+			WHERE events.cohort_id=$1
 		`;
 
 		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
@@ -590,6 +590,23 @@ router.get("/google/distance", (req, res) => {
 });
 });
 
+router.get("/google/admin", (req, res) => {
+	const startCoords = req.query.begin;
+	// console.log(startCoords);
+	const endsCoords = req.query.finish;
+	// console.log(endsCoords);
+	const transitMode = req.query.transit;
+	fetch(
+		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&mode=${transitMode}&key=${process.env.API_KEY}`
+	)
+		.then((response) => response.json())
+		.then((data) => res.json(data))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
+
 // endpoint for getting dietary information for cohort
 router.get("/lunch/dietary",(req,res)=> {
 	const dietCohort = parseInt(req.query.diets);
@@ -610,6 +627,18 @@ router.get("/lunch/dietary",(req,res)=> {
 			return dietArray.push(response.rows);
 		})
 		.then(()=> res.json(dietArray))
+		.catch(function (error) {
+			console.log(error);
+		});
+});
+
+router.get("/postcodes", (req, res) => {
+	const allPostCodes = parseInt(req.query.codesCohort);
+	const postcodeQuery =
+		"SELECT user_location, transport_type FROM users WHERE cohort_id=$1";
+	pool
+		.query(postcodeQuery, [allPostCodes])
+		.then((response) => res.json(response.rows))
 		.catch(function (error) {
 			console.log(error);
 		});

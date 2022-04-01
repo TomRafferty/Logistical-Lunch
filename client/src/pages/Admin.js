@@ -8,7 +8,6 @@ import CreateEventForm from "../components/CreateEventForm";
 import SetLunchShopper from "../components/SetLunchShopper";
 
 
-
 export default function Admin() {
 	return (
 		<div sx={{ padding: 0 }}>
@@ -18,6 +17,7 @@ export default function Admin() {
 			</Container>
 			<RequestLunch />
 			<CreateEventForm />
+
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 				<Typography variant="h5" sx={{ mb: 2 }} align="center">
 					Nominate Lunch Maker & Lunch Shopper

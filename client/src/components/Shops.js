@@ -1,9 +1,10 @@
 import { React, useState, useEffect } from "react";
-import { Card, Typography, Paper, Box, Container } from "@mui/material";
+import { Card, Typography, Box, Grid } from "@mui/material";
 
 const Shops = () => {
 const [shopResults, setShopResults] = useState([]);
 const location = sessionStorage.getItem("userLocation");
+
 
 // a function that first fetches the latitude and longitude for the students postcode
 async function getPlaces() {
@@ -18,10 +19,11 @@ async function getPlaces() {
 		return {
 			name: element.name,
 			address: element.vicinity,
-			open: element.opening_hours.open_now ? "open now" : "closed now",
+			open: !element.opening_hours ? "" : element.opening_hours.open_now ? "open now" : "closed now",
 			distance: "",
 		};
 	});
+
 	// builds a string of coordinates to pass to the distance matrix
 	let originData = `${data.result.latitude},${data.result.longitude}`;
 	let distString = "";
@@ -30,7 +32,6 @@ async function getPlaces() {
 				${element.geometry.location.lat},
 				${element.geometry.location.lng}|`;
 	});
-	console.log(distString);
 	// then sends built string to the distance matrix
 	const distanceData = await fetch(
 		`http://localhost:3000/api/google/distance?start=${originData}&ends=${distString.slice(1)}`
@@ -47,20 +48,24 @@ async function getPlaces() {
 
 useEffect(() => {
 	getPlaces();
+	return () => {
+		"cleanup";
+	};
 }, []);
 
     return (
-			<Container>
-				<Card sx={{ display: "flex" }}>
+			<Grid display="flex" flexDirection="column" alignItems="center">
+				<Card sx={{ display: "flex", width: "87%" }}>
 					<Box width="100%" gap="10px">
-						{shopResults.slice(0,7).map((element, index) => {
+						{shopResults.slice(0, 7).map((element, index) => {
 							return (
-								<Paper
+								<Box
 									sx={{
 										padding: "5px 0px",
 										textAlign: "center",
 										display: "flex",
 										justifyContent: "space-evenly",
+										my: "15px",
 									}}
 									key={index}
 								>
@@ -72,18 +77,18 @@ useEffect(() => {
 									<Box width="35%" display="flex">
 										<Typography>{element.address}</Typography>
 									</Box>
-									<Box width="15%" display="flex">
+									<Box width="15%" display="flex" justifyContent="center">
 										<Typography>{element.open}</Typography>
 									</Box>
 									<Box width="15%" display="flex">
 										<Typography>{element.distance}</Typography>
 									</Box>
-								</Paper>
+								</Box>
 							);
 						})}
 					</Box>
 				</Card>
-			</Container>
+			</Grid>
 		);
 };
 

@@ -26,6 +26,7 @@ const Transit = () => {
         useEffect(()=>{
              getId();
         },[update]);
+
     // on change the value of the option will be sent to sessionStorage and as an update to the database
     const handleChange=(e)=> {
         let sessionData = sessionStorage.getItem("transportType");
