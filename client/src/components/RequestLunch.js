@@ -121,16 +121,24 @@ const RequestLunch = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, p: 4, minWidth: "40%", alignSelf: "center" }}>
+		<Box
+			sx={{
+				boxShadow: 3,
+				p: 4,
+				width: "40%",
+				alignSelf: "center",
+				minHeight: "170px",
+			}}
+		>
 			<Container
-				sx={{ display: "flex", alignItems: "center", marginLeft: "0", mb:2 }}
+				sx={{ display: "flex", alignItems: "center", marginLeft: "0", mb: 2 }}
 			>
 				<LunchDiningIcon fontSize="large"></LunchDiningIcon>
 				<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
 					Lunch Request
 				</Typography>
 			</Container>
-			<FormControl >
+			<FormControl>
 				{/* radio button for selecting if user wants/ doesn't want the meal to be provided*/}
 				<FormLabel id="lunch-radio-buttons-group-label">
 					Would you like to have the lunch provided by us?
@@ -157,7 +165,7 @@ const RequestLunch = () => {
 							Do you have any dietary restrictions?
 						</FormLabel>
 						<FormGroup>
-							<Box sx={{ display: "flex" }}>
+							<Box sx={{ display: "flex", flexWrap: "wrap" }}>
 								{Object.keys(dietaryRestrictions).map((restriction, index) => {
 									return (
 										<CheckboxLabel
@@ -190,7 +198,7 @@ const RequestLunch = () => {
 							Do you have any dietary requirements?
 						</FormLabel>
 						<FormGroup>
-							<Box sx={{ display: "flex" }}>
+							<Box sx={{ display: "flex", flexWrap: "wrap" }}>
 								{Object.keys(dietaryRequirements).map((requirement, index) => {
 									return (
 										<CheckboxLabel

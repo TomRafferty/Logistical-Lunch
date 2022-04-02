@@ -2,12 +2,12 @@ import { React, useState, useEffect } from "react";
 import {
 	Container,
 	Typography,
-	Card,
 	Box,
 	TextField,
 	FormControl,
 	Button,
 } from "@mui/material";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 
 // function sends locations(postcodes) to api and receives coordinates back
 async function getPostCodeData(postcodes, origin) {
@@ -105,71 +105,73 @@ const DistanceMatrix = () => {
 	};
 
 	return (
-		<Container>
-			<Card>
-				<Typography margin="20px" variant="h5">
+		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
+			<Container
+				sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+			>
+				<ScheduleIcon fontSize="large"></ScheduleIcon>
+				<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
 					Travel Times of Trainees
 				</Typography>
-				<Typography margin="20px" variant="h7">
-					Enter venue postcode
-				</Typography>
-				<Box component="form" noValidate autoComplete="off" margin="10px">
-					<FormControl
-						sx={{
-							display: "flex",
-							flexDirection: "row",
-							gap: "30px",
-						}}
+			</Container>
+			<Typography marginTop={2} marginBottom={1}>
+				Enter venue postcode
+			</Typography>
+			<Box marginBottom={1} component="form" noValidate autoComplete="off">
+				<FormControl
+					sx={{
+						display: "flex",
+						flexDirection: "row",
+						gap: "30px",
+					}}
+				>
+					<TextField
+						required
+						id="distance"
+						label="venue"
+						variant="outlined"
+						size="small"
+						name="distance"
+						sx={{ width: "200px" }}
+						onChange={handleChange}
+					/>
+					<Button
+						type="button"
+						variant="contained"
+						size="medium"
+						sx={{ width: "max-content" }}
+						onClick={handleClick}
 					>
-						<TextField
-							required
-							id="distance"
-							label="venue"
-							variant="outlined"
-							size="small"
-							name="distance"
-							sx={{ width: "200px" }}
-							onChange={handleChange}
-						/>
-						<Button
-							type="button"
-							variant="contained"
-							margin="10px"
-							size="small"
-							sx={{ height: "40px", width: "100px" }}
-							onClick={handleClick}
-						>
-							Submit
-						</Button>
-					</FormControl>
-				</Box>
-				<Box margin="20px">
-					{matrix.map((element, index) => {
-						return (
-							<Box key={index} display="flex">
-								<Box width="100px">
-									<Typography display="inline">
-										{element.distance.text}
-									</Typography>
-								</Box>
-								<Box width="130px">
-									<Typography display="inline">
-										{element.duration.text}
-									</Typography>
-								</Box>
-								<Box width="120px">
-									<Typography display="inline">
-										{element.transport === "transit"
-											? "public transport"
-											: element.transport}
-									</Typography>
-								</Box>
+						Submit
+					</Button>
+				</FormControl>
+			</Box>
+			<Box>
+				{matrix.map((element, index) => {
+					return (
+						<Box key={index} display="flex">
+							<Box width="100px">
+								<Typography display="inline">
+									{element.distance.text}
+								</Typography>
 							</Box>
-						);
-					})}
-				</Box>
-			</Card>
-		</Container>
+							<Box width="130px">
+								<Typography display="inline">
+									{element.duration.text}
+								</Typography>
+							</Box>
+							<Box width="120px">
+								<Typography display="inline">
+									{element.transport === "transit"
+										? "public transport"
+										: element.transport}
+								</Typography>
+							</Box>
+						</Box>
+					);
+				})}
+			</Box>
+		</Box>
 	);
 };
 
