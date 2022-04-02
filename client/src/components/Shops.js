@@ -8,14 +8,14 @@ const location = sessionStorage.getItem("userLocation");
 
 // a function that first fetches the latitude and longitude for the students postcode
 async function getPlaces() {
-	const data = await fetch(`https://api.postcodes.io/postcodes/${location}`).then(
-		(response) => response.json()
-	);
+	const data = await fetch(`https://api.postcodes.io/postcodes/${location}`);
+	const dataTwo = await data.json();
 	// then gets the information for nearby supermarkets/grocery shops
 	const shopData = await fetch(
-		`http://localhost:3000/api/google?lat=${data.result.latitude}&long=${data.result.longitude}`
-	).then((response) => response.json());
-	const shopArray = shopData.results.map((element) => {
+		`http://localhost:3000/api/google?lat=${dataTwo.result.latitude}&long=${dataTwo.result.longitude}`
+	);
+	const shopDataTwo = await shopData.json();
+	const shopArray = shopDataTwo.results.map((element) => {
 		return {
 			name: element.name,
 			address: element.vicinity,
@@ -25,21 +25,23 @@ async function getPlaces() {
 	});
 
 	// builds a string of coordinates to pass to the distance matrix
-	let originData = `${data.result.latitude},${data.result.longitude}`;
+	let originData = `${dataTwo.result.latitude},${dataTwo.result.longitude}`;
 	let distString = "";
-	shopData.results.forEach((element) => {
+	shopDataTwo.results.forEach((element) => {
 		distString = `${distString}
 				${element.geometry.location.lat},
 				${element.geometry.location.lng}|`;
 	});
+  
 	// then sends built string to the distance matrix
 	const distanceData = await fetch(
 		`http://localhost:3000/api/google/distance?start=${originData}&ends=${distString.slice(1)}`
-	).then((response) => response.json());
+	);
+	const distanceDataTwo = await distanceData.json();
 	const distShopArr = shopArray.map((element, index) => {
 		return {
 			...element,
-			distance: distanceData.rows[0].elements[index].distance.text,
+			distance: distanceDataTwo.rows[0].elements[index].distance.text,
 		};
 	});
 
@@ -69,12 +71,12 @@ useEffect(() => {
 									}}
 									key={index}
 								>
-									<Box width="35%" display="flex" padding="5px">
+									<Box width="30%" display="flex" padding="5px">
 										<Typography>
 											<b>{element.name}</b>
 										</Typography>
 									</Box>
-									<Box width="35%" display="flex">
+									<Box width="40%" display="flex">
 										<Typography>{element.address}</Typography>
 									</Box>
 									<Box width="15%" display="flex" justifyContent="center">

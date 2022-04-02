@@ -93,7 +93,7 @@ const Info = () => {
 							<Typography padding="10px" variant="h6">
 								<strong>Lunch Information:</strong>
 							</Typography>
-
+// TODO refactor to avoid hardcoded styles
 							<Typography align="left" padding="10px">
 								<strong>Meal Date:</strong>
 								<Typography

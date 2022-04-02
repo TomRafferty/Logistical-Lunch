@@ -8,7 +8,7 @@ const HeadingContainer = styled(Container)({
 	background: "rgb(239,239,239)",
 	display: "flex",
 	alignItems: "center",
-	margin: 0,
+	marginTop: "20px",
 	paddingLeft: 40,
 	paddingRight: 40,
 });
@@ -24,7 +24,7 @@ const Heading = styled(Typography)({
 
 const LoginPageHeading = () => {
     return (
-			<HeadingContainer disableGutters={true} maxWidth="xl">
+			<HeadingContainer disableGutters={true} maxWidth="false">
 				<IconBox
 					variant="square"
 					src={LogisticalLunchIcon}

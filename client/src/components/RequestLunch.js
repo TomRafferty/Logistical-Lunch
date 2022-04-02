@@ -11,8 +11,10 @@ import {
 	TextField,
 	Button,
 	Typography,
+	Container,
 } from "@mui/material";
 import CheckboxLabel from "./CheckboxLabel";
+import LunchDiningIcon from "@mui/icons-material/LunchDining";
 
 //applying styles to different elements
 const SubmitButton = styled(Button)({
@@ -119,11 +121,16 @@ const RequestLunch = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
-			<Typography variant="h5" sx={{ mb: 2 }} align="center">
-				Lunch Requests
-			</Typography>
-			<FormControl>
+		<Box sx={{ boxShadow: 3, p: 4, minWidth: "40%", alignSelf: "center" }}>
+			<Container
+				sx={{ display: "flex", alignItems: "center", marginLeft: "0", mb:2 }}
+			>
+				<LunchDiningIcon fontSize="large"></LunchDiningIcon>
+				<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+					Lunch Request
+				</Typography>
+			</Container>
+			<FormControl >
 				{/* radio button for selecting if user wants/ doesn't want the meal to be provided*/}
 				<FormLabel id="lunch-radio-buttons-group-label">
 					Would you like to have the lunch provided by us?
@@ -205,6 +212,7 @@ const RequestLunch = () => {
 					type="submit"
 					variant="contained"
 					size="medium"
+					sx={{ width: "max-content", height: "40px" }}
 					onClick={handleSubmit}
 				>
 					Submit
