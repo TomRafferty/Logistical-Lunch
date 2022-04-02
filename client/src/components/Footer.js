@@ -12,6 +12,7 @@ const FooterBox = styled(Box)({
 	width: "100%",
 	textAlign: "center",
     zIndex: 100,
+
 });
 
 const Footer = () => {

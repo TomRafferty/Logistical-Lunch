@@ -8,12 +8,21 @@ const ListStyled = styled(List)({
 	flexWrap: "wrap",
 });
 
+const makeArrayUnique = (arr) => {
+	// reusable array formatter for ensuring every element only appears once.
+	let newArr = [];
+	arr.forEach((element) => {
+		if (!newArr.includes(element)) {
+			newArr.push(element);
+		}
+	});
+	return newArr;
+};
 const ListItemStyled = styled(ListItem)({
 	width: "150px",
 	border: "1px solid #2196f3",
 	margin: "5px 10px",
 });
-
 
 const LunchMakerInformation = () => {
 	const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
@@ -38,12 +47,16 @@ const LunchMakerInformation = () => {
 				throw `${response.status} ${response.statusText}`;
 			})
 			.then((data) => {
-				const dietRes = data.allergies.flat();
+				const dietRes = makeArrayUnique(data.allergies.flat());
 				setDietaryRestrictions(dietRes);
 
 				const numServ = Object.values(data.numDiners)[0];
 				setNumberOfServings(numServ);
 
+// 			const lunchShop = data.lunchShopper.user_name;
+// 			setLunchShopper(lunchShop);
+      
+//      TODO make sure this is correct.
 				const lunchShop = data.lunchShopper;
 				setLunchShopper(lunchShop.user_name);
 			})
