@@ -578,4 +578,12 @@ router.get("/postcodes", (req, res) => {
 		});
 });
 
+router.get("/postcodes/validate/:newLocal", async (req, res) => {
+	const validate = await fetch(
+		`https://api.postcodes.io/postcodes/${req.params.newLocal}/validate`
+	);
+	const data = await validate.json();
+	res.json(data);
+});
+
 export default router;
