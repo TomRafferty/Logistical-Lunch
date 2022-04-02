@@ -50,7 +50,7 @@ const RecipeCard = (props) => {
 
 	//event submit
     const handleSubmit = (event) => {
-		fetch("http://localhost:3000/api/eventRecipeId", {
+		fetch("/api/eventRecipeId", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

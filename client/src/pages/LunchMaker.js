@@ -15,7 +15,7 @@ const LunchMaker = () => {
 
 	//fetching all the recipes and the name of the chosen recipe
 	useEffect(() => {
-		fetch("http://localhost:3000/api/recipes", {
+		fetch("/api/recipes", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
