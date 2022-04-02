@@ -43,7 +43,7 @@ const SetLunchShopper = () => {
 
 	//fetching all the users that have the same cohortId as the admin so it can be displayed in the dropdown
 	useEffect(() => {
-		fetch(`/api/users/cohort/${cohortId}`)
+		fetch(`http://localhost:3000/api/users/cohort/${cohortId}`)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();

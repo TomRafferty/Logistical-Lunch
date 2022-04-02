@@ -70,7 +70,7 @@ const EditEventForm = () => {
 		},
 	};
 	const fetchCurrentMeeting = async () => {
-		await fetch("/api/events/get/378", options)
+		await fetch("http://localhost:3000/api/events/get/378", options)
 			.then((response) => response.json())
 			.then((result) => {
 				// this assumes we only have one meeting per cohort which is currently the case
@@ -110,7 +110,7 @@ const EditEventForm = () => {
 				},
 				body: JSON.stringify(submitState),
 			};
-			await fetch("/api/editEvent", options)
+			await fetch("http://localhost:3000/api/editEvent", options)
 				.then((response) => {
 					if(response.ok){
 						console.log(response.json());

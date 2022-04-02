@@ -34,7 +34,7 @@ const Info = () => {
 	// this function uses the userId get event data for the user
 	async function getEvent() {
 		const eventData = await fetch(
-			`/api/events/shopper?shopperId=${shopperId}`
+			`http://localhost:3000/api/events/shopper?shopperId=${shopperId}`
 		)
 			.then((response) => response.json())
 			.catch((error) => console.error(error));
@@ -45,7 +45,7 @@ const Info = () => {
 	// gets dietary restrictions and lunch requirements for the particular cohort/class
 	async function getDietary() {
 		const dietData = await fetch(
-			`/api/lunch/dietary?diets=${getCohort}}`
+			`http://localhost:3000/api/lunch/dietary?diets=${getCohort}}`
 		)
 			.then((response) => response.json())
 			.catch((error) => console.error(error));

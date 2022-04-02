@@ -9,7 +9,7 @@ const Transit = () => {
 
     // function to get the id of the current user
     function getId() {
-        fetch(`/api/users/${sessionStorage.getItem("userId")}`)
+        fetch(`http://localhost:3000/api/users/${sessionStorage.getItem("userId")}`)
             .then((response) => {
                 if (response.ok) {
                     return response.json();

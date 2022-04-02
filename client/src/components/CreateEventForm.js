@@ -62,7 +62,7 @@ const CreateEventForm = () => {
 				},
 				body: JSON.stringify(submitState),
 			};
-			await fetch("http://localhost:3000/api/createNewEvent", options)
+			await fetch("/api/createNewEvent", options)
 				.then(() => {
 					console.log("Created new event");
 				})

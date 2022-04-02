@@ -15,7 +15,7 @@ const StudentCard = () => {
 
   // hook to fetch the event information and display it within the card
   useEffect(() => {
-    fetch(`/api/events/next?cohId=${cohort}`)
+    fetch(`http://localhost:3000/api/events/next?cohId=${cohort}`)
 			.then(function (response) {
 				if (response.ok) {
 					return response.json();

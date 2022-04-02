@@ -34,7 +34,7 @@ const LoginForm = () => {
 			},
 			body: JSON.stringify(submitObjectState),
 		};
-		fetch("http://localhost:3000/api/login", options)
+		fetch("/api/login", options)
 		.then((response) => response.json())
 		.then((resJson) => {
 			const res = resJson[0];

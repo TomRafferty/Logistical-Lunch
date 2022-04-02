@@ -39,7 +39,7 @@ const LunchMakerInformation = () => {
 			},
 			body: JSON.stringify({ "cohort_id":thisUserCohort }),
 		};
-		fetch("/api/lunchMakerInfo", options)
+		fetch("http://localhost:3000/api/lunchMakerInfo", options)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();
@@ -55,7 +55,7 @@ const LunchMakerInformation = () => {
 
 // 			const lunchShop = data.lunchShopper.user_name;
 // 			setLunchShopper(lunchShop);
-      
+
 //      TODO make sure this is correct.
 				const lunchShop = data.lunchShopper;
 				setLunchShopper(lunchShop.user_name);
