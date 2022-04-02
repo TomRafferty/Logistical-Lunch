@@ -6,8 +6,8 @@ import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
 import CreateEventForm from "../components/CreateEventForm";
 import SetLunchShopper from "../components/SetLunchShopper";
+import EditEventForm from "../components/EditEventForm";
 import DistanceMatrix from "../components/DistanceMatrix";
-
 
 export default function Admin() {
 	return (

@@ -5,17 +5,6 @@ import fetch from "node-fetch";
 const bcrypt = require("bcrypt");
 const router = Router("nodemailer");
 
-const makeArrayUnique = (arr) => {
-	// reusable array formatter for ensuring every element only appears once.
-	let newArr = [];
-	arr.forEach((element) => {
-		if(!newArr.includes(element)){
-			newArr.push(element);
-		}
-	});
-	return newArr;
-};
-
 router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
@@ -60,8 +49,6 @@ router.post("/lunchMakerInfo", (req, res) => {
 					lunchMakerInfo["allergies"].push(response.rows.map((requirement) => {
 						return requirement.requirement_name;
 					}));
-					const allAllergies = lunchMakerInfo["allergies"];
-					lunchMakerInfo["allergies"] = makeArrayUnique(allAllergies);
 
 					pool
 						.query(
@@ -217,7 +204,7 @@ router.get("/events/shopper", (req, res) => {
 				meeting_end, break_time, lunch_maker_id,
 				lunch_shopper_id, diners, recipe_id,
 				events.cohort_id, user_name,
-				user_email, recipes.ingredients, recipes.recipe_name
+				user_email, recipes.ingredients, recipes.recipe_name, recipes.servings
 			FROM events 
 			INNER JOIN recipes 
 				ON events.recipe_id=recipes.id 
@@ -245,8 +232,8 @@ router.get("/events/next", (req,res)=> {
 				cohort_id, class_number, region 
 			FROM events 
 			INNER JOIN cohort 
-				ON events.cohort_id=cohort.id 
-			WHERE $1=events.cohort_id
+				ON events.cohort_id=cohort.id
+			WHERE events.cohort_id=$1
 		`;
 
 		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
@@ -258,6 +245,23 @@ router.get("/events/next", (req,res)=> {
 		res.status(500).json(error);
 	});
 
+});
+
+router.get("/events/get/:cohortId", (req, res) => {
+	pool
+		.query(
+			`
+				SELECT * FROM events WHERE cohort_id=$1
+			`,
+			[req.params.cohortId]
+		)
+		.then((response) => {
+			res.json(response.rows);
+		})
+		.catch((error) => {
+			console.error(error);
+			res.status(error.status).send(error);
+		});
 });
 
 //endpoint to get user by id
@@ -552,7 +556,6 @@ router.post("/eventRecipeId", async (req, res) => {
 
 // admin create new event
 router.post("/createNewEvent", (req, res) => {
-	console.log(req.body);
 	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
 	pool
 	.query(
@@ -566,7 +569,26 @@ router.post("/createNewEvent", (req, res) => {
 		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
 	)
 	.then(() => {
-		console.log("added new event");
+		res.status(200).json({ message:"added new event" });
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
+});
+router.put("/editEvent", (req, res) => {
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			UPDATE events
+			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
+			WHERE cohort_id=$7
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		res.status(200).json({ message: "successfully updated event" });
 	})
 	.catch((error) => {
 		console.error(error);
@@ -647,7 +669,7 @@ router.get("/lunch/dietary",(req,res)=> {
 router.get("/postcodes", (req, res) => {
 	const allPostCodes = parseInt(req.query.codesCohort);
 	const postcodeQuery =
-		"SELECT user_name, user_location, transport_type FROM users WHERE cohort_id=$1";
+		"SELECT user_location, transport_type FROM users WHERE cohort_id=$1";
 	pool
 		.query(postcodeQuery, [allPostCodes])
 		.then((response) => res.json(response.rows))
@@ -655,7 +677,5 @@ router.get("/postcodes", (req, res) => {
 			console.log(error);
 		});
 });
-
-
 
 export default router;
