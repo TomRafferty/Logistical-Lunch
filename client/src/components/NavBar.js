@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Menu, MenuItem, IconButton, Typography, Avatar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import logo from "../../images/cyf-logo.png";
 
 const NavBar = () => {
 	// boilerplate code from mui for a basic menu
@@ -35,7 +36,7 @@ const NavBar = () => {
 			<Toolbar>
 				<Avatar
 					alt="logistical-lunch"
-					src="https://codeyourfuture.io/wp-content/uploads/2019/03/cyf_brand.png"
+					src={logo}
 					sx={{ height: "40px", width: "auto" }}
 					variant="square"
 				/>

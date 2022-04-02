@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { DateTime } from "luxon";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import meetingImage from "../../images/meeting-image.jpg";
 
 const StudentCard = () => {
       const [cardData, setCardData] = useState([]);
@@ -128,7 +129,7 @@ const StudentCard = () => {
 				})}
 			</Container>
 			<img
-				src="https://media.istockphoto.com/vectors/important-business-meeting-medical-masks-vector-id1297193695?k=20&m=1297193695&s=612x612&w=0&h=FuKYn8KTxJmab23gc4G5zvKc_QxFCwLmFNe0FyenuMo="
+				src={meetingImage}
 				alt="meeting people"
 				width="500px"
 			/>

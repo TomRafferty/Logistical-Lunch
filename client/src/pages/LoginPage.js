@@ -5,6 +5,7 @@ import LoginPageHeading from "../components/LoginPageHeading";
 import RegisterForm from "../components/RegisterForm";
 import LoginForm from "../components/LoginForm";
 import LoginRegisterButtons from "../components/LoginRegisterButtons";
+import cyfBanner from "../../images/cyf-banner.png";
 
 export function LoginPage() {
 	const [displayRegister, setDisplayRegister] = useState({
@@ -75,7 +76,7 @@ export function LoginPage() {
 			<Container sx={{ display: "flex", alignItems: "center" }}>
 				<Container style={{ alignSelf: "flex-start", marginTop: "100px" }}>
 					<img
-						src="https://classplanner.codeyourfuture.io/files/Home.png"
+						src={cyfBanner}
 						alt="CYF group"
 					/>
 					<Typography sx={{ marginTop: "30px", marginBottom: "70px", textAlign: "justify" }}>
