@@ -128,7 +128,7 @@ const RegisterForm = () => {
 		if (!areTheFieldsValid()) {
 			return;
 		} else {
-			fetch("http://localhost:3100/api/register", {
+			fetch("/api/register", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(formData),

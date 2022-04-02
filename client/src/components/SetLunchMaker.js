@@ -73,7 +73,7 @@ const SetLunchMaker = () => {
 	const handleSubmit = () => {
 		const lunchMakerName = getLunchMakerName(lunchMakerId);
 
-		fetch("http://localhost:3100/api/lunchMaker", {
+		fetch("/api/lunchMaker", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
