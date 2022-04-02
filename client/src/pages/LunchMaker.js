@@ -1,7 +1,9 @@
 import { Typography, Box, Grid } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import LunchMakerGuide from "../components/LunchMakerGuide";
 import LunchMakerInformation from "../components/LunchMakerInformation";
 import RecipeCard from "../components/RecipeCard";
+
 
 const LunchMaker = () => {
 	//state to update the recipes
@@ -38,25 +40,33 @@ const LunchMaker = () => {
 
 	return (
 		<Grid>
+			<LunchMakerGuide />
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 				<LunchMakerInformation />
 			</Box>
 
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
-				<Typography variant="h5" sx={{ mt: 4, textAlign: "center" }}>
+				<Typography
+					sx={{ textAlign: "center", fontSize: "20px", fontWeight: "bold" }}
+				>
 					Recipes
 				</Typography>
 				{selectedRecipeName.length > 0 ? (
-					<Typography
-						variant="h6"
-						sx={{ mt: 4, textAlign: "center", color: "primary.main" }}
-					>
-						Your choice for this week event is {selectedRecipeName}
+					<Typography sx={{ mt: 2, textAlign: "center", fontWeight: "bold" }}>
+						Your choice for this week event is:
+						<Typography
+							component="span"
+							sx={{ color: "primary.main", m: "5px" }}
+						>
+							{selectedRecipeName}
+						</Typography>
 					</Typography>
 				) : (
 					""
 				)}
-				<Box sx={{ display: "flex", flexWrap: "wrap" }}>
+				<Box
+					sx={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }}
+				>
 					{recipes.map((recipe, index) => (
 						<RecipeCard key={index} recipe={recipe} />
 					))}

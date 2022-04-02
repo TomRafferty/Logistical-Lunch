@@ -3,14 +3,16 @@ import { Box, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
 const FooterBox = styled(Box)({
-	background: "#f3f3f3",
-    height: "60px",
-    marginTop: "2rem",
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    textAlign: "center",
+	background: "rgb(239,239,239)",
+	height: "50px",
+	paddingTop: "20px",
+	// position: "fixed",
+	// bottom: 0,
+	// left: 0,
+	width: "100%",
+	textAlign: "center",
+    zIndex: 100,
+
 });
 
 const Footer = () => {

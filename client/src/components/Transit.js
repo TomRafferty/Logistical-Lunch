@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { FormControl, Typography, Box, InputLabel, Select, MenuItem, Container } from "@mui/material";
+import EmojiTransportationIcon from "@mui/icons-material/EmojiTransportation";
 
 const Transit = () => {
     const [userData, setUserData] = useState([]);
@@ -48,20 +49,38 @@ const Transit = () => {
     };
 
     return (
-			<Container sx={{ mt: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+			<Box
+				sx={{
+					boxShadow: 3,
+					p: 4,
+					width: "40%",
+					alignSelf: "flex-start",
+					minHeight: "150px",
+				}}
+			>
+				<Container
+					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+				>
+					<EmojiTransportationIcon fontSize="large"></EmojiTransportationIcon>
+					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+						Transportation mode
+					</Typography>
+				</Container>
 				{userData.map((element) => {
 					return !element.transport_type ? (
-						<Typography margin="20px">
-							How will you be travelling to this weeks meeting? Please Select a
+						<Typography marginTop={2} marginBottom={1}>
+							How will you be traveling to this weeks meeting? Please select a
 							travel option.
 						</Typography>
 					) : (
-						<Typography>
-							Your chosen mode of travel is{" "}
-							{element.transport_type === "transit"
-								? "public transport"
-								: element.transport_type}
-							. Is this Correct? If not please update.
+						<Typography marginTop={2} marginBottom={1}>
+							Your chosen mode of travel is
+							<Typography component="span" sx={{ color: "primary.main" }}>
+								{element.transport_type === "transit"
+									? " public transport"
+									: ` ${element.transport_type}`}
+							</Typography>
+							. Is this correct? If not please update.
 						</Typography>
 					);
 				})}
@@ -69,25 +88,18 @@ const Transit = () => {
 					<InputLabel id="travel">Go</InputLabel>
 					<Select
 						id="travel"
+						size="small"
 						value={travel}
 						label="Age"
 						onChange={handleChange}
 					>
-						<MenuItem value={"transit"}>
-							Public Transport
-						</MenuItem>
-						<MenuItem value={"driving"}>
-							Car
-						</MenuItem>
-						<MenuItem value={"walking"}>
-							Walking
-						</MenuItem>
-						<MenuItem value={"bicycling"}>
-							Bicycling
-						</MenuItem>
+						<MenuItem value={"transit"}>Public Transport</MenuItem>
+						<MenuItem value={"driving"}>Car</MenuItem>
+						<MenuItem value={"walking"}>Walking</MenuItem>
+						<MenuItem value={"bicycling"}>Bicycling</MenuItem>
 					</Select>
 				</FormControl>
-			</Container>
+			</Box>
 		);
 };
 
