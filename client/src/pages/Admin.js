@@ -23,13 +23,14 @@ export default function Admin() {
 
 			<DistanceMatrix />
 			<CreateEventForm />
+			<EditEventForm />
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
 				<Typography fontSize="20px" fontWeight="bold" textAlign="center" marginBottom="16px">
 					Nominate Lunch Maker & Lunch Shopper
 				</Typography>
 				<Box
 					disableGutters
-					sx={{ display: "flex", justifyContent: "space-between"}}
+					sx={{ display: "flex", justifyContent: "space-between" }}
 				>
 					<SetLunchMaker />
 					<SetLunchShopper />

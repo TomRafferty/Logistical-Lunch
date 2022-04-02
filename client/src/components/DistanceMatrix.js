@@ -34,7 +34,7 @@ async function getPostCodeData(postcodes, origin) {
 // inputs coordinates and travel types to google matrix and receives durations and distances
 async function getDistance(originCoords, coord, mode) {
 	const result = await fetch(
-		`http://localhost:3000/api/google/admin?begin=${originCoords}&finish=${coord}&transit=${mode}`
+		`/api/google/admin?begin=${originCoords}&finish=${coord}&transit=${mode}`
 	);
 	const data = await result.json();
 	if(data.rows[0].elements[0].status!=="OK") {
@@ -67,7 +67,7 @@ const DistanceMatrix = () => {
 	// function to get the location and transport type of users
 	async function getPostcodes() {
 		const data = await fetch(
-			`http://localhost:3000/api/postcodes?codesCohort=${postCodeCohort}`
+			`/api/postcodes?codesCohort=${postCodeCohort}`
 		);
 		const dataTwo = await data.json();
 		let filtered = dataTwo.filter(

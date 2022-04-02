@@ -12,7 +12,7 @@ async function getPlaces() {
 	const dataTwo = await data.json();
 	// then gets the information for nearby supermarkets/grocery shops
 	const shopData = await fetch(
-		`http://localhost:3000/api/google?lat=${dataTwo.result.latitude}&long=${dataTwo.result.longitude}`
+		`/api/google?lat=${dataTwo.result.latitude}&long=${dataTwo.result.longitude}`
 	);
 	const shopDataTwo = await shopData.json();
 	const shopArray = shopDataTwo.results.map((element) => {
@@ -35,7 +35,7 @@ async function getPlaces() {
   
 	// then sends built string to the distance matrix
 	const distanceData = await fetch(
-		`http://localhost:3000/api/google/distance?start=${originData}&ends=${distString.slice(1)}`
+		`/api/google/distance?start=${originData}&ends=${distString.slice(1)}`
 	);
 	const distanceDataTwo = await distanceData.json();
 	const distShopArr = shopArray.map((element, index) => {

@@ -39,7 +39,7 @@ const LunchMakerInformation = () => {
 			},
 			body: JSON.stringify({ "cohort_id":thisUserCohort }),
 		};
-		fetch("http://localhost:3000/api/lunchMakerInfo", options)
+		fetch("/api/lunchMakerInfo", options)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();

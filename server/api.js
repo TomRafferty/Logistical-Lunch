@@ -1,12 +1,83 @@
-import { Router } from "express";
-import { knex } from "./db";
-import pool from "./db";
+import express from "express";
+import pool, { knex } from "./db";
 import fetch from "node-fetch";
-const bcrypt = require("bcrypt");
-const router = Router("nodemailer");
+import bcrypt from "bcrypt";
+const router = express.Router("nodemailer");
+import { router as userRouter } from "./routers/users.routers";
+import { router as eventsRouter } from "./routers/events.routers";
 
 router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
+});
+
+/*
+contains 4 routers for users:
+	-update location
+	-
+*/
+router.use("/users", userRouter);
+
+router.use("/events", eventsRouter);
+
+//endpoint to update the chosen recipe id in the events table;
+router.post("/eventRecipeId", async (req, res) => {
+	const recipeId = req.body.recipeId;
+	const cohortId = req.body.cohortId;
+	try {
+		//update the recipe_id column
+		await knex.transaction(async (trx) => {
+			await trx("events")
+				.update("recipe_id", recipeId)
+				.where("cohort_id", cohortId);
+
+			res.status(201).json({ msg: "Your choice was successfully submitted" });
+		});
+	} catch (error) {
+		res
+			.status(500)
+			.json({ msg: "Something went wrong. Please try again later!" });
+	}
+});
+// admin create new event
+router.post("/createNewEvent", (req, res) => {
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			INSERT INTO 
+			events
+				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
+			VALUES
+				($1, $2, $3, $4, $5, $6, $7)
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		res.status(200).json({ message:"added new event" });
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
+});
+router.put("/editEvent", (req, res) => {
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	pool
+	.query(
+		`
+			UPDATE events
+			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
+			WHERE cohort_id=$7
+		`,
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+	)
+	.then(() => {
+		res.status(200).json({ message: "successfully updated event" });
+	})
+	.catch((error) => {
+		console.error(error);
+		res.status(error.status).send(error);
+	});
 });
 
 router.post("/lunchMakerInfo", (req, res) => {
@@ -149,147 +220,87 @@ router.post("/login", async (req, res) => {
 			res.status(error.status).send(error);
 		});
 });
+// endpoint for register form
+router.post("/register", async (req, res) => {
+	const { name, email, region, classNr, password } = req.body;
+	const role = req.body.role == "Admin" ? true : false;
+	const isLunchMaker = false;
+	const isLunchShopper = false;
 
-// endpoint to update location
-router.put("/users/location", (req, res) => {
-	const location = req.body.location;
-	const id = req.body.id;
-	if (!location) {
-		res.status(400).json({ msg: "Please provide a location" });
-	}
-	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
+	//hashing the password
+	const saltRounds = 10;
+	const salt = await bcrypt.genSalt(saltRounds);
+	const encryptedPassword = await bcrypt.hash(password, salt);
+
+	//get the cohortId from cohort table
+	const getCohortId =
+		"Select id FROM cohort WHERE class_number = $1 AND region = $2";
+
+	const cohortId = await pool
+		.query(getCohortId, [classNr, region])
+		.then((result) => result.rows[0].id);
+
+	//check if email is already used
 	pool
-		.query(locationQuery, [location, id])
-		.then(() => {
-			res.json({ msg: "user location updated" });
-		})
-		.catch((error) => {
-			console.error(error);
-			res.status(500).json(error);
+		.query("SELECT * FROM users WHERE user_email = $1", [email])
+		.then((result) => {
+			if (result.rows.length > 0) {
+				return res
+					.status(409)
+					.json({ msg: "This email address already has an account" });
+			}else{
+				//if email is not already used, insert new user to the users table
+				const query =
+					`
+						INSERT INTO 
+							users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id)
+						VALUES ($1, $2, $3, $4, $5, $6, $7)
+					`;
+				pool
+					.query(query, [
+						name,
+						email,
+						role,
+						isLunchMaker,
+						isLunchShopper,
+						encryptedPassword,
+						cohortId,
+					])
+					.then(() => res.json({ msg: "Register successful" }))
+					.catch(() => res.status(400).json({ msg: "Unsuccessful. Please try again later" }));
+			}
 		});
-});
-
-// endpoint to update chosen travel type
-router.put("/users/transport", (req, res) => {
-	const transport = req.body.transport;
-	const id = req.body.id;
-	if (!transport) {
-		res.status(400).json({ msg: "Please provide a transport option" });
-	}
-	const locationQuery = "UPDATE users SET transport_type=$1 WHERE id=$2";
-	pool
-		.query(locationQuery, [transport, id])
-		.then(() => {
-			res.json({ msg: "transport_type updated" });
-		})
-		.catch((error) => {
-			console.error(error);
-			res.status(500).json(error);
-		});
-});
-
-
-
-
-
-//  endpoint for event details for shopper
-router.get("/events/shopper", (req, res) => {
-	const shopPerson = parseInt(req.query.shopperId);
-	console.log(shopPerson);
-	const shopperQuery =
-		`
-			SELECT 
-				events.id, meeting_location, meeting_postcode,
-				meeting_address, meeting_city, meeting_start,
-				meeting_end, break_time, lunch_maker_id,
-				lunch_shopper_id, diners, recipe_id,
-				events.cohort_id, user_name,
-				user_email, recipes.ingredients, recipes.recipe_name, recipes.servings
-			FROM events 
-			INNER JOIN recipes 
-				ON events.recipe_id=recipes.id 
-			INNER JOIN users
-				ON events.lunch_maker_id=users.id 
-			WHERE events.lunch_shopper_id=$1
-		`;
-	pool
-		.query(shopperQuery, [shopPerson])
-		.then((response) => res.json(response.rows))
-		.catch((error) => {
-			console.error(error);
-			res.status(500).json(error);
-		});
-});
-
-router.get("/events/next", (req,res)=> {
-    const cohortId = req.query.cohId;
-	const eventQuery =
-		`
-			SELECT 
-				events.id, meeting_location, meeting_postcode,
-				meeting_address, meeting_city, meeting_start,
-				meeting_end, break_time, lunch_maker_id, recipe_id,
-				cohort_id, class_number, region 
-			FROM events 
-			INNER JOIN cohort 
-				ON events.cohort_id=cohort.id
-			WHERE events.cohort_id=$1
-		`;
-
-		// AND meeting_end BETWEEN NOW() + INTERVAL '21 days';
-
-	pool.query(eventQuery,[cohortId])
-	.then((response)=>res.json(response.rows))
-	.catch((error)=>{
-		console.error(error);
-		res.status(500).json(error);
-	});
 
 });
 
-router.get("/events/get/:cohortId", (req, res) => {
-	pool
-		.query(
-			`
-				SELECT * FROM events WHERE cohort_id=$1
-			`,
-			[req.params.cohortId]
-		)
-		.then((response) => {
-			res.json(response.rows);
-		})
-		.catch((error) => {
-			console.error(error);
-			res.status(error.status).send(error);
-		});
-});
 
-//endpoint to get user by id
-router.get("/users/:id", (req,res)=> {
-	const userId = req.params.id;
 
-	const userQuery = "SELECT * FROM users WHERE id=$1";
-	pool.query(userQuery,[userId])
-	.then((response)=>res.json(response.rows))
-	.catch((error)=>{
-		console.error(error);
-		res.status(500).json(error);
-	});
-});
+// //endpoint to get user by id
+// router.get("/users/:id", (req,res)=> {
+// 	const userId = req.params.id;
+
+// 	const userQuery = "SELECT * FROM users WHERE id=$1";
+// 	pool.query(userQuery,[userId])
+// 	.then((response)=>res.json(response.rows))
+// 	.catch((error)=>{
+// 		console.error(error);
+// 		res.status(500).json(error);
+// 	});
+// });
 
 //endpoint to get user by cohort_id
-router.get("/users/cohort/:cohortId", async (req, res) => {
-	const cohortId = req.params.cohortId;
-	const cohortUsers = await knex.select("id", "user_name", "is_lunch_maker", "is_lunch_shopper")
-		.from("users")
-		.where({ "cohort_id": cohortId, "is_admin": false });
+// router.get("/users/cohort/:cohortId", async (req, res) => {
+// 	const cohortId = req.params.cohortId;
+// 	const cohortUsers = await knex.select("id", "user_name", "is_lunch_maker", "is_lunch_shopper")
+// 		.from("users")
+// 		.where({ "cohort_id": cohortId, "is_admin": false });
 
-	if(cohortUsers.length > 0) {
-		res.status(201).json(cohortUsers);
-	}else{
-		res.status(401).json({ msg: "There was a problem please try again later" });
-	}
-});
+// 	if(cohortUsers.length > 0) {
+// 		res.status(201).json(cohortUsers);
+// 	}else{
+// 		res.status(401).json({ msg: "There was a problem please try again later" });
+// 	}
+// });
 
 //endpoint to get the history of all the lunch makers assigned in the past
 router.get("/history/lunchMaker/:cohortId", async (req, res) => {
@@ -379,58 +390,7 @@ router.post("/lunchShopper", async (req, res) => {
 	}
 });
 
-// endpoint for register form
-router.post("/register", async (req, res) => {
-	const { name, email, region, classNr, password } = req.body;
-	const role = req.body.role == "Admin" ? true : false;
-	const isLunchMaker = false;
-	const isLunchShopper = false;
 
-	//hashing the password
-	const saltRounds = 10;
-	const salt = await bcrypt.genSalt(saltRounds);
-	const encryptedPassword = await bcrypt.hash(password, salt);
-
-	//get the cohortId from cohort table
-	const getCohortId =
-		"Select id FROM cohort WHERE class_number = $1 AND region = $2";
-
-	const cohortId = await pool
-		.query(getCohortId, [classNr, region])
-		.then((result) => result.rows[0].id);
-
-	//check if email is already used
-	pool
-		.query("SELECT * FROM users WHERE user_email = $1", [email])
-		.then((result) => {
-			if (result.rows.length > 0) {
-				return res
-					.status(409)
-					.json({ msg: "This email address already has an account" });
-			}else{
-				//if email is not already used, insert new user to the users table
-				const query =
-					`
-						INSERT INTO 
-							users (user_name, user_email, is_admin, is_lunch_maker, is_lunch_shopper, user_password, cohort_id)
-						VALUES ($1, $2, $3, $4, $5, $6, $7)
-					`;
-				pool
-					.query(query, [
-						name,
-						email,
-						role,
-						isLunchMaker,
-						isLunchShopper,
-						encryptedPassword,
-						cohortId,
-					])
-					.then(() => res.json({ msg: "Register successful" }))
-					.catch(() => res.status(400).json({ msg: "Unsuccessful. Please try again later" }));
-			}
-		});
-
-});
 
 //lunchRequest
 router.post("/lunch/dietary", async (req, res) => {
@@ -534,67 +494,7 @@ router.post("/recipes", async (req, res) => {
 
 });
 
-//endpoint to update the chosen recipe id in the events table;
-router.post("/eventRecipeId", async (req, res) => {
-	const recipeId = req.body.recipeId;
-	const cohortId = req.body.cohortId;
-	try {
-		//update the recipe_id column
-		await knex.transaction(async (trx) => {
-			await trx("events")
-				.update("recipe_id", recipeId)
-				.where("cohort_id", cohortId);
 
-			res.status(201).json({ msg: "Your choice was successfully submitted" });
-		});
-	} catch (error) {
-		res
-			.status(500)
-			.json({ msg: "Something went wrong. Please try again later!" });
-	}
-});
-
-// admin create new event
-router.post("/createNewEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
-	pool
-	.query(
-		`
-			INSERT INTO 
-			events
-				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
-			VALUES
-				($1, $2, $3, $4, $5, $6, $7)
-		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
-	)
-	.then(() => {
-		res.status(200).json({ message:"added new event" });
-	})
-	.catch((error) => {
-		console.error(error);
-		res.status(error.status).send(error);
-	});
-});
-router.put("/editEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
-	pool
-	.query(
-		`
-			UPDATE events
-			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
-			WHERE cohort_id=$7
-		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
-	)
-	.then(() => {
-		res.status(200).json({ message: "successfully updated event" });
-	})
-	.catch((error) => {
-		console.error(error);
-		res.status(error.status).send(error);
-	});
-});
 
 // route to get nearby shops for the users postcode
 router.get("/google", (req,res)=> {
