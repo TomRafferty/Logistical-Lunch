@@ -1,28 +1,31 @@
 /* eslint-disable no-inner-declarations */
 import styled from "@emotion/styled";
-import { Box, Button, FormControl, Grid, InputLabel, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, FormControl, Grid, TextField, Typography } from "@mui/material";
 import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useEffect, useState } from "react";
-import { DateTimePicker, MobileDatePicker } from "@mui/lab";
+import { DateTimePicker } from "@mui/lab";
 import { DateTime } from "luxon";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 
 // styles:
-const Header = styled(Typography)({
-	align: "center",
-	variant: "h3",
-});
+// const Header = styled(Typography)({
+// 	align: "center",
+// 	variant: "h3",
+// });
 const FormContainer = styled(Grid)({
+	display: "flex",
 	spacing: "0",
 	flexDirection: "column",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: "30px 50px",
+	padding: "20px",
 	background: "#fafafa",
+	marginBottom: "2rem",
 });
 const StyledInput = styled(FormControl)({
-	margin: "2rem",
-	width: "40%",
+	margin: "1rem",
+	width: "80%",
 });
 const CreateEventForm = () => {
 	// submit state
@@ -84,18 +87,25 @@ const CreateEventForm = () => {
 	};
 
 	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault();
-				submitReq();
-			}}
-		>
-			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
+		<Box sx={{ mx: "auto", p: 4, width: "45%" }}>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					submitReq();
+				}}
+			>
 				<FormContainer container>
-					<Header>Create New Event:</Header>
+					<Container
+						sx={{ display: "flex", alignItems: "center", marginLeft: "0", padding: "20px" }}
+					>
+						<EventAvailableRoundedIcon fontSize="large"></EventAvailableRoundedIcon>
+						<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+							Create an Event
+						</Typography>
+					</Container>
 
 					{/* location */}
-					<StyledInput sx={{ width: 1 / 2 }}>
+					<StyledInput>
 						<TextField
 							label="location"
 							required
@@ -201,8 +211,8 @@ const CreateEventForm = () => {
 						</Button>
 					</StyledInput>
 				</FormContainer>
-			</Box>
-		</form>
+			</form>
+		</Box>
 	);
 };
 export default CreateEventForm;

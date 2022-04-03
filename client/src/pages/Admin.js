@@ -22,10 +22,19 @@ export default function Admin() {
 			</Box>
 
 			<DistanceMatrix />
-			<CreateEventForm />
-			<EditEventForm />
+
+			<Box sx={{ boxShadow: 3, mx: "auto", mb: 6, display: "flex", justifyContent: "space-between" }}>
+				<CreateEventForm />
+				<EditEventForm />
+			</Box>
+
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
-				<Typography fontSize="20px" fontWeight="bold" textAlign="center" marginBottom="16px">
+				<Typography
+					fontSize="20px"
+					fontWeight="bold"
+					textAlign="center"
+					marginBottom="16px"
+				>
 					Nominate Lunch Maker & Lunch Shopper
 				</Typography>
 				<Box

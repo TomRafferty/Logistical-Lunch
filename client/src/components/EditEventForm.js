@@ -1,29 +1,27 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import DateAdapter from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { DateTimePicker } from "@mui/lab";
+import EditIcon from "@mui/icons-material/Edit";
 
 const { default: styled } = require("@emotion/styled");
 const { FormControl } = require("@material-ui/core");
 
 const StyledInput = styled(FormControl)({
-	margin: "2rem",
-	width: "50%",
-});
-const Header = styled(Typography)({
-	variant: "h4",
-	align: "center",
+	margin: "1rem",
+	width: "80%",
 });
 
 const FormContainer = styled(Grid)({
+	display: "flex",
 	spacing: "0",
 	flexDirection: "column",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: "30px 50px",
+	padding: "20px",
 	background: "#fafafa",
 	marginBottom: "2rem",
 });
@@ -70,7 +68,7 @@ const EditEventForm = () => {
 		},
 	};
 	const fetchCurrentMeeting = async () => {
-		await fetch("/api/events/get/378", options)
+		await fetch(`/api/events/get/${sessionStorage.getItem("cohortId")}`, options)
 			.then((response) => response.json())
 			.then((result) => {
 				// this assumes we only have one meeting per cohort which is currently the case
@@ -160,7 +158,7 @@ const EditEventForm = () => {
 	});
 
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
+		<Box sx={{ mx: "auto", p: 4, width: "45%" }}>
 			<form
 				onSubmit={(e) => {
 					// basically if you can click submit, then the form is likely loaded.
@@ -170,10 +168,17 @@ const EditEventForm = () => {
 				}}
 			>
 				<FormContainer container>
-					<Header>{`Edit - ${eventToEdit.location}`}</Header>
-
+					{/* <Header>{`Edit - ${eventToEdit.location}`}</Header> */}
+					<Container
+						sx={{ display: "flex", alignItems: "center", marginLeft: "0", padding: "20px" }}
+					>
+					<EditIcon fontSize="large"></EditIcon>
+					<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+						{`Event - ${eventToEdit.location}`}
+					</Typography>
+					</Container>
 					{/* location */}
-					<StyledInput sx={{ width: 1 / 2 }}>
+					<StyledInput>
 						<TextField
 							label="Location"
 							required
