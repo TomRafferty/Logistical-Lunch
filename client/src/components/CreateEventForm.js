@@ -8,11 +8,11 @@ import { DateTimePicker } from "@mui/lab";
 import { DateTime } from "luxon";
 import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 
-// styles:
-// const Header = styled(Typography)({
-// 	align: "center",
-// 	variant: "h3",
-// });
+const StyledInput = styled(FormControl)({
+	margin: "1rem",
+	width: "80%",
+});
+
 const FormContainer = styled(Grid)({
 	display: "flex",
 	spacing: "0",
@@ -23,10 +23,7 @@ const FormContainer = styled(Grid)({
 	background: "#fafafa",
 	marginBottom: "2rem",
 });
-const StyledInput = styled(FormControl)({
-	margin: "1rem",
-	width: "80%",
-});
+
 const CreateEventForm = () => {
 	// submit state
 	const emptyEvent = {
