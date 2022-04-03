@@ -74,36 +74,37 @@ router.post("/eventRecipeId", async (req, res) => {
 });
 // admin create new event
 router.post("/createNewEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date } = req.body;
+	console.log(req.body);
 	pool
 	.query(
 		`
 			INSERT INTO 
 			events
-				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
+				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id, meeting_date)
 			VALUES
-				($1, $2, $3, $4, $5, $6, $7)
+				($1, $2, $3, $4, $5, $6, $7, $8)
 		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date]
 	)
 	.then(() => {
 		res.status(200).json({ message:"added new event" });
 	})
 	.catch((error) => {
 		console.error(error);
-		res.status(error.status).send(error);
+		res.status(500).send(error);
 	});
 });
 router.put("/editEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date } = req.body;
 	pool
 	.query(
 		`
 			UPDATE events
-			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
-			WHERE cohort_id=$7
+			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6, meeting_date=$7
+			WHERE cohort_id=$8
 		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+		[location, postcode, address, city, meeting_start, meeting_end, meeting_date, currentCohort]
 	)
 	.then(() => {
 		res.status(200).json({ message: "successfully updated event" });

@@ -2,44 +2,6 @@ import { Router } from "express";
 import pool from "../db";
 const router = Router("nodemailer");
 
-// // endpoint to update location
-// router.put("/users/location", (req, res) => {
-// 	const location = req.body.location;
-// 	const id = req.body.id;
-// 	if (!location) {
-// 		res.status(400).json({ msg: "Please provide a location" });
-// 	}
-// 	const locationQuery = "UPDATE users SET user_location=$1 WHERE id=$2";
-// 	pool
-// 		.query(locationQuery, [location, id])
-// 		.then(() => {
-// 			res.json({ msg: "user location updated" });
-// 		})
-// 		.catch((error) => {
-// 			console.error(error);
-// 			res.status(500).json(error);
-// 		});
-// });
-
-// // endpoint to update chosen travel type
-// router.put("/users/transport", (req, res) => {
-// 	const transport = req.body.transport;
-// 	const id = req.body.id;
-// 	if (!transport) {
-// 		res.status(400).json({ msg: "Please provide a transport option" });
-// 	}
-// 	const locationQuery = "UPDATE users SET transport_type=$1 WHERE id=$2";
-// 	pool
-// 		.query(locationQuery, [transport, id])
-// 		.then(() => {
-// 			res.json({ msg: "transport_type updated" });
-// 		})
-// 		.catch((error) => {
-// 			console.error(error);
-// 			res.status(500).json(error);
-// 		});
-// });
-
 //  endpoint for event details for shopper
 router.get("/shopper", (req, res) => {
 	const shopPerson = parseInt(req.query.shopperId);

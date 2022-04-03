@@ -25,6 +25,7 @@ const StudentCard = () => {
 			})
 			.then(function (data) {
 				setCardData(data);
+				console.log(`data values = ${Object.values(data[0])}`);
 			})
 			.catch(function (error) {
 				console.log("An error occurred:", error);
@@ -33,7 +34,7 @@ const StudentCard = () => {
 
   // function to convert timestamp string into an array of time an date
   const timeSplitter=(element)=> {
-     return element.slice(0,16).split("T");
+	return element.slice(0,16).split("T");
   };
   // typography styling
   const TypographyInner = styled(Typography)({
