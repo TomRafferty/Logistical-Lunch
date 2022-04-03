@@ -27,9 +27,6 @@ const FormContainer = styled(Grid)({
 });
 
 const EditEventForm = () => {
-	// // just stops the alert before editing the form being displayed incorrectly
-	// let editFormLoaded = false;
-	// // states:
 	const [originalLocation, setOriginalLocation] = useState("");
 	const [location, setLocation] = useState("");
 	const [postcode, setPostcode] = useState("");
@@ -40,36 +37,6 @@ const EditEventForm = () => {
 	const [meetingDate, setMeetingDate] = useState("");
 	const [currentCohort, setCurrentCohort] = useState("");
 
-	// const [submitState, setSubmitState] = useState({
-	// 	location: "",
-	// 	postcode: "",
-	// 	address: "",
-	// 	city: "",
-	// 	meeting_start: "",
-	// 	meeting_end: "",
-	// 	currentCohort: sessionStorage.getItem("cohortId"),
-	// });
-	// this is where the data is stored from the database to display initial values
-	// const [eventToEdit, setEventToEdit] = useState({
-	// 	location: "",
-	// 	postcode: "",
-	// 	address: "",
-	// 	city: "",
-	// 	meeting_start: "",
-	// 	meeting_end: "",
-	// 	currentCohort: sessionStorage.getItem("cohortId"),
-	// });
-	// dates to display and use to update the subObj:
-	// const [displayedStartDate, setDisplayedStartDate] = useState(new Date());
-	// const [displayedEndDate, setDisplayedEndDate] = useState(new Date());
-	// --------------------------------------------------------------------------------
-	// this object stores all the information ready to be sent off to the database + stops rerendering while using states
-	// let subObj = {};
-	// // set up the initial data inside of the subObj
-	// const setData = () => {
-	// 	subObj = eventToEdit;
-	// };
-	// get current cohort data
 	const options = {
 		method: "get",
 		headers: {
@@ -81,21 +48,9 @@ const EditEventForm = () => {
 		await fetch(`/api/events/get/${sessionStorage.getItem("cohortId")}`, options)
 			.then((response) => response.json())
 			.then((result) => {
-				// this assumes we only have one meeting per cohort which is currently the case
 				return result[0];
 			})
 			.then((event) => {
-				// this will set both the eventToEdit and subObj to be the same initially
-				// const setEvent = {
-				// 	location: event.meeting_location,
-				// 	postcode: event.meeting_postcode,
-				// 	address: event.meeting_address,
-				// 	city: event.meeting_city,
-				// 	meeting_start: DateTime.fromSQL(event.meeting_start),
-				// 	meeting_end: DateTime.fromSQL(event.meeting_end),
-				// 	currentCohort: sessionStorage.getItem("cohortId"),
-				// };
-				// setEventToEdit(setEvent, setData());
 				setOriginalLocation(event.meeting_location);
 				setLocation(event.meeting_location);
 				setPostcode(event.meeting_postcode);
@@ -117,9 +72,6 @@ const EditEventForm = () => {
 
 	// submit
 	const submitReq = async () => {
-		// const shouldPass = submitState.location !== "" ? true : false;
-		// if(shouldPass){
-			console.log(meetingStart, meetingEnd);
 		const options = {
 			method: "put",
 			headers: {
@@ -147,60 +99,21 @@ const EditEventForm = () => {
 				console.error(`error - ${error}`);
 				throw error;
 			});
-		// }else if(!shouldPass && editFormLoaded){
-		// 	alert("please edit the form before trying to update");
-		// }
+
 	};
 	useEffect(() => {
 		submitReq();
 	}, []);
 
-	// // reformat subObj key - plant old value in place of undefined change
-	// const reformatSubmit = (keyName) => {
-	// 	/*
-	// 	this essentially makes sure everything has a value when
-	// 	it is submitted; so if nothing was changed, it will use
-	// 	the old value.
-	// 	*/
-	// 	if (keyName !== ("meeting_start" || "meeting_end")) {
-	// 		handleSubObjChange(keyName, eventToEdit[keyName]);
-	// 	}
-	// };
-
-	// // handle changes to the subObj
-	// const handleSubObjChange = (key, value) => {
-	// 	subObj[key] = value;
-	// 	// this will check if all the values have been adjusted,
-	// 	// if not it will apply the previously set values to them.
-	// 	Object.keys(eventToEdit).forEach((key) => {
-	// 		if (!Object.keys(subObj).includes(key)) {
-	// 			reformatSubmit(key);
-	// 		}
-	// 	});
-	// 	setSubmitState(subObj);
-	// 	console.log(JSON.parse(JSON.stringify(subObj)));
-	// };
-
-	// change date useEffect will refresh the date value in subObj
-	// useEffect(() => {
-	// 	subObj.meeting_start = DateTime.local(displayedStartDate).toSQL();
-	// });
-	// useEffect(() => {
-	// 	subObj.meeting_end = DateTime.local(displayedEndDate).toSQL();
-	// });
-
 	return (
 		<Box sx={{ mx: "auto", p: 4, width: "45%" }}>
 			<form
 				onSubmit={(e) => {
-					// basically if you can click submit, then the form is likely loaded.
-					// editFormLoaded = true;
 					e.preventDefault();
 					submitReq();
 				}}
 			>
 				<FormContainer container>
-					{/* <Header>{`Edit - ${eventToEdit.location}`}</Header> */}
 					<Container
 						sx={{
 							display: "flex",
@@ -221,7 +134,6 @@ const EditEventForm = () => {
 							required
 							id="location-input"
 							name="location"
-							// key={location}
 							value={location}
 							onChange={(e) => setLocation(e.target.value)}
 						/>
@@ -234,7 +146,6 @@ const EditEventForm = () => {
 							required
 							id="postcode-input"
 							name="postcode"
-							// key={postcode}
 							value={postcode}
 							onChange={(e) => setPostcode(e.target.value)}
 						/>
@@ -247,7 +158,6 @@ const EditEventForm = () => {
 							required
 							id="address-input"
 							name="address"
-							// key={address}
 							value={address}
 							onChange={(e) => setAddress(e.target.value)}
 						/>
@@ -260,7 +170,6 @@ const EditEventForm = () => {
 							required
 							id="city-input"
 							name="city"
-							// key={city}
 							value={city}
 							onChange={(e) => setCity(e.target.value)}
 						/>
