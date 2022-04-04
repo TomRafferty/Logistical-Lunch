@@ -69,6 +69,7 @@ const StudentCard = () => {
 				</Container>
 
 				{cardData.map((element) => {
+					console.log(JSON.parse(JSON.stringify(element)));
 					return (
 						<Box key={element.id} sx={{ mt: 2, p: 0 }}>
 							<Container disableGutters>
@@ -81,26 +82,29 @@ const StudentCard = () => {
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Date:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[0]
-										).toFormat("DDDD")}
+										).toFormat("DDDD")} */}
+										{element.meeting_date}
 									</TypographyInner>
 								</Typography>
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Meeting starts:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[1]
-										).toFormat("HH:mm a")}
+										).toFormat("HH:mm a")} */}
+										{element.meeting_start}
 									</TypographyInner>
 								</Typography>
 
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Meeting ends:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_end)[1]
-										).toFormat("HH:mm a")}
+										).toFormat("HH:mm a")} */}
+										{element.meeting_end}
 									</TypographyInner>
 								</Typography>
 

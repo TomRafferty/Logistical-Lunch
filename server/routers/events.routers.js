@@ -38,7 +38,7 @@ router.get("/next", (req,res)=> {
 			SELECT 
 				events.id, meeting_location, meeting_postcode,
 				meeting_address, meeting_city, meeting_start,
-				meeting_end, break_time, lunch_maker_id, recipe_id,
+				meeting_end, meeting_date, break_time, lunch_maker_id, recipe_id,
 				cohort_id, class_number, region 
 			FROM events 
 			INNER JOIN cohort 
