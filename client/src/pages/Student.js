@@ -11,14 +11,9 @@ const Student = () => {
 		<Box sx={{ width: "80%", mx: "auto", mb: 6 }}>
 			<StandardStudentGuide />
 			<StudentCard />
-			<Box disableGutters sx={{ display: "flex", flexDirection: "column" }}>
-				<Box
-					disableGutters
-					sx={{ display: "flex", justifyContent: "space-between", mb: 6 }}
-				>
-					<Location />
-					<Transit />
-				</Box>
+			<Box disableGutters sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+				<Location />
+				<Transit />
 				<RequestLunch />
 			</Box>
 		</Box>

@@ -96,7 +96,7 @@ const SetLunchShopper = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", p: 4, width: "40%" }}>
+		<Box sx={{ boxShadow: 3, mx: 4, p: 4, width: "350px" }}>
 			<HeadingContainer>
 				<ShoppingCartCheckoutIcon fontSize="large"></ShoppingCartCheckoutIcon>
 				<Typography variant="h6" sx={{ ml: 2 }}>

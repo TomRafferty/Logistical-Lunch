@@ -105,7 +105,17 @@ const DistanceMatrix = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
+		<Box
+			sx={{
+				boxShadow: 3,
+				mx: 4,
+				mb: 6,
+				p: 4,
+				width: "350px",
+				minHeight: "170px",
+				alignSelf: "flex-start",
+			}}
+		>
 			<Container
 				sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
 			>

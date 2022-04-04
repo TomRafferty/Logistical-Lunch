@@ -1,8 +1,10 @@
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box, Grid, Card } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import LunchMakerGuide from "../components/LunchMakerGuide";
 import LunchMakerInformation from "../components/LunchMakerInformation";
 import RecipeCard from "../components/RecipeCard";
+import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
+import LunchDiningRoundedIcon from "@mui/icons-material/LunchDiningRounded";
 
 
 const LunchMaker = () => {
@@ -40,6 +42,29 @@ const LunchMaker = () => {
 
 	return (
 		<Grid>
+			<Card
+				sx={{
+					boxShadow: 3,
+					mx: "auto",
+					mt: 4,
+					mb: 2,
+					py: 2,
+					px: 4,
+					width: "80%",
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<DinnerDiningIcon fontSize="large"></DinnerDiningIcon>
+				<Typography
+					fontSize="20px"
+					fontWeight="bold"
+					alignSelf="flex-end"
+					marginLeft="10px"
+				>
+					Lunch Maker Guide
+				</Typography>
+			</Card>
 			<LunchMakerGuide />
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4, width: "80%" }}>
 				<LunchMakerInformation />

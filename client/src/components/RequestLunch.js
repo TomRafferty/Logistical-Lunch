@@ -125,8 +125,8 @@ const RequestLunch = () => {
 			sx={{
 				boxShadow: 3,
 				p: 4,
-				width: "40%",
-				alignSelf: "center",
+				mx: 4,
+				width: "350px",
 				minHeight: "170px",
 			}}
 		>

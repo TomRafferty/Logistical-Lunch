@@ -55,7 +55,9 @@ const Location = () => {
 				sx={{
 					boxShadow: 3,
 					p: 4,
-					width: "40%",
+					mx: 4,
+					mb: 6,
+					width: "350px",
 					minHeight: "170px",
 					alignSelf: "flex-start",
 				}}
