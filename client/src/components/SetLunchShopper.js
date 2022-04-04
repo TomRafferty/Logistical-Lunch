@@ -78,7 +78,7 @@ const SetLunchShopper = () => {
 	//event submit lunch shopper
 	const handleSubmit = () => {
 		const lunchShopperName = getLunchShopperNameFromList(lunchShopperId);
-		fetch("http://localhost:3100/api/lunchShopper", {
+		fetch("/api/lunchShopper", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

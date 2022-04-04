@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { DateTime } from "luxon";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import meetingImage from "../../images/meeting-image.jpg";
 
 const StudentCard = () => {
       const [cardData, setCardData] = useState([]);
@@ -24,6 +25,7 @@ const StudentCard = () => {
 			})
 			.then(function (data) {
 				setCardData(data);
+				console.log(`data values = ${Object.values(data[0])}`);
 			})
 			.catch(function (error) {
 				console.log("An error occurred:", error);
@@ -32,7 +34,7 @@ const StudentCard = () => {
 
   // function to convert timestamp string into an array of time an date
   const timeSplitter=(element)=> {
-     return element.slice(0,16).split("T");
+	return element.slice(0,16).split("T");
   };
   // typography styling
   const TypographyInner = styled(Typography)({
@@ -67,6 +69,7 @@ const StudentCard = () => {
 				</Container>
 
 				{cardData.map((element) => {
+					console.log(JSON.parse(JSON.stringify(element)));
 					return (
 						<Box key={element.id} sx={{ mt: 2, p: 0 }}>
 							<Container disableGutters>
@@ -79,26 +82,29 @@ const StudentCard = () => {
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Date:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[0]
-										).toFormat("DDDD")}
+										).toFormat("DDDD")} */}
+										{element.meeting_date}
 									</TypographyInner>
 								</Typography>
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Meeting starts:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[1]
-										).toFormat("HH:mm a")}
+										).toFormat("HH:mm a")} */}
+										{element.meeting_start}
 									</TypographyInner>
 								</Typography>
 
 								<Typography sx={{ mb: "5px" }}>
 									<strong>Meeting ends:</strong>
 									<TypographyInner sx={{ color: "primary.main" }}>
-										{DateTime.fromISO(
+										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_end)[1]
-										).toFormat("HH:mm a")}
+										).toFormat("HH:mm a")} */}
+										{element.meeting_end}
 									</TypographyInner>
 								</Typography>
 
@@ -128,7 +134,7 @@ const StudentCard = () => {
 				})}
 			</Container>
 			<img
-				src="https://media.istockphoto.com/vectors/important-business-meeting-medical-masks-vector-id1297193695?k=20&m=1297193695&s=612x612&w=0&h=FuKYn8KTxJmab23gc4G5zvKc_QxFCwLmFNe0FyenuMo="
+				src={meetingImage}
 				alt="meeting people"
 				width="500px"
 			/>

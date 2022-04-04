@@ -1,23 +1,57 @@
 import express from "express";
 import pool, { knex } from "./db";
-import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 const router = express.Router("nodemailer");
 import { router as userRouter } from "./routers/users.routers";
 import { router as eventsRouter } from "./routers/events.routers";
+import { router as googleRouter } from "./routers/google.routers";
+import { router as historyRouter } from "./routers/history.routers";
+import { router as postcodeRouter } from "./routers/postcodes.routers";
+import { router as lunchRouter } from "./routers/lunch.routers";
 
 router.get("/", (_, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-/*
-contains 4 routers for users:
+/* contains 4 routers for users:
 	-update location
-	-
+	-update transport
+	-get by id
+	-get by cohort id
 */
 router.use("/users", userRouter);
 
+/* contains 3 routers for events:
+	-get shopper
+	-get next event
+	-get by cohort id
+*/
 router.use("/events", eventsRouter);
+
+/* contains 3 routers for google:
+	-get nearest shops
+	-distance matrix endpoint one
+	-distance matrix endpoint two
+*/
+router.use("/google", googleRouter);
+
+/* contains 2 routers for history:
+	-lunch maker history
+	-lunch shopper history
+*/
+router.use("/history", historyRouter);
+
+/* contains 2 routers for history:
+	-get passed postcode
+	-validate postcode
+*/
+router.use("/postcodes", postcodeRouter);
+
+/* contains 2 routers for history:
+	-post new dietary information
+	-get new dietary information
+*/
+router.use("/lunch", lunchRouter);
 
 //endpoint to update the chosen recipe id in the events table;
 router.post("/eventRecipeId", async (req, res) => {
@@ -40,36 +74,37 @@ router.post("/eventRecipeId", async (req, res) => {
 });
 // admin create new event
 router.post("/createNewEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date } = req.body;
+	console.log(req.body);
 	pool
 	.query(
 		`
 			INSERT INTO 
 			events
-				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id)
+				(meeting_location, meeting_postcode, meeting_address, meeting_city, meeting_start, meeting_end, cohort_id, meeting_date)
 			VALUES
-				($1, $2, $3, $4, $5, $6, $7)
+				($1, $2, $3, $4, $5, $6, $7, $8)
 		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+		[location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date]
 	)
 	.then(() => {
 		res.status(200).json({ message:"added new event" });
 	})
 	.catch((error) => {
 		console.error(error);
-		res.status(error.status).send(error);
+		res.status(500).send(error);
 	});
 });
 router.put("/editEvent", (req, res) => {
-	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort } = req.body;
+	const { location, postcode, address, city, meeting_start, meeting_end, currentCohort, meeting_date } = req.body;
 	pool
 	.query(
 		`
 			UPDATE events
-			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6
-			WHERE cohort_id=$7
+			SET meeting_location=$1, meeting_postcode=$2, meeting_address=$3, meeting_city=$4, meeting_start=$5, meeting_end=$6, meeting_date=$7
+			WHERE cohort_id=$8
 		`,
-		[location, postcode, address, city, meeting_start, meeting_end, currentCohort]
+		[location, postcode, address, city, meeting_start, meeting_end, meeting_date, currentCohort]
 	)
 	.then(() => {
 		res.status(200).json({ message: "successfully updated event" });
@@ -273,59 +308,6 @@ router.post("/register", async (req, res) => {
 
 });
 
-
-
-// //endpoint to get user by id
-// router.get("/users/:id", (req,res)=> {
-// 	const userId = req.params.id;
-
-// 	const userQuery = "SELECT * FROM users WHERE id=$1";
-// 	pool.query(userQuery,[userId])
-// 	.then((response)=>res.json(response.rows))
-// 	.catch((error)=>{
-// 		console.error(error);
-// 		res.status(500).json(error);
-// 	});
-// });
-
-//endpoint to get user by cohort_id
-// router.get("/users/cohort/:cohortId", async (req, res) => {
-// 	const cohortId = req.params.cohortId;
-// 	const cohortUsers = await knex.select("id", "user_name", "is_lunch_maker", "is_lunch_shopper")
-// 		.from("users")
-// 		.where({ "cohort_id": cohortId, "is_admin": false });
-
-// 	if(cohortUsers.length > 0) {
-// 		res.status(201).json(cohortUsers);
-// 	}else{
-// 		res.status(401).json({ msg: "There was a problem please try again later" });
-// 	}
-// });
-
-//endpoint to get the history of all the lunch makers assigned in the past
-router.get("/history/lunchMaker/:cohortId", async (req, res) => {
-	const cohortId = req.params.cohortId;
-	const historyLunchMaker = await knex("lunch_maker_history").where("cohort_id", cohortId);
-
-	if (historyLunchMaker.length > 0) {
-		res.status(201).json(historyLunchMaker);
-	} else {
-		res.status(401).json({ msg: "There was a problem please try again later" });
-	}
-});
-
-//endpoint to get the history of all the lunch shoppers assigned in the past
-router.get("/history/lunchShopper/:cohortId", async (req, res) => {
-	const cohortId = req.params.cohortId;
-	const historyLunchShopper = await knex("lunch_shopper_history").where("cohort_id", cohortId);
-
-	if (historyLunchShopper.length > 0) {
-		res.status(201).json(historyLunchShopper);
-	}else{
-		res.status(401).json({ msg: "There was a problem please try again later" });
-	}
-});
-
 //endpoint to update the is_lunch_maker value for a specific user
 router.post("/lunchMaker", async (req, res) => {
 	const lunchMakerId = req.body.lunchMakerId;
@@ -390,81 +372,6 @@ router.post("/lunchShopper", async (req, res) => {
 	}
 });
 
-
-
-//lunchRequest
-router.post("/lunch/dietary", async (req, res) => {
-	const {
-		dietaryRestrictions,
-		dietaryRequirements,
-		otherDietaryRestrictions,
-		userId,
-		cohortId,
-	} = req.body;
-
-	try {
-		await knex.transaction(async (trx) => {
-			//updating the numbers of meals
-			const diners = await trx("events")
-				.select("diners")
-				.where("cohort_id", cohortId);
-
-			await trx("events")
-				.update("diners", diners[0].diners + 1)
-				.where("cohort_id", cohortId);
-
-			if (otherDietaryRestrictions.length > 0) {
-				//INSERT new allergy and GET the otherDietaryRestriction id
-				//so we can insert it in the dietary_restrictions table
-				const allergyResult = await trx("allergies")
-					.insert({ allergy_name: otherDietaryRestrictions })
-					.returning("id");
-
-				await trx("dietary_restrictions").insert({
-					user_id: userId,
-					allergen_id: allergyResult[0].id,
-				});
-			}
-
-			if (dietaryRestrictions.length > 0) {
-				//GET the allergies ids so we can insert them in the dietary_restrictions table
-				const allergiesId = await trx("allergies")
-					.select("id")
-					.whereIn("allergy_name", dietaryRestrictions);
-
-				//INSERT allergies ids alongside with the userId into the dietary_restrictions table
-				const allergiesArray = allergiesId.map((field) => ({
-					user_id: userId,
-					allergen_id: field.id,
-				}));
-				await trx("dietary_restrictions").insert(allergiesArray);
-			}
-
-			if (dietaryRequirements.length > 0) {
-				//GET the lunch requirements ids so we can insert them in the dietary_requirements table
-				const dietaryReqIds = await trx("lunch_requirements")
-					.select("id")
-					.whereIn("requirement_name", dietaryRequirements);
-
-				//INSERT dietaryRequirements id alongside with the userId into the dietary_restrictions table
-				const dietaryReqArray = dietaryReqIds.map((field) => ({
-					user_id: userId,
-					requirement_id: field.id,
-				}));
-				await trx("dietary_requirements").insert(dietaryReqArray);
-			}
-
-			res
-				.status(201)
-				.json({ msg: "Your lunch request was submitted successfully" });
-		});
-	} catch (error) {
-		res
-			.status(401)
-			.json({ msg: "Something went wrong. Please try again later!" });
-	}
-});
-
 //endpoint to get all the recipes and the name of the selected recipe
 router.post("/recipes", async (req, res) => {
 	const cohortId = req.body.cohortId;
@@ -492,90 +399,6 @@ router.post("/recipes", async (req, res) => {
 		res.status(500).json({ msg: "There was a problem please try again later" });
 	}
 
-});
-
-
-
-// route to get nearby shops for the users postcode
-router.get("/google", (req,res)=> {
-	const getLat = req.query.lat;
-	const getLong = req.query.long;
-
-	fetch(
-		`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${getLat},${getLong}&radius=2000&type=supermarket&key=${process.env.API_KEY}`
-	)
-		.then((response) => response.json())
-		.then((data) => res.json(data))
-		.catch(function (error) {
-			console.log(error);
-		});
-	});
-
-// distance matrix endpoint
-router.get("/google/distance", (req, res) => {
-	const startCoords = req.query.start;
-	const endsCoords = req.query.ends;
-
-	fetch(
-		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&key=${process.env.API_KEY}`
-	)
-		.then((response) => response.json())
-		.then((data) => res.json(data))
-		.catch(function (error) {
-			console.log(error);
-});
-});
-
-// google matrix endpoint two
-router.get("/google/admin", (req, res) => {
-	const startCoords = req.query.begin;
-	const endsCoords = req.query.finish;
-	const transitMode = req.query.transit;
-	fetch(
-		`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${startCoords}&destinations=${endsCoords}&mode=${transitMode}&key=${process.env.API_KEY}`
-	)
-		.then((response) => response.json())
-		.then((data) => res.json(data))
-		.catch(function (error) {
-			console.log(error);
-		});
-});
-
-// endpoint for getting dietary information for cohort
-router.get("/lunch/dietary",(req,res)=> {
-	const dietCohort = parseInt(req.query.diets);
-	const dietArray = [];
-
-	const allergyQuery = "SELECT DISTINCT allergy_name FROM allergies INNER JOIN dietary_restrictions ON allergies.id=dietary_restrictions.allergen_id INNER JOIN users ON dietary_restrictions.user_id=users.id INNER JOIN cohort ON users.cohort_id=cohort.id WHERE cohort.id=$1";
-
-	const lunchQuery = "SELECT DISTINCT requirement_name FROM lunch_requirements INNER JOIN dietary_requirements ON lunch_requirements.id=dietary_requirements.requirement_id INNER JOIN users ON dietary_requirements.user_id=users.id INNER JOIN cohort ON users.cohort_id=cohort.id WHERE cohort.id=$1";
-
-
-	pool
-		.query(allergyQuery, [dietCohort])
-		.then((response) => dietArray.push(response.rows))
-		.then(() => {
-			return pool.query(lunchQuery,[dietCohort]);
-		})
-		.then((response)=> {
-			return dietArray.push(response.rows);
-		})
-		.then(()=> res.json(dietArray))
-		.catch(function (error) {
-			console.log(error);
-		});
-});
-
-router.get("/postcodes", (req, res) => {
-	const allPostCodes = parseInt(req.query.codesCohort);
-	const postcodeQuery =
-		"SELECT user_location, transport_type FROM users WHERE cohort_id=$1";
-	pool
-		.query(postcodeQuery, [allPostCodes])
-		.then((response) => res.json(response.rows))
-		.catch(function (error) {
-			console.log(error);
-		});
 });
 
 export default router;

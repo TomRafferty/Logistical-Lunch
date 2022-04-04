@@ -95,7 +95,7 @@ const RequestLunch = () => {
 		const dietaryRestrictionsArray = transformObjToArray(dietaryRestrictions);
 		const dietaryRequirementsArray = transformObjToArray(dietaryRequirements);
 		if(lunchOption == "yes"){
-			fetch("http://localhost:3100/api/lunch/dietary", {
+			fetch("/api/lunch/dietary", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({

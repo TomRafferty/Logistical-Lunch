@@ -18,7 +18,10 @@ const Location = () => {
     };
     // a function to validate the inputted postcode and update the users location in the database
     async function handleClick() {
-        const validate = await fetch(`https://api.postcodes.io/postcodes/${newLocal}/validate`);
+		if(!newLocal){
+			return;
+		}
+        const validate = await fetch(`/api/postcodes/validate/${newLocal}`);
         const data = await validate.json();
         if(data.result===true) {
             fetch("api/users/location", {

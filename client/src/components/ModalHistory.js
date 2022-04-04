@@ -31,7 +31,7 @@ const ModalHistory = (props) => {
 	const handleOpen = () => {
 		setOpen(true);
 		//fetching information (name & date) from a specific table - used 1 prop to make the component reusable
-		fetch(`http://localhost:3100/api/history/${props.userInstance}/${cohortId}`)
+		fetch(`/api/history/${props.userInstance}/${cohortId}`)
 			.then((response) => {
 				if (response.ok) {
 					return response.json();
