@@ -91,7 +91,7 @@ const EditEventForm = ({ isEdit }) => {
 				meeting_start: meetingStart.toISOTime(),
 				meeting_end: meetingEnd.toISOTime(),
 				meeting_date: meetingDate.toISODate(),
-				currentCohort: sessionStorage.getItem("cohortID"),
+				currentCohort,
 			}),
 		};
 		await fetch(`/api/${isEdit ? "editEvent" : "createNewEvent"}`, options)
@@ -130,7 +130,7 @@ const EditEventForm = ({ isEdit }) => {
 						>
 							<EditIcon fontSize="large"></EditIcon>
 							<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
-								{`Event - ${originalLocation}`}
+								{`Edit - ${originalLocation}`}
 							</Typography>
 						</Container>
 					) : (
