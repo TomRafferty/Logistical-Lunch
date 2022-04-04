@@ -4,9 +4,8 @@ import { Box, Typography } from "@mui/material";
 import Location from "../components/Location";
 import RequestLunch from "../components/RequestLunch";
 import SetLunchMaker from "../components/SetLunchMaker";
-import CreateEventForm from "../components/CreateEventForm";
 import SetLunchShopper from "../components/SetLunchShopper";
-import EditEventForm from "../components/EditEventForm";
+import EventForm from "../components/EventForm";
 import DistanceMatrix from "../components/DistanceMatrix";
 
 export default function Admin() {
@@ -24,8 +23,8 @@ export default function Admin() {
 			<DistanceMatrix />
 
 			<Box sx={{ boxShadow: 3, mx: "auto", mb: 6, display: "flex", justifyContent: "space-between" }}>
-				<CreateEventForm />
-				<EditEventForm />
+				<EventForm isEdit={false} />
+				<EventForm isEdit={true} />
 			</Box>
 
 			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>

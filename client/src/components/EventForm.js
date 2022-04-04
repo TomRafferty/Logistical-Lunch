@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 import { DesktopDatePicker, TimePicker } from "@mui/lab";
 import EditIcon from "@mui/icons-material/Edit";
+import EventAvailableRoundedIcon from "@mui/icons-material/EventAvailableRounded";
 
 const { default: styled } = require("@emotion/styled");
 const { FormControl } = require("@material-ui/core");
@@ -26,7 +27,7 @@ const FormContainer = styled(Grid)({
 	marginBottom: "2rem",
 });
 
-const EditEventForm = () => {
+const EditEventForm = ({ isEdit }) => {
 	const [originalLocation, setOriginalLocation] = useState("");
 	const [location, setLocation] = useState("");
 	const [postcode, setPostcode] = useState("");
@@ -51,6 +52,7 @@ const EditEventForm = () => {
 				return result[0];
 			})
 			.then((event) => {
+				console.log(event);
 				setOriginalLocation(event.meeting_location);
 				setLocation(event.meeting_location);
 				setPostcode(event.meeting_postcode);
@@ -58,7 +60,7 @@ const EditEventForm = () => {
 				setCity(event.meeting_city);
 				setMeetingStart(DateTime.fromSQL(event.meeting_start));
 				setMeetingEnd(DateTime.fromSQL(event.meeting_end));
-				setMeetingDate(DateTime.fromSQL(event.meeting_date));
+				setMeetingDate(DateTime.fromISO(event.meeting_date));
 				setCurrentCohort(sessionStorage.getItem("cohortId"));
 			})
 			.catch((error) => {
@@ -66,14 +68,17 @@ const EditEventForm = () => {
 				throw error;
 			});
 	};
+
 	useEffect(() => {
-		fetchCurrentMeeting();
+		if (isEdit) {
+			fetchCurrentMeeting();
+		}
 	}, []);
 
 	// submit
 	const submitReq = async () => {
 		const options = {
-			method: "put",
+			method: isEdit ? "put" : "post",
 			headers: {
 				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
@@ -86,10 +91,10 @@ const EditEventForm = () => {
 				meeting_start: meetingStart.toISOTime(),
 				meeting_end: meetingEnd.toISOTime(),
 				meeting_date: meetingDate.toISODate(),
-				currentCohort,
+				currentCohort: sessionStorage.getItem("cohortID"),
 			}),
 		};
-		await fetch("/api/editEvent", options)
+		await fetch(`/api/${isEdit ? "editEvent" : "createNewEvent"}`, options)
 			.then((response) => {
 				if(response.ok){
 					console.log(response.json());
@@ -114,19 +119,35 @@ const EditEventForm = () => {
 				}}
 			>
 				<FormContainer container>
-					<Container
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							marginLeft: "0",
-							padding: "20px",
-						}}
-					>
-						<EditIcon fontSize="large"></EditIcon>
-						<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
-							{`Event - ${originalLocation}`}
-						</Typography>
-					</Container>
+					{isEdit ? (
+						<Container
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								marginLeft: "0",
+								padding: "20px",
+							}}
+						>
+							<EditIcon fontSize="large"></EditIcon>
+							<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+								{`Event - ${originalLocation}`}
+							</Typography>
+						</Container>
+					) : (
+						<Container
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								marginLeft: "0",
+								padding: "20px",
+							}}
+						>
+							<EventAvailableRoundedIcon fontSize="large"></EventAvailableRoundedIcon>
+							<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+								Create an Event
+							</Typography>
+						</Container>
+					)}
 					{/* location */}
 					<StyledInput>
 						<TextField
@@ -138,7 +159,6 @@ const EditEventForm = () => {
 							onChange={(e) => setLocation(e.target.value)}
 						/>
 					</StyledInput>
-
 					{/* postcode */}
 					<StyledInput>
 						<TextField
@@ -150,7 +170,6 @@ const EditEventForm = () => {
 							onChange={(e) => setPostcode(e.target.value)}
 						/>
 					</StyledInput>
-
 					{/* address */}
 					<StyledInput>
 						<TextField
@@ -162,7 +181,6 @@ const EditEventForm = () => {
 							onChange={(e) => setAddress(e.target.value)}
 						/>
 					</StyledInput>
-
 					{/* city */}
 					<StyledInput>
 						<TextField
@@ -174,7 +192,6 @@ const EditEventForm = () => {
 							onChange={(e) => setCity(e.target.value)}
 						/>
 					</StyledInput>
-
 					{/* meeting start */}
 					<StyledInput>
 						<LocalizationProvider dateAdapter={DateAdapter}>
@@ -194,12 +211,10 @@ const EditEventForm = () => {
 								keyboardButtonProps={{
 									"aria-label": "change time",
 								}}
-								openTo="day"
 								renderInput={(params) => <TextField {...params} />}
 							/>
 						</LocalizationProvider>
 					</StyledInput>
-
 					{/* meeting end */}
 					<StyledInput>
 						<LocalizationProvider dateAdapter={DateAdapter}>
@@ -218,12 +233,10 @@ const EditEventForm = () => {
 								keyboardButtonProps={{
 									"aria-label": "change time",
 								}}
-								openTo="day"
 								renderInput={(params) => <TextField {...params} />}
 							/>
 						</LocalizationProvider>
 					</StyledInput>
-
 					{/* meeting date */}
 					<StyledInput>
 						<LocalizationProvider dateAdapter={DateAdapter}>
@@ -248,12 +261,17 @@ const EditEventForm = () => {
 							/>
 						</LocalizationProvider>
 					</StyledInput>
-
 					{/* submit button */}
 					<StyledInput>
-						<Button variant="contained" type="submit" value="Submit">
-							Update
-						</Button>
+						{isEdit ? (
+							<Button variant="contained" type="submit" value="Submit">
+								Update
+							</Button>
+						) : (
+							<Button variant="contained" type="submit" value="Submit">
+								Create
+							</Button>
+						)}
 					</StyledInput>
 				</FormContainer>
 			</form>
