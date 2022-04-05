@@ -144,9 +144,9 @@ const StudentCard = () => {
 						</Box>
 					);
 				})}
-// 			</Container>
+{/* // 			</Container>
 // 			<img src={meetingImage} alt="meeting people" width="500px" />
-// 		</Box>
+// 		</Box> */}
 			</Box>
 			<img src={meetingImage} alt="meeting people" width="400px" />
 		</Grid>
