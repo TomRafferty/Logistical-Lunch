@@ -85,7 +85,6 @@ useEffect(() => {
 						</Typography>
 					</Container>
 					<Box width="100%" gap="10px">
-						<p>hello there ;)</p>
 						{shopResults.slice(0, 7).map((element, index) => {
 							return (
 								<Box
