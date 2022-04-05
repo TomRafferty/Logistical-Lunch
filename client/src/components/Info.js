@@ -89,120 +89,123 @@ const Info = () => {
 			<LunchShopperGuide />
 			{eventInfo.map((element, index) => {
 				return (
-						<Card key={index} sx={{ boxShadow: 3, mx: "auto", p: 4, width: "80%" }}>
-							<Container
-								sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+					<Card
+						key={index}
+						sx={{ boxShadow: 3, mx: "auto", p: 4, width: "80%" }}
+					>
+						<Container
+							sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+						>
+							<LunchDiningRoundedIcon fontSize="large"></LunchDiningRoundedIcon>
+							<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+								Lunch Information
+							</Typography>
+						</Container>
+						{/* TODO refactor to avoid hardcoded styles */}
+						<Typography align="left" padding="10px">
+							<strong>Meal Date:</strong>
+							<Typography
+								component="span"
+								sx={{ color: "primary.main", m: "5px" }}
 							>
-								<LunchDiningRoundedIcon fontSize="large"></LunchDiningRoundedIcon>
-								<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
-									Lunch Information
-								</Typography>
-							</Container>
-							{/* TODO refactor to avoid hardcoded styles */}
-							<Typography align="left" padding="10px">
-								<strong>Meal Date:</strong>
-								<Typography
-									component="span"
-									sx={{ color: "primary.main", m: "5px" }}
-								>
-									{DateTime.fromISO(
-										timeSplitter(element.meeting_start)[0]
-									).toFormat("DDDD")}
-								</Typography>
+								{DateTime.fromISO(
+									timeSplitter(element.meeting_start)[0]
+								).toFormat("DDDD")}
 							</Typography>
-							<Typography padding="10px">
-								<strong>Lunch maker:</strong>
-								<Typography
-									component="span"
-									sx={{ color: "primary.main", m: "5px" }}
-								>
-									{element.user_name}
-								</Typography>
+						</Typography>
+						<Typography padding="10px">
+							<strong>Lunch maker:</strong>
+							<Typography
+								component="span"
+								sx={{ color: "primary.main", m: "5px" }}
+							>
+								{element.user_name}
 							</Typography>
-							<Typography padding="10px">
-								<strong>Recipe:</strong>
-								<Typography
-									component="span"
-									sx={{ color: "primary.main", m: "5px" }}
-								>
-									{element.recipe_name}
-								</Typography>
+						</Typography>
+						<Typography padding="10px">
+							<strong>Recipe:</strong>
+							<Typography
+								component="span"
+								sx={{ color: "primary.main", m: "5px" }}
+							>
+								{element.recipe_name}
 							</Typography>
-							<Typography padding="10px">
-								<strong>Servings:</strong>
-								<Typography
-									component="span"
-									sx={{ color: "primary.main", m: "5px" }}
-								>
-									{element.servings}
-								</Typography>
+						</Typography>
+						<Typography padding="10px">
+							<strong>Servings:</strong>
+							<Typography
+								component="span"
+								sx={{ color: "primary.main", m: "5px" }}
+							>
+								{element.servings}
 							</Typography>
-							<Typography marginLeft={"10px"} my={1}>
-								<Typography>
-									<strong>
-										These are the ingredients you will need to buy:
-									</strong>
-								</Typography>
+						</Typography>
+						<Typography marginLeft={"10px"} my={1}>
+							<Typography>
+								<strong>These are the ingredients you will need to buy:</strong>
 							</Typography>
-							<Box width="80%">
-								<ListStyled>
-									{eventInfo[0].ingredients.map((element, index) => {
-										return (
-											<ListItemStyled key={index}>
-												<Typography sx={{ color: "primary.main" }}>
-													{element}
-												</Typography>
-											</ListItemStyled>
-										);
-									})}
-								</ListStyled>
-							</Box>
-							<Box>
-								<Typography padding="10px">
-									<strong>
-										For information on how to scale up ingredients:
-									</strong>
-									<Typography>
-										<Link href="#" underline="hover">
-											https://www.deliaonline.com/how-to-cook/and-the-rest/scaling-recipes-up-and-down
-										</Link>
-									</Typography>
-								</Typography>
-							</Box>
-							<Box sx={{ mt: 2, p: 0 }}>
-								<Typography marginLeft={"10px"}>
-									<strong>Number of diners:</strong>
-									<Typography
-										component="span"
-										sx={{ color: "primary.main", m: "5px" }}
-									>
-										{element.diners}
-									</Typography>
-									<br />
-									<strong>Budget:</strong>
-									<Typography
-										component="span"
-										sx={{ color: "primary.main", m: "5px" }}
-									>
-										£{element.diners * 5}
-									</Typography>
-								</Typography>
-								<Typography marginLeft={"10px"}>
-									<strong>Dietary restrictions:</strong>
-								</Typography>
-							</Box>
-							<ListStyled padding="5px">
-								{diet.map((element, index) => {
+						</Typography>
+						<Box width="80%">
+							<ListStyled>
+								{eventInfo[0].ingredients.map((element, index) => {
 									return (
 										<ListItemStyled key={index}>
 											<Typography sx={{ color: "primary.main" }}>
-												{element.allergy_name || element.requirement_name}
+												{element}
 											</Typography>
 										</ListItemStyled>
 									);
 								})}
 							</ListStyled>
-						</Card>
+						</Box>
+						<Box>
+							<Typography padding="10px">
+								<strong>For information on how to scale up ingredients:</strong>
+								<Typography>
+									<Link
+										href="https://www.deliaonline.com/how-to-cook/and-the-rest/scaling-recipes-up-and-down"
+										underline="hover"
+										target="_blank"
+									>
+										https://www.deliaonline.com/how-to-cook/and-the-rest/scaling-recipes-up-and-down
+									</Link>
+								</Typography>
+							</Typography>
+						</Box>
+						<Box sx={{ mt: 2, p: 0 }}>
+							<Typography marginLeft={"10px"}>
+								<strong>Number of diners:</strong>
+								<Typography
+									component="span"
+									sx={{ color: "primary.main", m: "5px" }}
+								>
+									{element.diners}
+								</Typography>
+								<br />
+								<strong>Budget:</strong>
+								<Typography
+									component="span"
+									sx={{ color: "primary.main", m: "5px" }}
+								>
+									£{element.diners * 5}
+								</Typography>
+							</Typography>
+							<Typography marginLeft={"10px"}>
+								<strong>Dietary restrictions:</strong>
+							</Typography>
+						</Box>
+						<ListStyled padding="5px">
+							{diet.map((element, index) => {
+								return (
+									<ListItemStyled key={index}>
+										<Typography sx={{ color: "primary.main" }}>
+											{element.allergy_name || element.requirement_name}
+										</Typography>
+									</ListItemStyled>
+								);
+							})}
+						</ListStyled>
+					</Card>
 				);
 			})}
 		</Grid>
