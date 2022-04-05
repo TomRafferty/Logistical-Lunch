@@ -2,17 +2,29 @@ import React from "react";
 import { Typography, Container, Box, Grid } from "@mui/material";
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { DateTime } from "luxon";
+// import { DateTime } from "luxon";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import meetingImage from "../../images/meeting-image.jpg";
 
 const StudentCard = () => {
-      const [cardData, setCardData] = useState([]);
-      const cohort = JSON.parse(sessionStorage.getItem("cohortId"));
+	const [cardData, setCardData] = useState([]);
+	const cohort = JSON.parse(sessionStorage.getItem("cohortId"));
 
-  // hook to fetch the event information and display it within the card
-  useEffect(() => {
-    fetch(`/api/events/next?cohId=${cohort}`)
+	// time trimming to turn this : 12:00:11 into this : 12:00
+	const timeTrimmer = (timeString) => {
+		const stringSplit = timeString.split(":");
+		console.log(stringSplit);
+		return stringSplit.slice(0,2).join(":");
+	};
+	// date trimmer to turn this : 2099-04-10T23:00:00.000Z into this : 2099-04-10
+	const dateTrimmer = (dateString) => {
+		const stringSplit = dateString.split("T");
+		return stringSplit[0];
+	};
+
+	// hook to fetch the event information and display it within the card
+	useEffect(() => {
+		fetch(`/api/events/next?cohId=${cohort}`)
 			.then(function (response) {
 				if (response.ok) {
 					return response.json();
@@ -26,20 +38,22 @@ const StudentCard = () => {
 			.catch(function (error) {
 				console.log("An error occurred:", error);
 			});
-  }, []);
+	}, []);
 
-  // function to convert timestamp string into an array of time an date
-  const timeSplitter=(element)=> {
-	return element.slice(0,16).split("T");
-  };
-  // typography styling
-  const TypographyInner = styled(Typography)({
-    display: "inline",
-    margin: "10px",
-  });
+	// function to convert timestamp string into an array of time an date
+	const timeSplitter = (element) => {
+		return element.slice(0, 16).split("T");
+	};
+	// typography styling
+	const TypographyInner = styled(Typography)({
+		display: "inline",
+		margin: "10px",
+	});
 
-// getting region and class to display in heading
+	// getting region and class to display in heading
 
+// 	return (
+// 		<Box
   return (
 		<Grid
 			sx={{
@@ -83,7 +97,7 @@ const StudentCard = () => {
 										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[0]
 										).toFormat("DDDD")} */}
-										{element.meeting_date}
+										{dateTrimmer(element.meeting_date)}
 									</TypographyInner>
 								</Typography>
 								<Typography sx={{ mb: "5px" }}>
@@ -92,7 +106,7 @@ const StudentCard = () => {
 										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_start)[1]
 										).toFormat("HH:mm a")} */}
-										{element.meeting_start}
+										{timeTrimmer(element.meeting_start)}
 									</TypographyInner>
 								</Typography>
 
@@ -102,7 +116,7 @@ const StudentCard = () => {
 										{/* {DateTime.fromISO(
 											timeSplitter(element.meeting_end)[1]
 										).toFormat("HH:mm a")} */}
-										{element.meeting_end}
+										{timeTrimmer(element.meeting_end)}
 									</TypographyInner>
 								</Typography>
 
@@ -130,6 +144,9 @@ const StudentCard = () => {
 						</Box>
 					);
 				})}
+// 			</Container>
+// 			<img src={meetingImage} alt="meeting people" width="500px" />
+// 		</Box>
 			</Box>
 			<img src={meetingImage} alt="meeting people" width="400px" />
 		</Grid>
