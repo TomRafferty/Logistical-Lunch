@@ -18,7 +18,7 @@ async function getPostCodeData(postcodes, origin) {
 		modes.push(element.transport_type);
 	});
 
-	const pcInfo = await fetch("https://api.postcodes.io/postcodes", {
+	const pcInfo = await fetch("/api/postcodes/coordinates", {
 		method: "post",
 		headers: {
 			"Content-Type": "application/json",

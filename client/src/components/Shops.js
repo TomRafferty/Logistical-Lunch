@@ -9,7 +9,7 @@ const location = sessionStorage.getItem("userLocation");
 
 // a function that first fetches the latitude and longitude for the students postcode
 async function getPlaces() {
-	const data = await fetch(`https://api.postcodes.io/postcodes/${location}`);
+	const data = await fetch(`/api/postcodes/shops/${location}`);
 	const dataTwo = await data.json();
 	// then gets the information for nearby supermarkets/grocery shops
 	const shopData = await fetch(

@@ -409,6 +409,25 @@ router.get("/postcodes/validate/:newLocal", async (req, res) => {
 	const data = await validate.json();
 	res.json(data);
 });
-
+router.post("/postcodes/coordinates", async (req, res) => {
+	const postcodes = req.body.postcodes;
+	const pcInfo = await fetch("https://api.postcodes.io/postcodes", {
+		method: "post",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			postcodes: postcodes,
+		}),
+	});
+	const output = await pcInfo.json();
+	res.json(output);
+});
+router.get("/postcodes/shops/:location", async (req, res) => {
+	const location = req.params.location;
+	const data = await fetch(`https://api.postcodes.io/postcodes/${location}`);
+	const output = await data.json();
+	res.json(output);
+});
 
 export default router;
