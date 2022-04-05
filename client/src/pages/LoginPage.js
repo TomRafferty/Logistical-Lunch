@@ -96,15 +96,15 @@ export function LoginPage() {
 							textAlign: "justify",
 						}}
 					>
-						Lorem Ipsum is simply dummy text of the printing and typesetting
-						industry. Lorem Ipsum has been the industry is standard dummy text
-						ever since the 1500s, when an unknown printer took a galley of type
-						and scrambled it to make a type specimen book. It has survived not
-						only five centuries, but also the leap into electronic typesetting,
-						remaining essentially unchanged. It was popularised in the 1960s
-						with the release of Letraset sheets containing Lorem Ipsum passages,
-						and more recently with desktop publishing software like Aldus
-						PageMaker including versions of Lorem Ipsum.
+						Welcome to the CYF meeting app After registering, you will need to
+						add extra information before each meeting such as: your location,
+						confirmation of your attendance and if you will be having lunch. If
+						you are chosen as the Lunch Shopper or Maker you will be informed by
+						Friday of that week. The Lunch Shopper will be supplied with
+						appropriate information, such as the nearest supermarket, a
+						comprehensive shopping list and the budget. The Lunch Maker will be
+						supplied with recipes, amount of diners and a list of all allergies
+						and dietary requirements.
 					</Typography>
 				</Box>
 				<Box sx={{ marginBottom: "70px", width: "350px" }}>
