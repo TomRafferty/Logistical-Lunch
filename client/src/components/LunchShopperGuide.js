@@ -3,7 +3,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 
 const LunchShopperGuide = () => {
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", my: 4, p: 4, width: "80%" }}>
+		<Box sx={{ boxShadow: 3, mx: "auto", my:6, p: 4, width: "80%" }}>
 			<Container
 				sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
 			>

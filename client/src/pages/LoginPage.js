@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, Grid, Box } from "@mui/material";
 import LoginPageHeading from "../components/LoginPageHeading";
 import RegisterForm from "../components/RegisterForm";
 import LoginForm from "../components/LoginForm";
@@ -71,15 +71,31 @@ export function LoginPage() {
 	};
 
 	return (
-		<main role="main">
+		<Grid>
 			<LoginPageHeading />
-			<Container sx={{ display: "flex", alignItems: "center" }}>
-				<Container style={{ alignSelf: "flex-start", marginTop: "100px" }}>
-					<img
-						src={cyfBanner}
-						alt="CYF group"
-					/>
-					<Typography sx={{ marginTop: "30px", marginBottom: "70px", textAlign: "justify" }}>
+			<Container
+				sx={{
+					display: "flex",
+					flexWrap: "wrap",
+					alignItems: "center",
+					justifyContent: "space-around",
+				}}
+			>
+				<Box
+					style={{
+						alignSelf: "flex-start",
+						marginTop: "100px",
+						maxWidth: "400px",
+					}}
+				>
+					<img src={cyfBanner} alt="CYF group" width="100%" />
+					<Typography
+						sx={{
+							marginTop: "30px",
+							marginBottom: "70px",
+							textAlign: "justify",
+						}}
+					>
 						Lorem Ipsum is simply dummy text of the printing and typesetting
 						industry. Lorem Ipsum has been the industry is standard dummy text
 						ever since the 1500s, when an unknown printer took a galley of type
@@ -90,8 +106,8 @@ export function LoginPage() {
 						and more recently with desktop publishing software like Aldus
 						PageMaker including versions of Lorem Ipsum.
 					</Typography>
-				</Container>
-				<Container sx={{ marginBottom: "70px" }}>
+				</Box>
+				<Box sx={{ marginBottom: "70px", width: "350px" }}>
 					<LoginRegisterButtons displayForms={displayForms} />
 					{/* register form render */}
 					<RegisterFormContainer
@@ -109,9 +125,9 @@ export function LoginPage() {
 					>
 						<LoginForm />
 					</LoginFormContainer>
-				</Container>
+				</Box>
 			</Container>
-		</main>
+		</Grid>
 	);
 }
 

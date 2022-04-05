@@ -24,7 +24,6 @@ const FormContainer = styled(Grid)({
 	justifyContent: "center",
 	padding: "20px",
 	background: "#fafafa",
-	marginBottom: "2rem",
 });
 
 const EditEventForm = ({ isEdit }) => {
@@ -111,7 +110,7 @@ const EditEventForm = ({ isEdit }) => {
 	}, []);
 
 	return (
-		<Box sx={{ mx: "auto", p: 4, width: "45%" }}>
+		<Box sx={{ mx: "auto", p: 4, width: "350px" }}>
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();

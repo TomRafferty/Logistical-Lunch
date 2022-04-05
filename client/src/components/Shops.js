@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
-import { Card, Typography, Box, Grid } from "@mui/material";
+import { Container, Typography, Box, Grid } from "@mui/material";
+import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 
 const Shops = () => {
 const [shopResults, setShopResults] = useState([]);
@@ -57,7 +58,24 @@ useEffect(() => {
 
     return (
 			<Grid display="flex" flexDirection="column" alignItems="center">
-				<Card sx={{ display: "flex", width: "87%" }}>
+				<Box
+					sx={{
+						boxShadow: 3,
+						my: 6,
+						p: 4,
+						display: "flex",
+						flexDirection: "column",
+						width: "80%",
+					}}
+				>
+					<Container
+						sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+					>
+						<LocalGroceryStoreIcon fontSize="large"></LocalGroceryStoreIcon>
+						<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+							Local shops
+						</Typography>
+					</Container>
 					<Box width="100%" gap="10px">
 						{shopResults.slice(0, 7).map((element, index) => {
 							return (
@@ -89,7 +107,7 @@ useEffect(() => {
 							);
 						})}
 					</Box>
-				</Card>
+				</Box>
 			</Grid>
 		);
 };

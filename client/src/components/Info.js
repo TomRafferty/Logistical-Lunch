@@ -12,6 +12,8 @@ import { DateTime } from "luxon";
 import LunchShopperGuide from "./LunchShopperGuide";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { Box, styled } from "@mui/system";
+import LunchDiningRoundedIcon from "@mui/icons-material/LunchDiningRounded";
+
 const ListStyled = styled(List)({
 	display: "flex",
 	flexWrap: "wrap",
@@ -67,11 +69,11 @@ const Info = () => {
 					boxShadow: 3,
 					mx: "auto",
 					mt: 4,
-					mb: 2,
 					py: 2,
 					px: 4,
 					width: "80%",
 					display: "flex",
+					justifyContent: "center",
 				}}
 			>
 				<ShoppingBasketIcon fontSize="large"></ShoppingBasketIcon>
@@ -85,14 +87,18 @@ const Info = () => {
 				</Typography>
 			</Card>
 			<LunchShopperGuide />
-			{eventInfo.map((element) => {
+			{eventInfo.map((element, index) => {
 				return (
-					<Container disableGutters key={element.id} sx={{ mb: "15px", p: 0 }}>
-						<Card sx={{ boxShadow: 3, mx: "auto", my: 3, p: 4, width: "80%" }}>
-							<Typography padding="10px" variant="h6">
-								<strong>Lunch Information:</strong>
-							</Typography>
-// TODO refactor to avoid hardcoded styles
+						<Card key={index} sx={{ boxShadow: 3, mx: "auto", p: 4, width: "80%" }}>
+							<Container
+								sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
+							>
+								<LunchDiningRoundedIcon fontSize="large"></LunchDiningRoundedIcon>
+								<Typography marginLeft="20px" fontSize="20px" fontWeight="bold">
+									Lunch Information
+								</Typography>
+							</Container>
+							{/* TODO refactor to avoid hardcoded styles */}
 							<Typography align="left" padding="10px">
 								<strong>Meal Date:</strong>
 								<Typography
@@ -197,25 +203,8 @@ const Info = () => {
 								})}
 							</ListStyled>
 						</Card>
-					</Container>
 				);
 			})}
-			<Container disableGutters display="flex" alignSelf="center">
-				<Card
-					sx={{
-						boxShadow: 3,
-						mx: "auto",
-						my: 3,
-						p: 1,
-						width: "85.5%",
-						alignText: "center",
-					}}
-				>
-					<Typography padding="10px">
-						<strong>Here are some local shops:</strong>
-					</Typography>
-				</Card>
-			</Container>
 		</Grid>
 	);
 };

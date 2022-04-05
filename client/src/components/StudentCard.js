@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Typography,
-  Container,
-  Box,
-} from "@mui/material";
+import { Typography, Container, Box, Grid } from "@mui/material";
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { DateTime } from "luxon";
@@ -45,15 +41,17 @@ const StudentCard = () => {
 // getting region and class to display in heading
 
   return (
-		<Box
+		<Grid
 			sx={{
 				boxShadow: 3,
 				display: "flex",
+				flexWrap: "wrap",
+				justifyContent: "space-around",
 				my: 6,
 				p: 4,
 			}}
 		>
-			<Container disableGutters>
+			<Box disableGutters sx={{ width:"400px" }}>
 				<Container
 					sx={{ display: "flex", alignItems: "center", marginLeft: "0" }}
 				>
@@ -132,13 +130,9 @@ const StudentCard = () => {
 						</Box>
 					);
 				})}
-			</Container>
-			<img
-				src={meetingImage}
-				alt="meeting people"
-				width="500px"
-			/>
-		</Box>
+			</Box>
+			<img src={meetingImage} alt="meeting people" width="400px" />
+		</Grid>
 	);
 };
 
