@@ -2,6 +2,10 @@ import { React, useState, useEffect } from "react";
 import { Container, Typography, Box, Grid } from "@mui/material";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 
+const clean = (obj) => {
+	return JSON.parse(JSON.stringify(obj));
+};
+
 const Shops = () => {
 const [shopResults, setShopResults] = useState([]);
 const location = sessionStorage.getItem("userLocation");
@@ -10,11 +14,14 @@ const location = sessionStorage.getItem("userLocation");
 // a function that first fetches the latitude and longitude for the students postcode
 async function getPlaces() {
 	const data = await fetch(`/api/postcodes/shops/${location}`);
+	console.log(`data 1 = ${clean(data)}`);
 	const dataTwo = await data.json();
+	console.log(`data 2 = ${clean(dataTwo)}`);
 	// then gets the information for nearby supermarkets/grocery shops
 	const shopData = await fetch(
 		`/api/google?lat=${dataTwo.result.latitude}&long=${dataTwo.result.longitude}`
 	);
+	console.log(`shop data = ${clean(shopData)}`);
 	const shopDataTwo = await shopData.json();
 	const shopArray = shopDataTwo.results.map((element) => {
 		return {
@@ -38,6 +45,7 @@ async function getPlaces() {
 	const distanceData = await fetch(
 		`/api/google/distance?start=${originData}&ends=${distString.slice(1)}`
 	);
+	console.log(`distance date = ${clean(distanceData)}`);
 	const distanceDataTwo = await distanceData.json();
 	const distShopArr = shopArray.map((element, index) => {
 		return {
@@ -77,6 +85,7 @@ useEffect(() => {
 						</Typography>
 					</Container>
 					<Box width="100%" gap="10px">
+						<p>hello there ;)</p>
 						{shopResults.slice(0, 7).map((element, index) => {
 							return (
 								<Box

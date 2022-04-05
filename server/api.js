@@ -427,7 +427,8 @@ router.get("/postcodes/shops/:location", async (req, res) => {
 	const location = req.params.location;
 	const data = await fetch(`https://api.postcodes.io/postcodes/${location}`);
 	const output = await data.json();
-	res.json(output);
+	console.log(`postcode shop location - ${output}`);
+	res.json(output).status(output.status);
 });
 
 export default router;
