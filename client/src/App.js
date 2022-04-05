@@ -7,7 +7,6 @@ import Footer from "./components/Footer";
 import Admin from "./pages/Admin";
 import LunchMaker from "./pages/LunchMaker";
 import Shopper from "./pages/Shopper";
-
 const App = () => (
 	<div>
 		<NavBar />
