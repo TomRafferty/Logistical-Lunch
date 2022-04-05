@@ -18,33 +18,33 @@ const Location = () => {
     };
     // a function to validate the inputted postcode and update the users location in the database
     async function handleClick() {
-		if(!newLocal){
-			return;
+			if (!newLocal) {
+				return;
+			}
+			const validate = await fetch(`/api/postcodes/validate/${newLocal}`);
+			const data = await validate.json();
+			if (data.result === true) {
+				fetch("api/users/location", {
+					method: "put",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						location: newLocal,
+						id: sessionStorage.getItem("userId"),
+					}),
+				})
+					.then(() => {
+						let sessionData = sessionStorage.getItem("userLocation");
+						sessionData = newLocal;
+						sessionStorage.setItem("userLocation", sessionData);
+						setUpdate(!update);
+					})
+					.catch((error) => {
+						console.log("An error occurred:", error);
+					});
+			}
 		}
-        const validate = await fetch(`/api/postcodes/validate/${newLocal}`);
-        const data = await validate.json();
-        if(data.result===true) {
-            fetch("api/users/location", {
-                        method: "put",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            location: newLocal,
-                            id: sessionStorage.getItem("userId"),
-                        }),
-                    })
-                        .then(() => {
-                            let sessionData = sessionStorage.getItem("userLocation");
-                            sessionData = newLocal;
-                            sessionStorage.setItem("userLocation", sessionData);
-                            setUpdate(!update);
-                        })
-                        .catch((error) => {
-                            console.log("An error occurred:", error);
-                        });
-                    }
-                }
 
     useEffect(()=>{
         handleClick();
