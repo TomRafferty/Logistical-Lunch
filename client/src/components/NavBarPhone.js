@@ -1,24 +1,20 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-	AppBar,
-	Toolbar,
-	MenuItem,
-	Typography,
-	Avatar,
-} from "@mui/material";
+import { AppBar, Toolbar, Menu, MenuItem, IconButton, Typography, Avatar } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../../images/cyf-logo.png";
-import { styled } from "@mui/system";
 
-const StyledMenuItem = styled(MenuItem)({
-	color: "black",
-});
-
-const StyledMenuItemLogout = styled(MenuItem)({
-	color: "red",
-});
-
-const NavBar = () => {
+const NavBarPhone = () => {
+	// boilerplate code from mui for a basic menu
+	const [anchorEl, setAnchorEl] = useState(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (e) => {
+		setAnchorEl(e.currentTarget);
+	};
+	const close = () => {
+		setAnchorEl(null);
+	};
 
 	//storing the role of the user into the  sessionStorage so we can display the nav accordingly.
 	const userType = sessionStorage.getItem("userType");
@@ -29,7 +25,7 @@ const NavBar = () => {
 	const bgColor = userType != null ? "rgb(239,239,239)" : "rgb(255,255,255)";
 	const boxShadow = userType != null ? "" : "none";
 
-	// variable for the useNavigate hook
+    // variable for the useNavigate hook
 	let nav = useNavigate();
 
 	return (
@@ -53,41 +49,54 @@ const NavBar = () => {
 						<Typography sx={{ flexGrow: 1, color: "black" }} align="center">
 							Hi {sessionStorage.getItem("userName")}
 						</Typography>
+						<IconButton
+							aria-label="menu"
+							id="menu-button"
+							aria-haspopup="true"
+							onClick={handleClick}
+						>
+							<MenuIcon sx={{ fontSize: 35 }} />
+						</IconButton>
+						<Menu id="menu" anchorEl={anchorEl} open={open} onClose={close}>
 							{isLunchMaker === "true" ? (
-								<StyledMenuItem onClick={() => nav("/recipes")} >Lunch Maker</StyledMenuItem>
+								<MenuItem onClick={() => nav("/recipes")}>Lunch Maker</MenuItem>
 							) : (
 								""
 							)}
 							{isLunchShopper === "true" ? (
-								<StyledMenuItem onClick={() => nav("/shopper")}>
+								<MenuItem onClick={() => nav("/shopper")}>
 									Lunch Shopper
-								</StyledMenuItem>
+								</MenuItem>
 							) : (
 								""
 							)}
 							{userType === "student" ? (
-								<StyledMenuItem onClick={() => nav("/student")}>
+								<MenuItem onClick={() => nav("/student")}>
 									{" "}
 									Meeting Info
-								</StyledMenuItem>
+								</MenuItem>
 							) : (
 								""
 							)}
 
 							{userType === "admin" ? (
-								<StyledMenuItem onClick={() => nav("/admin")}> Meeting Info</StyledMenuItem>
+								<MenuItem onClick={() => nav("/admin")}>
+									{" "}
+									Meeting Info
+								</MenuItem>
 							) : (
 								""
 							)}
 
-							<StyledMenuItemLogout
+							<MenuItem
 								onClick={() => {
 									sessionStorage.removeItem("userType");
 									nav("/");
 								}}
 							>
 								Logout
-							</StyledMenuItemLogout>
+							</MenuItem>
+						</Menu>
 					</>
 				) : (
 					""
@@ -97,4 +106,4 @@ const NavBar = () => {
 	);
 };
 
-export default NavBar;
+export default NavBarPhone;
