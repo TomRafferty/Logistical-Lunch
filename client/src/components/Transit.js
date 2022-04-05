@@ -53,9 +53,11 @@ const Transit = () => {
 				sx={{
 					boxShadow: 3,
 					p: 4,
-					width: "40%",
+					mx: 4,
+					mb: 6,
+					width: "350px",
 					alignSelf: "flex-start",
-					minHeight: "150px",
+					minHeight: "170px",
 				}}
 			>
 				<Container

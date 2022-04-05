@@ -91,7 +91,7 @@ const SetLunchMaker = () => {
 	};
 
 	return (
-		<Box sx={{ boxShadow: 3, mx: "auto", p: 4, width: "40%" }}>
+		<Box sx={{ boxShadow: 3, mx: 4,mb: 6, p: 4, width: "350px" }}>
 			<HeadingContainer>
 				<DinnerDiningIcon fontSize="large"></DinnerDiningIcon>
 				<Typography variant="h6" sx={{ ml: 2 }}>

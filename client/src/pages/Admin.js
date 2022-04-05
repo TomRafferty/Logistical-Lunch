@@ -13,21 +13,39 @@ export default function Admin() {
 		<Box sx={{ width: "80%", mx: "auto", mb: 6 }}>
 			<StudentCard />
 			<Box
-				disableGutters
-				sx={{ display: "flex", justifyContent: "space-between", mb: 6 }}
+				sx={{
+					boxShadow: 3,
+					mx: "auto",
+					mb: 6,
+					display: "flex",
+					flexWrap: "wrap",
+					justifyContent: "center",
+				}}
 			>
-				<Location />
-				<RequestLunch />
-			</Box>
-
-			<DistanceMatrix />
-
-			<Box sx={{ boxShadow: 3, mx: "auto", mb: 6, display: "flex", justifyContent: "space-between" }}>
 				<EventForm isEdit={false} />
 				<EventForm isEdit={true} />
 			</Box>
+			<Box
+				disableGutters
+				sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+			>
+				<Location />
+				<DistanceMatrix />
+				<RequestLunch />
+			</Box>
 
-			<Box sx={{ boxShadow: 3, mx: "auto", my: 6, p: 4 }}>
+			<Box
+				sx={{
+					boxShadow: 3,
+					mx: "auto",
+					my: 6,
+					p: 4,
+					display: "flex",
+					flexDirection: "column",
+					flexWrap: "wrap",
+					justifyContent: "center",
+				}}
+			>
 				<Typography
 					fontSize="20px"
 					fontWeight="bold"
@@ -38,7 +56,13 @@ export default function Admin() {
 				</Typography>
 				<Box
 					disableGutters
-					sx={{ display: "flex", justifyContent: "space-between" }}
+					sx={{
+						mx: "auto",
+						display: "flex",
+						flexWrap: "wrap",
+						justifyContent: "center",
+						alignItems: "flex-start",
+					}}
 				>
 					<SetLunchMaker />
 					<SetLunchShopper />

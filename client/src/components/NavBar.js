@@ -31,7 +31,11 @@ const NavBar = () => {
 	return (
 		<AppBar
 			position="static"
-			sx={{ bgcolor: `${bgColor}`, boxShadow: `${boxShadow}`, paddingLeft: "40px" }}
+			sx={{
+				bgcolor: `${bgColor}`,
+				boxShadow: `${boxShadow}`,
+				paddingLeft: "40px",
+			}}
 		>
 			<Toolbar>
 				<Avatar
@@ -54,18 +58,36 @@ const NavBar = () => {
 							<MenuIcon sx={{ fontSize: 35 }} />
 						</IconButton>
 						<Menu id="menu" anchorEl={anchorEl} open={open} onClose={close}>
-
 							{isLunchMaker === "true" ? (
 								<MenuItem onClick={() => nav("/recipes")}>Lunch Maker</MenuItem>
 							) : (
 								""
 							)}
 							{isLunchShopper === "true" ? (
-								<MenuItem onClick={() => nav("/shopper")}>Lunch Shopper</MenuItem>
+								<MenuItem onClick={() => nav("/shopper")}>
+									Lunch Shopper
+								</MenuItem>
 							) : (
 								""
 							)}
-							<MenuItem onClick={() => nav("/student")}> Meeting Info</MenuItem>
+							{userType === "student" ? (
+								<MenuItem onClick={() => nav("/student")}>
+									{" "}
+									Meeting Info
+								</MenuItem>
+							) : (
+								""
+							)}
+
+							{userType === "admin" ? (
+								<MenuItem onClick={() => nav("/admin")}>
+									{" "}
+									Meeting Info
+								</MenuItem>
+							) : (
+								""
+							)}
+
 							<MenuItem
 								onClick={() => {
 									sessionStorage.removeItem("userType");
